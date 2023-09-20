@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.servlet;
+package by.tms.instaclone22onl.web.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
