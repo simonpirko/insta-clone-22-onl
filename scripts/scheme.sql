@@ -18,13 +18,13 @@ create table if not exists "Human" (
 create table if not exists "City" (
     id serial unique not null primary key,
     name varchar(50) not null unique,
-    countryId int unique,
+    countryId int,
     foreign key (countryId) references "Country"(id)
 );
 
 create table if not exists "Post" (
     id serial unique not null primary key,
-    author int unique,
+    author int,
     photo bytea,
     description varchar(250),
     foreign key (author) references "Human"(id)
@@ -40,8 +40,8 @@ create table if not exists "PostLike" (
 
 create table if not exists Comment (
     id serial unique not null primary key,
-    author int unique,
-    postId int unique,
+    author int,
+    postId int,
     foreign key (author) references "Human"(id),
     foreign key (postId) references "Post"(id)
 )
