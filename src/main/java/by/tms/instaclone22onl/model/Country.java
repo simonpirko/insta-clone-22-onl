@@ -12,6 +12,11 @@ public class Country {
     private String name;
     private List<City> cities;
 
+    public Country(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

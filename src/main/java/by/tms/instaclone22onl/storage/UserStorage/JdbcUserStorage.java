@@ -15,9 +15,11 @@ public class JdbcUserStorage implements UserStorage {
 
     private static JdbcUserStorage instance;
 
-    private final String INSERT = "insert into \"Human\" (name, surname, username, photo, email, password, countryId) values (?, ?, ?, ?, ?, ?, ?)";
-    private final String GET_BY_ID = "select * from \"Human\" where id = ?";
-    private final String GET_BY_USERNAME = "select * from \"Human\" where username = ?";
+    private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, countryId) values (?, ?, ?, ?, ?, ?, ?)";
+    private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
+    private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
+
+    private JdbcUserStorage() {}
 
     public static JdbcUserStorage getInstance() {
         if (instance == null)
@@ -48,7 +50,7 @@ public class JdbcUserStorage implements UserStorage {
     @Override
     public Optional<User> getById(int id) {
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_WITH_COUNTRY);
             preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -65,7 +67,13 @@ public class JdbcUserStorage implements UserStorage {
                 );
                 user.setEmail(resultSet.getString(6));
                 user.setPassword(resultSet.getString(7));
-                user.setCountry(new Country());
+
+                Country country = new Country(
+                        resultSet.getInt(9),
+                        resultSet.getString(10)
+                );
+
+                user.setCountry(country);
 
                 return Optional.of(user);
             }
@@ -79,7 +87,7 @@ public class JdbcUserStorage implements UserStorage {
     @Override
     public Optional<User> getByUsername(String username) {
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USERNAME);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USERNAME_WITH_COUNTRY);
             preparedStatement.setString(1, username);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -94,7 +102,13 @@ public class JdbcUserStorage implements UserStorage {
                 user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
                 user.setEmail(resultSet.getString(6));
                 user.setPassword(resultSet.getString(7));
-                user.setCountry(new Country());
+
+                Country country = new Country(
+                        resultSet.getInt(9),
+                        resultSet.getString(10)
+                );
+
+                user.setCountry(country);
 
                 return Optional.of(user);
             }
