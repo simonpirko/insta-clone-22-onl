@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.Storage.LikeStorage;
+package by.tms.instaclone22onl.storage.LikeStorage;
 
 import by.tms.instaclone22onl.model.Like;
 import by.tms.instaclone22onl.model.Post;
