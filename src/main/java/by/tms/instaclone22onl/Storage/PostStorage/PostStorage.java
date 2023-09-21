@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.post;
+package by.tms.instaclone22onl.storage.PostStorage;
 
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
@@ -6,7 +6,7 @@ import by.tms.instaclone22onl.model.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface InstagramPost {
+public interface PostStorage {
    
     void addPost(Post post);
 

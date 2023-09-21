@@ -1,31 +1,32 @@
-package by.tms.instaclone22onl.Storage.LikeStorage;
+package by.tms.instaclone22onl.storage.LikeStorage;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Like;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.storage.CityStorage.CityStorage;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class JbdsLikeStorage implements LikeStorage {
+public class JdbcLikeStorage implements LikeStorage{
 
     Connection connection;
     int lastID;
 
     Post post;
     User user;
-    public JbdsLikeStorage(Post post, User user){
+    public JdbcLikeStorage(Post post, User user){
         this.user = user;
         this.post = post;
     }
 
     JdbcConnection jdbcConnection;
 
-    public JbdsLikeStorage() {
-        connection = JBDCConnection.getConnection();
+    public JdbcLikeStorage() {
+        connection = JdbcConnection.getConnection();
     }
 
 

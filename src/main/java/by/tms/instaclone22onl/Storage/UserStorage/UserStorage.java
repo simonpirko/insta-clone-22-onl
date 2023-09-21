@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.storage;
+package by.tms.instaclone22onl.storage.UserStorage;
 
 /*
     @author Ilya Moiseenko on 20.09.23

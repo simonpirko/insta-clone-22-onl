@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.post;
+package by.tms.instaclone22onl.storage.PostStorage;
 
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
@@ -9,7 +9,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class PostStorage implements InstagramPost {
+public class JdbcPostStorage implements PostStorage {
 
     @Override
     public void addPost(Post post) {

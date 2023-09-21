@@ -1,10 +1,10 @@
-package by.tms.instaclone22onl.storage;
+package by.tms.instaclone22onl.storage.CityStorage;
 
 import by.tms.instaclone22onl.model.City;
 import java.sql.*;
 import java.util.Optional;
 
-public class CityStorage implements Storage {
+public class JdbcCityStorage implements CityStorage {
     private final String url = "jdbc:postgresql://localhost:5432/postgres";
     private final String userName = "postgres";
     private final String password = "root";
