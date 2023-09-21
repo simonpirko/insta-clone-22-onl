@@ -13,9 +13,18 @@ import java.util.*;
 
 public class JdbcUserStorage implements UserStorage {
 
+    private static JdbcUserStorage instance;
+
     private final String INSERT = "insert into \"Human\" (name, surname, username, photo, email, password, countryId) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID = "select * from \"Human\" where id = ?";
     private final String GET_BY_USERNAME = "select * from \"Human\" where username = ?";
+
+    public static JdbcUserStorage getInstance() {
+        if (instance == null)
+            instance = new JdbcUserStorage();
+
+        return instance;
+    }
 
     @Override
     public void add(User user) {
