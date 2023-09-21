@@ -15,6 +15,13 @@ public class JbdsLikeStorage implements LikeStorage {
     Connection connection;
     int lastID;
 
+    Post post;
+    User user;
+    public JbdsLikeStorage(Post post, User user){
+        this.user = user;
+        this.post = post;
+    }
+
     JdbcConnection jdbcConnection;
 
     public JbdsLikeStorage() {
@@ -32,8 +39,8 @@ public class JbdsLikeStorage implements LikeStorage {
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(LIKE_INSERT);
-            preparedStatement.setString(1, String.valueOf(like.getPost()));
-            preparedStatement.setString(2, String.valueOf(like.getUser()));
+            preparedStatement.setInt(1, post.getId());            //preparedStatement.setString(1, String.valueOf(like.getPost()));
+            preparedStatement.setInt(2, user.getId());             // preparedStatement.setString(2, String.valueOf(like.getUser()));
 
             preparedStatement.execute();
 
@@ -61,9 +68,13 @@ public class JbdsLikeStorage implements LikeStorage {
             if (resultSet.next()) {
                 Like like = new Like();
 
-                like.setId(resultSet.getInt(1));
-                like.setPost(resultSet.getString(2));
-                like.setUser(resultSet.getString(3));
+//                like.setId(resultSet.getInt(1));
+//                like.setPost(resultSet.getString(2));
+//                like.setUser(resultSet.getString(3));
+
+                int id = resultSet.getInt(1);
+                int postID = resultSet.getInt(2);
+                int userID = resultSet.getInt(3);
 
                 return Optional.of(like);
             }
@@ -88,9 +99,14 @@ public class JbdsLikeStorage implements LikeStorage {
             if (resultSet.next()) {
                 Like like = new Like();
 
-               like.setId(resultSet.getInt(1));
-                like.setPost(resultSet.getString(2));
-                like.setUser(resultSet.getString(3));
+//               like.setId(resultSet.getInt(1));
+//                like.setPost(resultSet.getString(2));
+//                like.setUser(resultSet.getString(3));
+
+                int id = resultSet.getInt(1);
+                int postID = resultSet.getInt(2);
+                int userID = resultSet.getInt(3);
+
 
                 return Optional.of(like);
             }
