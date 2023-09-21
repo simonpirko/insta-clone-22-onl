@@ -131,9 +131,13 @@ public class JbdsLikeStorage implements LikeStorage {
             while (resultSet.next()){
                 Like like = new Like();
 
-                like.setId(resultSet.getInt(1));
-                like.setPost(resultSet.getObject(2, Class<Post> Post));
-                like.setUser(resultSet.getObject(3, Class<User> User));
+//                like.setId(resultSet.getInt(1));
+//                like.setPost(resultSet.getObject(2, Class<Post> Post));
+//                like.setUser(resultSet.getObject(3, Class<User> User));
+
+                int id = resultSet.getInt(1);
+                int postID = resultSet.getInt(2);
+                int userID = resultSet.getInt(3);
 
                 allLikes.add(like);
             }
