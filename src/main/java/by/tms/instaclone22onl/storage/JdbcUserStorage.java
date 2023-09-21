@@ -13,19 +13,13 @@ import java.util.*;
 
 public class JdbcUserStorage implements UserStorage {
 
-    private final Connection connection;
-
     private final String INSERT = "insert into \"Human\" (name, surname, username, photo, email, password, countryId) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID = "select * from \"Human\" where id = ?";
     private final String GET_BY_USERNAME = "select * from \"Human\" where username = ?";
 
-    public JdbcUserStorage() {
-        connection = JdbcConnection.getConnection();
-    }
-
     @Override
-    public boolean add(User user) {
-        try {
+    public void add(User user) {
+        try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
 
             preparedStatement.setString(1, user.getName());
@@ -37,19 +31,14 @@ public class JdbcUserStorage implements UserStorage {
             preparedStatement.setInt(7, user.getCountry().getId());
 
             preparedStatement.execute();
-            preparedStatement.close();
-
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        return false;
     }
 
     @Override
-    public Optional<User> get(int id) {
-        try {
+    public Optional<User> getById(int id) {
+        try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID);
             preparedStatement.setInt(1, id);
 
@@ -79,8 +68,8 @@ public class JdbcUserStorage implements UserStorage {
     }
 
     @Override
-    public Optional<User> get(String username) {
-        try {
+    public Optional<User> getByUsername(String username) {
+        try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USERNAME);
             preparedStatement.setString(1, username);
 

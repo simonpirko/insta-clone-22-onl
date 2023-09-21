@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserStorage {
 
-    boolean add(User user);
-    Optional<User> get(int id);
-    Optional<User> get(String username);
+    void add(User user);
+    Optional<User> getById(int id);
+    Optional<User> getByUsername(String username);
 }
