@@ -14,7 +14,7 @@ public class PostStorage implements InstagramPost {
     @Override
     public void addPost(Post post) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
             PreparedStatement preparedStatement = connection.prepareStatement("insert into Post(author, photo, description) values (?, ?, ?), Statement.RETURN_GENERATED_KEYS");
 
             preparedStatement.setInt(1, post.getUser().getId());
@@ -24,14 +24,14 @@ public class PostStorage implements InstagramPost {
             preparedStatement.close();
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
     @Override
     public Optional<Post> getPostById(int id) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post where id = ?");
 
             preparedStatement.setInt(1, id);
@@ -40,15 +40,15 @@ public class PostStorage implements InstagramPost {
                 Post post = new Post();
 
                 post.setId(resultSet.getInt(1));
-                post.setUser(resultSet.getInt(2));
-                post.getPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
+                post.setUser(new User());
+                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
 
                 return Optional.of(post);
             }
             preparedStatement.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return Optional.empty();
     }
@@ -56,7 +56,7 @@ public class PostStorage implements InstagramPost {
     @Override
     public Optional<Post> getPostByUser(User user) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post where name = ?");
 
             preparedStatement.setString(1, user.getName());
@@ -65,15 +65,15 @@ public class PostStorage implements InstagramPost {
                 Post post = new Post();
 
                 post.setId(resultSet.getInt(1));
-                post.setUser(resultSet.getInt(2));
-                post.getPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
+                post.setUser(new User());
+                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
 
                 return Optional.of(post);
             }
             preparedStatement.close();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return Optional.empty();
     }
@@ -82,15 +82,16 @@ public class PostStorage implements InstagramPost {
     public List<Post> getAllPost() {
         List<Post> posts = new ArrayList<>();
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Post post = new Post();
 
+
                 post.setId(resultSet.getInt(1));
-                post.setUser(resultSet.getInt(2));
-                post.getPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
+                post.setUser(new User());
+                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
 
                 posts.add(post);
@@ -105,16 +106,15 @@ public class PostStorage implements InstagramPost {
     @Override
     public boolean deletePostById(int id) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM Post WHERE id = ?");
 
             preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
             preparedStatement.close();
             return affectedRows > 0;
-        }
-    catch(SQLException e){
-            throw new RuntimeException(e);
+        } catch(SQLException e){
+            e.printStackTrace();
         }
         return false;
     }
@@ -122,16 +122,16 @@ public class PostStorage implements InstagramPost {
     @Override
     public boolean deletePostByUser(User user) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM Post WHERE name = ?");
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM Post WHERE id = ?");
 
-            preparedStatement.setInt(1, user.getName());
+            preparedStatement.setInt(1, user.getId());
             int affectedRows = preparedStatement.executeUpdate();
             preparedStatement.close();
             return affectedRows > 0;
         }
         catch(SQLException e){
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return false;
     }
@@ -141,7 +141,7 @@ public class PostStorage implements InstagramPost {
         Optional<Post> post = getPostById(id);
         if (post.isPresent()){
             try {
-                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
+                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Post SET photo = ?, description = ? WHERE id = ?");
 
                 preparedStatement.setBytes(1, Base64.getDecoder().decode(newPost.getPhoto()));
@@ -151,7 +151,7 @@ public class PostStorage implements InstagramPost {
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
             }catch (SQLException e){
-                throw  new RuntimeException(e);
+                e.printStackTrace();
             }
         }else System.out.println("Post not found");
     }
