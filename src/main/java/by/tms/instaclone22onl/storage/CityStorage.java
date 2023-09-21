@@ -34,7 +34,7 @@ public class CityStorage implements Storage {
 
     @Override
     public Optional<City> getName(String name) {
-        try (Connection connection = DriverManager.getConnection(url, userName, password);
+        try (Connection connection = DriverManager.getConnection(url,  userName,  password);
              PreparedStatement preparedStatement = connection.prepareStatement(getNameSqlScript)){
 
             preparedStatement.setString(1, name);
