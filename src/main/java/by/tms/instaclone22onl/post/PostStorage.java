@@ -15,7 +15,7 @@ public class PostStorage implements InstagramPost {
     public void addPost(Post post) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into Post(author, photo, desription) values (?, ?, ?), Statement.RETURN_GENERATED_KEYS");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into Post(author, photo, description) values (?, ?, ?), Statement.RETURN_GENERATED_KEYS");
 
             preparedStatement.setInt(1, post.getUser().getId());
             preparedStatement.setBytes(2, Base64.getDecoder().decode(post.getPhoto()));
@@ -37,18 +37,20 @@ public class PostStorage implements InstagramPost {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int authorID = resultSet.getInt("author");
-                String photo = resultSet.getBytes("photo");
-                String description = resultSet.getString("description")
+                Post post = new Post();
 
-                return Optional.of(new Post(id, authorID, photo, description))
+                post.setId(resultSet.getInt(1));
+                post.setUser(resultSet.getInt(2));
+                post.getPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
+                post.setDescription(resultSet.getString(4));
+
+                return Optional.of(post);
             }
             preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.empty()
+        return Optional.empty();
     }
 
     @Override
@@ -60,18 +62,20 @@ public class PostStorage implements InstagramPost {
             preparedStatement.setString(1, user.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int authorID = resultSet.getInt("author");
-                String photo = resultSet.getBytes("photo");
-                String description = resultSet.getString("description")
+                Post post = new Post();
 
-                return Optional.of(new Post(id, authorID, photo, description))
+                post.setId(resultSet.getInt(1));
+                post.setUser(resultSet.getInt(2));
+                post.getPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
+                post.setDescription(resultSet.getString(4));
+
+                return Optional.of(post);
             }
             preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return Optional.empty()
+        return Optional.empty();
     }
 
     @Override
@@ -82,12 +86,14 @@ public class PostStorage implements InstagramPost {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post");
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
-                int authorID = resultSet.getInt("author");
-                String photo = resultSet.getBytes("photo");
-                String description = resultSet.getString("description");
+                Post post = new Post();
 
-                posts.add(new Post(id, authorID, photo, description))
+                post.setId(resultSet.getInt(1));
+                post.setUser(resultSet.getInt(2));
+                post.getPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
+                post.setDescription(resultSet.getString(4));
+
+                posts.add(post);
             }
             preparedStatement.close();
         } catch (SQLException e) {
@@ -107,7 +113,6 @@ public class PostStorage implements InstagramPost {
             preparedStatement.close();
             return affectedRows > 0;
         }
-
     catch(SQLException e){
             throw new RuntimeException(e);
         }
@@ -133,7 +138,6 @@ public class PostStorage implements InstagramPost {
 
     @Override
     public void updatePost(int id, Post newPost) {
-
         Optional<Post> post = getPostById(id);
         if (post.isPresent()){
             try {
@@ -147,7 +151,7 @@ public class PostStorage implements InstagramPost {
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
             }catch (SQLException e){
-                throw  new RuntimeException(e)
+                throw  new RuntimeException(e);
             }
         }else System.out.println("Post not found");
     }
