@@ -10,15 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class JbdsLikeStorage implements LikeStorage {
+public final class JbdsLikeStorage implements LikeStorage {
 
     private final String LIKE_INSERT = "insert into \"post_like\" (id, post, user) values (default, ?, ?)";
     private final String GET_BY_POST = "select * from \"post_like\" where post_id = ?";
     private final String GET_BY_USER = "select * from \"post_like\" where author_id = ?";
+    private final String GET_BY_USER_POST = "select * from \"post_like\" where author_id = ? and post_id = ?";
     private final String SELECT_ALL = "select * from \"post_like\"";
+    private final String DELETE_BY_USER_POST = "delete from \"post_like\" where author_id = ? and post_id = ?";
+
     private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
     private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
 
+    private static JbdsLikeStorage instance;
+    private JbdsLikeStorage() {
+    }
+
+    public static JbdsLikeStorage getInstance(){
+        if(instance == null){
+            instance = new JbdsLikeStorage();
+        }
+        return instance;
+    }
 
     @Override
     public boolean add(Like like) {
@@ -31,8 +44,6 @@ public class JbdsLikeStorage implements LikeStorage {
 
             preparedStatement.execute();
 
-            //What about like ID?
-
             return true;
 
         } catch (SQLException e) {
@@ -41,46 +52,70 @@ public class JbdsLikeStorage implements LikeStorage {
     }
 
     @Override
-    public Optional<Like> getByUser(User user) {
+    public List<Like> getByUserId(int userId) {
+        List<Like> likeList = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER)) {
 
-            preparedStatement.setString(1, user.getUsername());     //??????????????
+            preparedStatement.setInt(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Like like = new Like();
 
-                like.setUser(resultSet.getInt(1));
-                like.setPost(resultSet.getString(2));
-                like.setId(resultSet.getInt(3));
-
-                return Optional.of(like);
+                like.setUserId(resultSet.getInt(1));
+                like.setPostId(resultSet.getInt(2));
+                likeList.add(like);
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return Optional.empty();
+        return likeList;
     }
 
     @Override
-    public Optional<Like> getByPost(Post post) {        // public Like get(Post post)
+    public List<Like> getByPostId(int postId) {
+        List<Like> likeList = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST)) {
 
-            preparedStatement.setInt(1, post.getId());
+            preparedStatement.setInt(1, postId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Like like = new Like();
+
+                like.setUserId(resultSet.getInt(1));
+                like.setPostId(resultSet.getInt(2));
+                likeList.add(like);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return likeList;
+    }
+
+
+    @Override
+    public Optional<Like> getByUserIdPostId(int userId, int postId) {
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER_POST)) {
+
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, postId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 Like like = new Like();
 
-                like.setUser(resultSet.getInt(1));
-                like.setPost(resultSet.getString(2));
-                like.setId(resultSet.getInt(3));
+                like.setUserId(resultSet.getInt(1));
+                like.setPostId(resultSet.getInt(2));
 
                 return Optional.of(like);
             }
@@ -105,9 +140,8 @@ public class JbdsLikeStorage implements LikeStorage {
             while (resultSet.next()) {
                 Like like = new Like();
 
-                like.setUser(resultSet.getInt(1));
-                like.setPost(resultSet.getString(2));
-                like.setId(resultSet.getInt(3));;
+                like.setUserId(resultSet.getInt(1));
+                like.setPostId(resultSet.getInt(2));
 
                 allLikes.add(like);
             }
@@ -120,37 +154,18 @@ public class JbdsLikeStorage implements LikeStorage {
     }
 
 
-    @Override
-    public boolean deleteByUser(User user) {
-
-        try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER)) {
-
-            preparedStatement.setInt(1, user.getId());
-
-            int affectedRows = preparedStatement.executeUpdate();
-if (affectedRows > 0){
-    return true;
-}
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return false;
-    }
-
-
 
     @Override
-    public boolean deleteByPost(Post post) {
+    public boolean deleteByUserIdPostId(int userId, int postId) {
 
         try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_POST)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER_POST)) {
 
-            preparedStatement.setInt(1, post.getId());
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(2, postId);
 
             int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows > 0){
+            if (affectedRows > 0) {
                 return true;
             }
 
@@ -160,6 +175,45 @@ if (affectedRows > 0){
         return false;
     }
 
+
+    @Override
+    public boolean deleteByUserId(int userId) {
+
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER)) {
+
+            preparedStatement.setInt(1, userId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+
+    @Override
+    public boolean deleteByPostId(int postId) {
+
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_POST)) {
+
+            preparedStatement.setInt(1, postId);
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows > 0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
 
 
 }
