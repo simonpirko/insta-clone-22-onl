@@ -12,43 +12,27 @@ import java.util.Optional;
 
 public class JbdsLikeStorage implements LikeStorage {
 
-    Connection connection;
-    int lastID;
+    private final String LIKE_INSERT = "insert into \"post_like\" (id, post, user) values (default, ?, ?)";
+    private final String GET_BY_POST = "select * from \"post_like\" where post_id = ?";
+    private final String GET_BY_USER = "select * from \"post_like\" where author_id = ?";
+    private final String SELECT_ALL = "select * from \"post_like\"";
+    private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
+    private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
 
-    Post post;
-    User user;
-    public JbdsLikeStorage(Post post, User user){
-        this.user = user;
-        this.post = post;
-    }
-
-    JdbcConnection jdbcConnection;
-
-    public JbdsLikeStorage() {
-        connection = JBDCConnection.getConnection();
-    }
-
-
-    private final String LIKE_INSERT = "insert into \"LikeTable\" (id, post, user) values (default, ?, ?)";
-    private final String GET_POST = "select * from \"LikeTable\" where post = ?";
-    private final String GET_USER = "select * from \"LikeTable\" where user = ?";
-    private final String SELECT_ALL = "select * from \"LikeTable\"";
 
     @Override
-    public boolean addLike(Like like) {
+    public boolean add(Like like) {
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(LIKE_INSERT);
-            preparedStatement.setInt(1, post.getId());            //preparedStatement.setString(1, String.valueOf(like.getPost()));
-            preparedStatement.setInt(2, user.getId());             // preparedStatement.setString(2, String.valueOf(like.getUser()));
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(LIKE_INSERT)) {
+
+            preparedStatement.setInt(1, like.getUser().getId());            //preparedStatement.setString(1, String.valueOf(like.getPost()));
+            preparedStatement.setInt(2, like.getPost().getId());             // preparedStatement.setString(2, String.valueOf(like.getUser()));
 
             preparedStatement.execute();
 
-            ResultSet resultSet = preparedStatement.getGeneratedKeys();
-            if (resultSet.next()) {
-                lastID = resultSet.getInt(1);
-            }
-            preparedStatement.close();
+            //What about like ID?
+
             return true;
 
         } catch (SQLException e) {
@@ -57,96 +41,125 @@ public class JbdsLikeStorage implements LikeStorage {
     }
 
     @Override
-    public Optional<Like> getLikeByUser(User user) {
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER);
-//            preparedStatement.setString(1, String.valueOf(user));
+    public Optional<Like> getByUser(User user) {
 
-            preparedStatement.setString(1, user.getUsername());
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER)) {
+
+            preparedStatement.setString(1, user.getUsername());     //??????????????
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 Like like = new Like();
 
-//                like.setId(resultSet.getInt(1));
-//                like.setPost(resultSet.getString(2));
-//                like.setUser(resultSet.getString(3));
-
-                int id = resultSet.getInt(1);
-                int postID = resultSet.getInt(2);
-                int userID = resultSet.getInt(3);
+                like.setUser(resultSet.getInt(1));
+                like.setPost(resultSet.getString(2));
+                like.setId(resultSet.getInt(3));
 
                 return Optional.of(like);
             }
-            preparedStatement.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return Optional.empty();
     }
 
     @Override
-    public Optional<Like> getLikeByPost(Post post) {        // public Like get(Post post)
+    public Optional<Like> getByPost(Post post) {        // public Like get(Post post)
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_POST);
-//            preparedStatement.setString(1, String.valueOf(post));
+        try (Connection connection = JdbcConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST)) {
 
-            preparedStatement.setInt(1,post.getId());
+            preparedStatement.setInt(1, post.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 Like like = new Like();
 
-//               like.setId(resultSet.getInt(1));
-//                like.setPost(resultSet.getString(2));
-//                like.setUser(resultSet.getString(3));
-
-                int id = resultSet.getInt(1);
-                int postID = resultSet.getInt(2);
-                int userID = resultSet.getInt(3);
-
+                like.setUser(resultSet.getInt(1));
+                like.setPost(resultSet.getString(2));
+                like.setId(resultSet.getInt(3));
 
                 return Optional.of(like);
             }
 
-            preparedStatement.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return Optional.empty();
     }
 
 
-
     @Override
-    public List<Like> getAllLike(){
-        List <Like> allLikes= new ArrayList<>();
+    public List<Like> getAll() {
+        List<Like> allLikes = new ArrayList<>();
 
-        try{
-         PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);     //Statement statement = connection.createStatement(SELECT_ALL);
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
+
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 Like like = new Like();
 
-//                like.setId(resultSet.getInt(1));
-//                like.setPost(resultSet.getObject(2, Class<Post> Post));
-//                like.setUser(resultSet.getObject(3, Class<User> User));
-
-                int id = resultSet.getInt(1);
-                int postID = resultSet.getInt(2);
-                int userID = resultSet.getInt(3);
+                like.setUser(resultSet.getInt(1));
+                like.setPost(resultSet.getString(2));
+                like.setId(resultSet.getInt(3));;
 
                 allLikes.add(like);
             }
-            preparedStatement.close();
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return allLikes;
     }
+
+
+    @Override
+    public boolean deleteByUser(User user) {
+
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER)) {
+
+            preparedStatement.setInt(1, user.getId());
+
+            int affectedRows = preparedStatement.executeUpdate();
+if (affectedRows > 0){
+    return true;
 }
 
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+
+
+    @Override
+    public boolean deleteByPost(Post post) {
+
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_POST)) {
+
+            preparedStatement.setInt(1, post.getId());
+
+            int affectedRows = preparedStatement.executeUpdate();
+            if (affectedRows > 0){
+                return true;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+
+
+}
