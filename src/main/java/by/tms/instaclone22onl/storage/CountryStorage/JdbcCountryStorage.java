@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.CountryStorage;
+package by.tms.instaclone22onl.storage.CountryStorage;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Country;
