@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.services;
+package by.tms.instaclone22onl.service;
 
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
