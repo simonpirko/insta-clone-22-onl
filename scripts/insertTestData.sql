@@ -20,7 +20,7 @@ insert into post_like values (1, 2);
 insert into post_like values (3, 3);
 insert into post_like values (4, 4);
 
-insert into comment values (1, 1);
-insert into comment values (2, 2);
-insert into comment values (2, 1);
-insert into comment values (3, 3);
+insert into comment values (1, 1, 'Great!');
+insert into comment values (2, 2, 'You are like a drop of water in the desert');
+insert into comment values (2, 1, 'Irresistable');
+insert into comment values (3, 3, 'Good');
