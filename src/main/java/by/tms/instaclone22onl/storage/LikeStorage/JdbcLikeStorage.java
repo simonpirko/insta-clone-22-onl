@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.Storage.LikeStorage;
+package by.tms.instaclone22onl.storage.LikeStorage;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Country;
