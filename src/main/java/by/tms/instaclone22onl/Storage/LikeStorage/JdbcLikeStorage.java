@@ -12,9 +12,9 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public final class JbdcLikeStorage implements LikeStorage {
+public final class JdbcLikeStorage implements LikeStorage {
 
-    private final String LIKE_INSERT = "insert into \"post_like\" ( user, post) values (default, ?, ?)";
+    private final String LIKE_INSERT = "insert into \"post_like\" (author_id, post_id) values (?, ?)";
     private final String GET_BY_POST = """
             select h.*, c.name  from "post_like" pl
                         join "human" h
@@ -42,14 +42,14 @@ public final class JbdcLikeStorage implements LikeStorage {
     private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
     private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
 
-    private static JbdcLikeStorage instance;
+    private static JdbcLikeStorage instance;
 
-    private JbdcLikeStorage() {
+    private JdbcLikeStorage() {
     }
 
-    public static JbdcLikeStorage getInstance() {
+    public static JdbcLikeStorage getInstance() {
         if (instance == null) {
-            instance = new JbdcLikeStorage();
+            instance = new JdbcLikeStorage();
         }
         return instance;
     }
@@ -88,7 +88,11 @@ public final class JbdcLikeStorage implements LikeStorage {
                 Post post = new Post();
                 post.setId(resultSet.getInt(1));
                 post.setUser(user);
-                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(2)));
+                byte[] image = resultSet.getBytes(2);
+                if (image != null) {
+                    post.setPhoto(Base64.getEncoder().encodeToString(image));
+                }
+
                 post.setDescription(resultSet.getString(3));
 
                 Like like = new Like();
@@ -117,14 +121,19 @@ public final class JbdcLikeStorage implements LikeStorage {
             while (resultSet.next()) {
 
 
-               User user = new User();
-               user.setId(resultSet.getInt(1));
-               user.setName(resultSet.getString(2));
-               user.setSurname(resultSet.getString(3));
-               user.setUsername(resultSet.getString(4));
-               user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
-               user.setEmail(resultSet.getString(6));
-               user.setPassword(resultSet.getString(7));
+                User user = new User();
+                user.setId(resultSet.getInt(1));
+                user.setName(resultSet.getString(2));
+                user.setSurname(resultSet.getString(3));
+                user.setUsername(resultSet.getString(4));
+
+                byte[] image = resultSet.getBytes(5);
+                if (image != null) {
+                    post.setPhoto(Base64.getEncoder().encodeToString(image));
+                }
+
+                user.setEmail(resultSet.getString(6));
+                user.setPassword(resultSet.getString(7));
 
                 Country country = new Country();
                 country.setId(resultSet.getInt(8));
@@ -187,7 +196,11 @@ public final class JbdcLikeStorage implements LikeStorage {
                 user.setName(resultSet.getString(2));
                 user.setSurname(resultSet.getString(3));
                 user.setUsername(resultSet.getString(4));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
+
+                byte[] image = resultSet.getBytes(5);
+                if (image != null) {
+                    user.setPhoto(Base64.getEncoder().encodeToString(image));
+                }
                 user.setEmail(resultSet.getString(6));
                 user.setPassword(resultSet.getString(7));
 
@@ -199,7 +212,11 @@ public final class JbdcLikeStorage implements LikeStorage {
                 Post post = new Post();
                 post.setId(resultSet.getInt(10));
                 post.setUser(user);
-                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(11)));
+
+                byte[] image1 = resultSet.getBytes(11);
+                if (image1 != null) {
+                    post.setPhoto(Base64.getEncoder().encodeToString(image));
+                }
                 post.setDescription(resultSet.getString(12));
 
                 Like like = new Like();
