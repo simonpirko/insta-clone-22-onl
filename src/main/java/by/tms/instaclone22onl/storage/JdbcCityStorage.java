@@ -7,8 +7,12 @@ import java.util.Optional;
 
 public class JdbcCityStorage implements CityStorage {
     private static JdbcCityStorage instance;
-    private final String GET_BY_ID_SQL_SCRIPT = "SELECT name FROM \"postgres\".public.\"City\" WHERE id = ?";
-    private final String GET_BY_NAME_SQL_SCRIPT = "SELECT id FROM \"postgres\".public.\"City\" WHERE name = ?";
+    private final String GET_BY_ID_SQL_SCRIPT = "SELECT * FROM \"City\" JOIN \"Country\"\n" +
+                                                "on \"Country\".id = \"City\".countryid\n" +
+                                                "WHERE \"City\".id = ?";
+    private final String GET_BY_NAME_SQL_SCRIPT = "SELECT * FROM \"City\" JOIN \"Country\"\n" +
+                                                  "on \"Country\".id = \"City\".countryid\n" +
+                                                  "WHERE \"City\".name = ?;";
 
     private JdbcCityStorage() {}
     public static JdbcCityStorage getInstance(){
