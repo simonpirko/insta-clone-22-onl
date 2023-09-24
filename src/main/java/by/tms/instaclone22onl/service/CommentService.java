@@ -28,6 +28,5 @@ public class CommentService {
     public Optional<Comment> getByPost(Post post){return storage.getByPost(post); }
 
     public Optional<Comment> getByUser(User user){return  storage.getByUser(user);}
-
 }
 
