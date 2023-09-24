@@ -9,13 +9,13 @@ import java.util.Optional;
 
 public interface LikeStorage {
     boolean add(Like like);
-    List <Like> getByUserId(int userId);
-    List <Like> getByPostId(int postId);
+    List <Like> getByUser(User user);
+    List <Like> getByPost(Post post);
     List<Like> getAll();
-    Optional<Like> getByUserIdPostId(int userId, int postId);
-    boolean deleteByUserIdPostId(int userId, int postId);
+    Optional<Like> getByUserPost(User user, Post post);
+    boolean deleteByUserPost(User user, Post post);
 
-    boolean deleteByUserId(int userId);
-    boolean deleteByPostId(int postId);
+    boolean deleteByUser(User user);
+    boolean deleteByPost(Post post);
 }
 

@@ -1,33 +1,54 @@
 package by.tms.instaclone22onl.Storage.LikeStorage;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
+import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.Like;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
 public final class JbdsLikeStorage implements LikeStorage {
 
-    private final String LIKE_INSERT = "insert into \"post_like\" (id, post, user) values (default, ?, ?)";
-    private final String GET_BY_POST = "select * from \"post_like\" where post_id = ?";
-    private final String GET_BY_USER = "select * from \"post_like\" where author_id = ?";
+    private final String LIKE_INSERT = "insert into \"post_like\" ( user, post) values (default, ?, ?)";
+    private final String GET_BY_POST = """
+            select h.*, c.name  from "post_like" pl
+                        join "human" h
+                        on pl.author_id = h.id
+                        join "country" c     
+                        on h.country_id  = c.id
+                        where pl.post_id =  ?""";
+    private final String GET_BY_USER = """                 
+            select p.id, p.photo, p.description from "post_like" pl
+            join "post" p
+            on pl.post_id = p.id
+            where pl.author_id = ?""";
+
     private final String GET_BY_USER_POST = "select * from \"post_like\" where author_id = ? and post_id = ?";
-    private final String SELECT_ALL = "select * from \"post_like\"";
+    private final String SELECT_ALL = """
+            select h.*, c.name, p.id, p.photo, p.description from "post_like" pl
+            join "human" h
+            on pl.author_id = h.id
+            join country c
+            on h.country_id = c.id
+            join post p
+            on pl.post_id = p.id""";
     private final String DELETE_BY_USER_POST = "delete from \"post_like\" where author_id = ? and post_id = ?";
 
     private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
     private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
 
     private static JbdsLikeStorage instance;
+
     private JbdsLikeStorage() {
     }
 
-    public static JbdsLikeStorage getInstance(){
-        if(instance == null){
+    public static JbdsLikeStorage getInstance() {
+        if (instance == null) {
             instance = new JbdsLikeStorage();
         }
         return instance;
@@ -39,8 +60,8 @@ public final class JbdsLikeStorage implements LikeStorage {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(LIKE_INSERT)) {
 
-            preparedStatement.setInt(1, like.getUser().getId());            //preparedStatement.setString(1, String.valueOf(like.getPost()));
-            preparedStatement.setInt(2, like.getPost().getId());             // preparedStatement.setString(2, String.valueOf(like.getUser()));
+            preparedStatement.setInt(1, like.getUser().getId());
+            preparedStatement.setInt(2, like.getPost().getId());
 
             preparedStatement.execute();
 
@@ -52,20 +73,27 @@ public final class JbdsLikeStorage implements LikeStorage {
     }
 
     @Override
-    public List<Like> getByUserId(int userId) {
+    public List<Like> getByUser(User user) {
         List<Like> likeList = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER)) {
 
-            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(1, user.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Like like = new Like();
 
-                like.setUserId(resultSet.getInt(1));
-                like.setPostId(resultSet.getInt(2));
+
+                Post post = new Post();
+                post.setId(resultSet.getInt(1));
+                post.setUser(user);
+                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(2)));
+                post.setDescription(resultSet.getString(3));
+
+                Like like = new Like();
+                like.setUser(user);
+                like.setPost(post);
                 likeList.add(like);
             }
 
@@ -77,20 +105,36 @@ public final class JbdsLikeStorage implements LikeStorage {
     }
 
     @Override
-    public List<Like> getByPostId(int postId) {
+    public List<Like> getByPost(Post post) {
         List<Like> likeList = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST)) {
 
-            preparedStatement.setInt(1, postId);
+            preparedStatement.setInt(1, post.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Like like = new Like();
 
-                like.setUserId(resultSet.getInt(1));
-                like.setPostId(resultSet.getInt(2));
+
+               User user = new User();
+               user.setId(resultSet.getInt(1));
+               user.setName(resultSet.getString(2));
+               user.setSurname(resultSet.getString(3));
+               user.setUsername(resultSet.getString(4));
+               user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
+               user.setEmail(resultSet.getString(6));
+               user.setPassword(resultSet.getString(7));
+
+                Country country = new Country();
+                country.setId(resultSet.getInt(8));
+                country.setName(resultSet.getString(9));
+                user.setCountry(country);
+
+                Like like = new Like();
+                like.setUser(user);
+                like.setPost(post);
+
                 likeList.add(like);
             }
 
@@ -103,19 +147,19 @@ public final class JbdsLikeStorage implements LikeStorage {
 
 
     @Override
-    public Optional<Like> getByUserIdPostId(int userId, int postId) {
+    public Optional<Like> getByUserPost(User user, Post post) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER_POST)) {
 
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, postId);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, post.getId());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
                 Like like = new Like();
 
-                like.setUserId(resultSet.getInt(1));
-                like.setPostId(resultSet.getInt(2));
+                like.setUser(user);
+                like.setPost(post);
 
                 return Optional.of(like);
             }
@@ -138,10 +182,29 @@ public final class JbdsLikeStorage implements LikeStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Like like = new Like();
+                User user = new User();
+                user.setId(resultSet.getInt(1));
+                user.setName(resultSet.getString(2));
+                user.setSurname(resultSet.getString(3));
+                user.setUsername(resultSet.getString(4));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
+                user.setEmail(resultSet.getString(6));
+                user.setPassword(resultSet.getString(7));
 
-                like.setUserId(resultSet.getInt(1));
-                like.setPostId(resultSet.getInt(2));
+                Country country = new Country();
+                country.setId(resultSet.getInt(8));
+                country.setName(resultSet.getString(9));
+                user.setCountry(country);
+
+                Post post = new Post();
+                post.setId(resultSet.getInt(10));
+                post.setUser(user);
+                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(11)));
+                post.setDescription(resultSet.getString(12));
+
+                Like like = new Like();
+                like.setUser(user);
+                like.setPost(post);
 
                 allLikes.add(like);
             }
@@ -154,15 +217,14 @@ public final class JbdsLikeStorage implements LikeStorage {
     }
 
 
-
     @Override
-    public boolean deleteByUserIdPostId(int userId, int postId) {
+    public boolean deleteByUserPost(User user, Post post) {
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER_POST)) {
 
-            preparedStatement.setInt(1, userId);
-            preparedStatement.setInt(2, postId);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, post.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows > 0) {
@@ -177,12 +239,12 @@ public final class JbdsLikeStorage implements LikeStorage {
 
 
     @Override
-    public boolean deleteByUserId(int userId) {
+    public boolean deleteByUser(User user) {
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER)) {
 
-            preparedStatement.setInt(1, userId);
+            preparedStatement.setInt(1, user.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows > 0) {
@@ -197,12 +259,12 @@ public final class JbdsLikeStorage implements LikeStorage {
 
 
     @Override
-    public boolean deleteByPostId(int postId) {
+    public boolean deleteByPost(Post post) {
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_POST)) {
 
-            preparedStatement.setInt(1, postId);
+            preparedStatement.setInt(1, post.getId());
 
             int affectedRows = preparedStatement.executeUpdate();
             if (affectedRows > 0) {
