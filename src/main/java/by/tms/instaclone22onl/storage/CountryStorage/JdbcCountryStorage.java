@@ -31,10 +31,10 @@ public class JdbcCountryStorage implements CountryStorage{
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                Country country = new Country();
-
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
+                Country country = new Country(
+                    resultSet.getInt(1),
+                    resultSet.getString(2)
+                );
 
                 return Optional.of(country);
             }
@@ -54,10 +54,10 @@ public class JdbcCountryStorage implements CountryStorage{
                     ResultSet resultSet = preparedStatement.executeQuery();
 
                     if (resultSet.next()) {
-                        Country country = new Country();
-
-                        country.setId(resultSet.getInt(1));
-                        country.setName(resultSet.getString(2));
+                        Country country = new Country(
+                            resultSet.getInt(1),
+                            resultSet.getString(2)
+                        );
 
                         return Optional.of(country);
                     }
