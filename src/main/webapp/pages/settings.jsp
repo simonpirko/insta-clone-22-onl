@@ -18,34 +18,31 @@
     <div class="row justify-content-center">
         <form class="mt-5 w-25" action="/settings" method="post">
             <div class="form-floating mb-3">
-                <input type="text" name="name" class="form-control" id="1" placeholder="name@example.com">
+                <input type="text" class="form-control" id="1" placeholder="name@example.com">
                 <label for="1">First name</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" name="surname" class="form-control" id="2" placeholder="name2@example.com">
+                <input type="text" class="form-control" id="2" placeholder="name2@example.com">
                 <label for="2">Second name</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="text" name="username" class="form-control" id="3" placeholder="name3@example.com">
+                <input type="text" class="form-control" id="3" placeholder="name3@example.com">
                 <label for="3">User name</label>
             </div>
             <div class="input-group mb-3">
                 <button class="btn btn-outline-secondary" type="button" id="4">Button</button>
-                <input type="file" name="photo" class="form-control" id="inputGroupFile03" aria-describedby="4" aria-label="Upload">
+                <input type="file" class="form-control" id="inputGroupFile03" aria-describedby="4" aria-label="Upload">
             </div>
             <div class="form-floating mb-3">
-                <input type="email" name="email" class="form-control" id="5" placeholder="name4@example.com">
+                <input type="email" class="form-control" id="5" placeholder="name4@example.com">
                 <label for="5">Email address</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="password"  name="password" class="form-control" id="6" placeholder="Password">
+                <input type="password" class="form-control" id="6" placeholder="Password">
                 <label for="6">Password</label>
             </div>
-            <div class="form-floating mb-3">
-                <input type="text"  name="country" class="form-control" id="7" placeholder="name3@example.com">
-                <label for="7">Country</label>
-            </div>
-                <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary">Save changes</button>
+                <button type="button" class="btn btn-outline-secondary">Cancel</button>
         </form>
     </div>
 </div>
