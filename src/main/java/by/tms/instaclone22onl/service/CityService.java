@@ -1,8 +1,8 @@
 package by.tms.instaclone22onl.service;
 
 import by.tms.instaclone22onl.model.City;
-import by.tms.instaclone22onl.storage.CityStorage;
-import by.tms.instaclone22onl.storage.JdbcCityStorage;
+import by.tms.instaclone22onl.storage.CityStorage.CityStorage;
+import by.tms.instaclone22onl.storage.CityStorage.JdbcCityStorage;
 
 import java.util.Optional;
 
