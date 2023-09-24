@@ -12,7 +12,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public final class JbdsLikeStorage implements LikeStorage {
+public final class JbdcLikeStorage implements LikeStorage {
 
     private final String LIKE_INSERT = "insert into \"post_like\" ( user, post) values (default, ?, ?)";
     private final String GET_BY_POST = """
@@ -42,14 +42,14 @@ public final class JbdsLikeStorage implements LikeStorage {
     private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
     private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
 
-    private static JbdsLikeStorage instance;
+    private static JbdcLikeStorage instance;
 
-    private JbdsLikeStorage() {
+    private JbdcLikeStorage() {
     }
 
-    public static JbdsLikeStorage getInstance() {
+    public static JbdcLikeStorage getInstance() {
         if (instance == null) {
-            instance = new JbdsLikeStorage();
+            instance = new JbdcLikeStorage();
         }
         return instance;
     }
