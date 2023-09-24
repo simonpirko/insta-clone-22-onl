@@ -10,7 +10,7 @@ public interface CommentStorage {
 
     void add(Comment comment);
 
-    Optional<Comment> getByPost(Post post);
-
     Optional<Comment> getByUser(User user);
+
+    Optional<Comment> getByPost(Post post);
 }
