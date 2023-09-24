@@ -135,9 +135,11 @@ public final class JdbcLikeStorage implements LikeStorage {
                 user.setEmail(resultSet.getString(6));
                 user.setPassword(resultSet.getString(7));
 
-                Country country = new Country();
-                country.setId(resultSet.getInt(8));
-                country.setName(resultSet.getString(9));
+                Country country = new Country(
+                        resultSet.getInt(8),
+                        resultSet.getString(9)
+                );
+
                 user.setCountry(country);
 
                 Like like = new Like();
@@ -204,9 +206,11 @@ public final class JdbcLikeStorage implements LikeStorage {
                 user.setEmail(resultSet.getString(6));
                 user.setPassword(resultSet.getString(7));
 
-                Country country = new Country();
-                country.setId(resultSet.getInt(8));
-                country.setName(resultSet.getString(9));
+                Country country = new Country(
+                        resultSet.getInt(8),
+                        resultSet.getString(9)
+                );
+
                 user.setCountry(country);
 
                 Post post = new Post();
