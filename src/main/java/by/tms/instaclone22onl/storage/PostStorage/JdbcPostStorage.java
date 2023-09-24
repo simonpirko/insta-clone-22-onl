@@ -1,5 +1,6 @@
 package by.tms.instaclone22onl.storage.PostStorage;
 
+import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
@@ -15,7 +16,7 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public void addPost(Post post) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            Connection connection = JdbcConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("insert into post(author_id, photo, description) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, post.getUser().getId());
@@ -32,7 +33,7 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public Optional<Post> getPost(int id) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            Connection connection = JdbcConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
                     " on post.author_id = human.id  join country on human.country_id = country.id where post.id = ?");
 
@@ -73,7 +74,7 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public Optional<Post> getPost(User user) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            Connection connection =JdbcConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
                     " on post.author_id = human.id  join country on human.country_id = country.id where human.name = ?");
 
@@ -113,7 +114,7 @@ public class JdbcPostStorage implements PostStorage {
     public List<Post> getAllPost() {
         List<Post> posts = new ArrayList<>();
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            Connection connection =JdbcConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
                     " on post.author_id = human.id  join country on human.country_id = country.id");
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -153,7 +154,7 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public boolean deletePost(int id) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            Connection connection =JdbcConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE  FROM Post WHERE id = ?");
 
             preparedStatement.setInt(1, id);
@@ -169,7 +170,7 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public boolean deletePost(User user) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+            Connection connection =JdbcConnection.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Post WHERE id = ?");
 
             preparedStatement.setInt(1, user.getId());
@@ -188,7 +189,7 @@ public class JdbcPostStorage implements PostStorage {
         Optional<Post> post = getPost(id);
         if (post.isPresent()){
             try {
-                Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
+                Connection connection = JdbcConnection.getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Post SET photo = ?, description = ? WHERE id = ?");
 
                 preparedStatement.setBytes(1, Base64.getDecoder().decode(newPost.getPhoto()));
