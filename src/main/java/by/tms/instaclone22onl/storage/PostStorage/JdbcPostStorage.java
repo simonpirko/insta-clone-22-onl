@@ -56,9 +56,10 @@ public class JdbcPostStorage implements PostStorage {
                 user.setEmail(resultSet.getString(10));
                 user.setPassword(resultSet.getString(11));
 
-                Country country = new Country();
-                country.setId(resultSet.getInt(13));
-                country.setName(resultSet.getString(12));
+                Country country = new Country(
+                        resultSet.getInt(13),
+                        resultSet.getString(12)
+                );
 
                 user.setCountry(country);
                 post.setUser(user);
@@ -94,9 +95,10 @@ public class JdbcPostStorage implements PostStorage {
                 user.setEmail(resultSet.getString(10));
                 user.setPassword(resultSet.getString(11));
 
-                Country country = new Country();
-                country.setId(resultSet.getInt(13));
-                country.setName(resultSet.getString(12));
+                Country country = new Country(
+                        resultSet.getInt(13),
+                        resultSet.getString(12)
+                );
 
                 user.setCountry(country);
                 post.setUser(user);
@@ -135,9 +137,10 @@ public class JdbcPostStorage implements PostStorage {
                 user.setEmail(resultSet.getString(10));
                 user.setPassword(resultSet.getString(11));
 
-                Country country = new Country();
-                country.setId(resultSet.getInt(13));
-                country.setName(resultSet.getString(12));
+                Country country = new Country(
+                        resultSet.getInt(13),
+                        resultSet.getString(12)
+                );
 
                 user.setCountry(country);
                 post.setUser(user);
