@@ -4,6 +4,6 @@ import by.tms.instaclone22onl.model.City;
 import java.util.Optional;
 
 public interface CityStorage {
-    Optional <City> getId(int id);
-    Optional <City> getName(String name);
+    Optional <City> getById(int id);
+    Optional <City> getByName(String name);
 }

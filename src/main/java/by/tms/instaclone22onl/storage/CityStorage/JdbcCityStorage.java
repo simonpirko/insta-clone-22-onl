@@ -1,28 +1,48 @@
 package by.tms.instaclone22onl.storage.CityStorage;
 
+import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.City;
+import by.tms.instaclone22onl.model.Country;
+
 import java.sql.*;
 import java.util.Optional;
 
 public class JdbcCityStorage implements CityStorage {
-    private final String url = "jdbc:postgresql://localhost:5432/postgres";
-    private final String userName = "postgres";
-    private final String password = "root";
-    private final String gitIdSqlScript = "SELECT name FROM \"postgres\".public.\"City\" WHERE id = ?";
-    private final String getNameSqlScript = "SELECT id FROM \"postgres\".public.\"City\" WHERE name = ?";
+    private static JdbcCityStorage instance;
+    private final String GET_BY_ID_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
+                                                "on \"сountry\".id = \"сity\".country_id\n" +
+                                                "WHERE \"сity\".id = ?";
+    private final String GET_BY_NAME_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
+                                                  "on \"сountry\".id = \"сity\".country_id\n" +
+                                                  "WHERE \"сity\".name = ?;";
+    private JdbcCityStorage() {
+    }
+    public static JdbcCityStorage getInstance(){
+        if (instance == null){
+            instance = new JdbcCityStorage();
+        }
+        return instance;
+    }
 
     @Override
-    public Optional<City> getId(int id) {
-        try (Connection connection = DriverManager.getConnection(url, userName, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(gitIdSqlScript)){
+    public Optional<City> getById(int id) {
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_SQL_SCRIPT)){
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()){
-                String rasName = resultSet.getString("name");
 
                 City city = new City(id);
-                city.setName(rasName);
+                city.setId(resultSet.getInt(1));
+                city.setName(resultSet.getString(2));
+
+                Country country = new Country(
+                        resultSet.getInt(4),
+                        resultSet.getString(5));
+
+                city.setCountry(country);
 
                 return Optional.of(city);
             }
@@ -33,16 +53,23 @@ public class JdbcCityStorage implements CityStorage {
     }
 
     @Override
-    public Optional<City> getName(String name) {
-        try (Connection connection = DriverManager.getConnection(url,  userName,  password);
-             PreparedStatement preparedStatement = connection.prepareStatement(getNameSqlScript)){
+    public Optional<City> getByName(String name) {
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_NAME_SQL_SCRIPT)){
 
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                int id = resultSet.getInt("id");
+
                 City city = new City(name);
-                city.setId(id);
+                city.setId(resultSet.getInt(1));
+                city.setName(resultSet.getString(2));
+
+                Country country = new Country(
+                        resultSet.getInt(4),
+                        resultSet.getString(5));
+
+                city.setCountry(country);
 
                 return Optional.of(city);
             }
