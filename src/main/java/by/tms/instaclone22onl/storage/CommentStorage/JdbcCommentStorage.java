@@ -86,7 +86,7 @@ public class JdbcCommentStorage implements CommentStorage {
     public Optional<Comment> getByPost(Post post) {
 
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST);
             preparedStatement.setInt(1, post.getId());
 
             ResultSet resultSet = preparedStatement.executeQuery();
