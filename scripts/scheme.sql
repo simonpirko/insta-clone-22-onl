@@ -1,45 +1,26 @@
-create table if not exists "country" (
-    id serial not null primary key,
-    name varchar(50) not null unique
-);
+insert into country values (1, 'Беларусь');
 
-create table if not exists "human" (
-    id serial not null primary key,
-    name varchar(50) not null,
-    surname varchar(50) not null,
-    username varchar(20) not null unique,
-    photo bytea,
-    email varchar(50) not null unique,
-    password varchar(50) not null,
-    country_id int not null,
-    foreign key (country_id) references "country"(id)
-);
+insert into city values (1, 'Гомель', 1);
+insert into city values (2, 'Брест', 1);
+insert into city values (3, 'Могилев', 1);
+insert into city values (4, 'Минск', 1);
 
-create table if not exists "city" (
-    id serial not null primary key,
-    name varchar(50) not null unique,
-    country_id int,
-    foreign key (country_id) references "country"(id)
-);
+insert into human values (1, 'Ilya', 'Moiseenko', 'IlyaMoiseenko', null, 'IlyaMoiseenko@gmail.com', 'testPassword', 1);
+insert into human values (2, 'Marina', 'Maslowa', 'MarinaMaslowa', null, 'MarinaMaslowa@gmail.com', 'testPassword', 1);
+insert into human values (3, 'Kolya', 'Pinchuk', 'KolyaPinchuk', null, 'KolyaPinchuk@gmail.com', 'testPassword', 1);
+insert into human values (4, 'Karina', 'Mashanova', 'KarinaMashanova', null, 'KarinaMashanova@gmail.com', 'testPassword', 1);
 
-create table if not exists "post" (
-    id serial not null primary key,
-    author_id int,
-    photo bytea,
-    description varchar(250),
-    foreign key (author_id) references "human"(id)
-);
+insert into post values (1, 1, null, 'Test description by post #1');
+insert into post values (2, 1, null, 'Test description by post #2');
+insert into post values (3, 2, null, 'Test description by post #3');
+insert into post values (4, 3, null, 'Test description by post #4');
 
-CREATE TABLE "post_like"(
-    author_id int REFERENCES "human"(id),
-    post_id int REFERENCES "post"(id),
-    CONSTRAINT post_like_pk PRIMARY KEY(author_id, post_id)
-);
+insert into post_like values (1, 1);
+insert into post_like values (1, 2);
+insert into post_like values (3, 3);
+insert into post_like values (4, 4);
 
-create table if not exists "comment" (
-    id serial not null primary key,
-    author_id int references "human"(id),
-    post_id int references "post"(id),
-    text varchar(255) not null,
-    constraint comment_pk primary key (author_id, post_id)
-);
+insert into comment values (1, 1, 'Great!');
+insert into comment values (2, 2, 'You are like a drop of water in the desert');
+insert into comment values (2, 1, 'Irresistable');
+insert into comment values (3, 3, 'Good');

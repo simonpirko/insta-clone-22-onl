@@ -19,12 +19,20 @@ import java.util.Optional;
 
 public class JdbcCommentStorage implements CommentStorage {
 
-    private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
-    private final String GET_BY_USER = "select * from \"comment\" where author_id = ?";
-    private final String GET_BY_POST = "select * from \"comment\" where post_id = ?";
+    private static JdbcCommentStorage instance;
 
-    private UserStorage userStorage = new JdbcUserStorage();
-    private PostStorage postStorage = new JdbcPostStorage();
+    private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
+    private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
+    private final String GET_BY_POST = "select * from \"comment\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
+
+    private JdbcCommentStorage() {}
+
+    public static JdbcCommentStorage getInstance() {
+        if (instance == null)
+            instance = new JdbcCommentStorage();
+
+        return instance;
+    }
 
     @Override
     public void add(Comment comment) {
@@ -52,11 +60,18 @@ public class JdbcCommentStorage implements CommentStorage {
             if (resultSet.next()) {
                 Comment comment = new Comment();
 
-                comment.setId(resultSet.getInt(1));
-                comment.setUser(userStorage.getById(resultSet.getInt(2)).get());
-                comment.setPost(postStorage.getPostById(resultSet.getInt(3)).get());
-                comment.setText(resultSet.getString(4));
+                comment.setUser(user);
+                //comment.setPost();
+                comment.setText(resultSet.getString(3));
 
+                Post post = new Post();
+
+                post.setId(resultSet.getInt(2));
+                post.setUser(user);
+                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(6)));
+                post.setDescription(resultSet.getString(7));
+
+                comment.setPost(post);
 
                 return Optional.of(comment);
             }
@@ -69,27 +84,7 @@ public class JdbcCommentStorage implements CommentStorage {
 
     @Override
     public Optional<Comment> getByPost(Post post) {
-        try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST);
-            preparedStatement.setInt(1, post.getId());
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                Comment comment = new Comment();
-
-                comment.setId(resultSet.getInt(1));
-                comment.setUser(userStorage.getById(resultSet.getInt(2)).get());
-                comment.setPost(postStorage.getPostById(resultSet.getInt(3)).get());
-                comment.setText(resultSet.getString(4));
-
-
-                return Optional.of(comment);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
         return Optional.empty();
     }
+
 }
