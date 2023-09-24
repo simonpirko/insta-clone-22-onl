@@ -10,15 +10,15 @@ public interface PostStorage {
    
     void addPost(Post post);
 
-    Optional<Post> getPostById(int id);
+    Optional<Post> getPost(int id);
 
-    Optional<Post> getPostByUser(User user);
+    Optional<Post> getPost(User user);
 
     List<Post> getAllPost();
 
-    boolean deletePostById(int id);
+    boolean deletePost(int id);
 
-    boolean deletePostByUser(User user);
+    boolean deletePost(User user);
 
     void updatePost(int id, Post newPost);
     
