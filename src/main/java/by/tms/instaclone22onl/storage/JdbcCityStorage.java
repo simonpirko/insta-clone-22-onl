@@ -2,6 +2,8 @@ package by.tms.instaclone22onl.storage;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.City;
+import by.tms.instaclone22onl.model.Country;
+
 import java.sql.*;
 import java.util.Optional;
 
@@ -30,11 +32,18 @@ public class JdbcCityStorage implements CityStorage {
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()){
-                String rasName = resultSet.getString("name");
 
                 City city = new City(id);
-                city.setName(rasName);
+                city.setId(resultSet.getInt(1));
+                city.setName(resultSet.getString(2));
+
+                Country country = new Country(
+                    resultSet.getInt(4),
+                    resultSet.getString(5));
+
+                city.setCountry(country);
 
                 return Optional.of(city);
             }
@@ -52,9 +61,16 @@ public class JdbcCityStorage implements CityStorage {
             preparedStatement.setString(1, name);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                int id = resultSet.getInt("id");
+
                 City city = new City(name);
-                city.setId(id);
+                city.setId(resultSet.getInt(1));
+                city.setName(resultSet.getString(2));
+
+                Country country = new Country(
+                        resultSet.getInt(4),
+                        resultSet.getString(5));
+
+                city.setCountry(country);
 
                 return Optional.of(city);
             }
