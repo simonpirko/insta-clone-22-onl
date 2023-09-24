@@ -29,6 +29,5 @@ public class CommentService {
 
     public Optional<Comment> getByUser(User user){return  storage.getByUser(user);}
 
-
 }
 
