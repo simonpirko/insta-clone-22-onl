@@ -1,5 +1,6 @@
 package by.tms.instaclone22onl.storage.PostStorage;
 
+import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
 
@@ -15,7 +16,7 @@ public class JdbcPostStorage implements PostStorage {
     public void addPost(Post post) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into Post(author, photo, description) values (?, ?, ?), Statement.RETURN_GENERATED_KEYS");
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into post(author_id, photo, description) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, post.getUser().getId());
             preparedStatement.setBytes(2, Base64.getDecoder().decode(post.getPhoto()));
@@ -29,21 +30,37 @@ public class JdbcPostStorage implements PostStorage {
     }
 
     @Override
-    public Optional<Post> getPostById(int id) {
+    public Optional<Post> getPost(int id) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post where id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
+                    " on post.author_id = human.id  join country on human.country_id = country.id where post.id = ?");
 
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                Post post = new Post();
 
+            if (resultSet.next()) {
+
+                Post post = new Post();
                 post.setId(resultSet.getInt(1));
-                post.setUser(new User());
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
 
+                User user = new User();
+                user.setId(resultSet.getInt(5));
+                user.setName(resultSet.getString(6));
+                user.setSurname(resultSet.getString(7));
+                user.setUsername(resultSet.getString(8));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(9)));
+                user.setEmail(resultSet.getString(10));
+                user.setPassword(resultSet.getString(11));
+
+                Country country = new Country();
+                country.setId(resultSet.getInt(13));
+                country.setName(resultSet.getString(12));
+
+                user.setCountry(country);
+                post.setUser(user);
                 return Optional.of(post);
             }
             preparedStatement.close();
@@ -54,20 +71,34 @@ public class JdbcPostStorage implements PostStorage {
     }
 
     @Override
-    public Optional<Post> getPostByUser(User user) {
+    public Optional<Post> getPost(User user) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post where name = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
+                    " on post.author_id = human.id  join country on human.country_id = country.id where human.name = ?");
 
             preparedStatement.setString(1, user.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 Post post = new Post();
-
                 post.setId(resultSet.getInt(1));
-                post.setUser(new User());
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
+
+                user.setId(resultSet.getInt(5));
+                user.setName(resultSet.getString(6));
+                user.setSurname(resultSet.getString(7));
+                user.setUsername(resultSet.getString(8));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(9)));
+                user.setEmail(resultSet.getString(10));
+                user.setPassword(resultSet.getString(11));
+
+                Country country = new Country();
+                country.setId(resultSet.getInt(13));
+                country.setName(resultSet.getString(12));
+
+                user.setCountry(country);
+                post.setUser(user);
 
                 return Optional.of(post);
             }
@@ -83,16 +114,32 @@ public class JdbcPostStorage implements PostStorage {
         List<Post> posts = new ArrayList<>();
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT * from Post");
+            PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
+                    " on post.author_id = human.id  join country on human.country_id = country.id");
             ResultSet resultSet = preparedStatement.executeQuery();
+
             while (resultSet.next()) {
+
                 Post post = new Post();
-
-
                 post.setId(resultSet.getInt(1));
-                post.setUser(new User());
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
+
+                User user = new User();
+                user.setId(resultSet.getInt(5));
+                user.setName(resultSet.getString(6));
+                user.setSurname(resultSet.getString(7));
+                user.setUsername(resultSet.getString(8));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(9)));
+                user.setEmail(resultSet.getString(10));
+                user.setPassword(resultSet.getString(11));
+
+                Country country = new Country();
+                country.setId(resultSet.getInt(13));
+                country.setName(resultSet.getString(12));
+
+                user.setCountry(country);
+                post.setUser(user);
 
                 posts.add(post);
             }
@@ -104,10 +151,10 @@ public class JdbcPostStorage implements PostStorage {
     }
 
     @Override
-    public boolean deletePostById(int id) {
+    public boolean deletePost(int id) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM Post WHERE id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE  FROM Post WHERE id = ?");
 
             preparedStatement.setInt(1, id);
             int affectedRows = preparedStatement.executeUpdate();
@@ -120,10 +167,10 @@ public class JdbcPostStorage implements PostStorage {
     }
 
     @Override
-    public boolean deletePostByUser(User user) {
+    public boolean deletePost(User user) {
         try {
             Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE * FROM Post WHERE id = ?");
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Post WHERE id = ?");
 
             preparedStatement.setInt(1, user.getId());
             int affectedRows = preparedStatement.executeUpdate();
@@ -138,7 +185,7 @@ public class JdbcPostStorage implements PostStorage {
 
     @Override
     public void updatePost(int id, Post newPost) {
-        Optional<Post> post = getPostById(id);
+        Optional<Post> post = getPost(id);
         if (post.isPresent()){
             try {
                 Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Instagram", "postgres", "root");
