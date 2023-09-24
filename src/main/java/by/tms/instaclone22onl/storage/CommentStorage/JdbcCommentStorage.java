@@ -23,7 +23,7 @@ public class JdbcCommentStorage implements CommentStorage {
 
     private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
     private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
-    private final String GET_BY_POST = "select * from \"comment\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
+    private final String GET_BY_POST = "select * from \"comment\" join \"human\" on \"comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"comment\".post_id = ?";
 
     private JdbcCommentStorage() {}
 
@@ -84,6 +84,44 @@ public class JdbcCommentStorage implements CommentStorage {
 
     @Override
     public Optional<Comment> getByPost(Post post) {
+
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER);
+            preparedStatement.setInt(1, post.getId());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Comment comment = new Comment();
+
+                //comment.setUser(user);
+                comment.setPost(post);
+                comment.setText(resultSet.getString(3));
+
+                User user = new User();
+                user.setId(resultSet.getInt(4));
+                user.setName(resultSet.getString(5));
+                user.setSurname(resultSet.getString(6));
+                user.setUsername(resultSet.getString(7));
+                user.setPhoto(
+                        Base64.getEncoder().encodeToString(resultSet.getBytes(8))
+                );
+                user.setEmail(resultSet.getString(9));
+                user.setPassword(resultSet.getString(10));
+                Country country = new Country(
+                        resultSet.getInt(12),
+                        resultSet.getString(13)
+                );
+
+                user.setCountry(country);
+
+                comment.setUser(user);
+
+                return Optional.of(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return Optional.empty();
     }
 
