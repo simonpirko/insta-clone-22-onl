@@ -7,10 +7,10 @@ import java.util.Optional;
 
 public class JdbcCityStorage implements CityStorage {
     private static JdbcCityStorage instance;
-    private final String GET_BY_ID_SQL_SCRIPT = "SELECT \"City\".name FROM \"Instagram\".public.\"City\" JOIN \"Instagram\".public.\"Country\"\n" +
+    private final String GET_BY_ID_SQL_SCRIPT = "SELECT * FROM \"City\" JOIN \"Country\"\n" +
                                                 "on \"Country\".id = \"City\".countryid\n" +
                                                 "WHERE \"City\".id = ?";
-    private final String GET_BY_NAME_SQL_SCRIPT = "SELECT \"City\".id FROM \"Instagram\".public.\"City\" JOIN \"Instagram\".public.\"Country\"\n" +
+    private final String GET_BY_NAME_SQL_SCRIPT = "SELECT * FROM \"City\" JOIN \"Country\"\n" +
                                                   "on \"Country\".id = \"City\".countryid\n" +
                                                   "WHERE \"City\".name = ?;";
 
