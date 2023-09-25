@@ -10,7 +10,7 @@
 <jsp:include page="_header.jsp"/>
 <div class="row justify-content-center">
     <div class="col-3">
-    <form class="mt-3 needs-validation" action="/register" method="post">
+    <form class="mt-3 needs-validation" action="/register" method="post" enctype="multipart/form-data">
                 <div class="row mb-3">
                     <div class="col">
                         <label for="name" class="form-label">Name</label>
@@ -36,8 +36,8 @@
                   </select>
                 </div>
                 <div class="mb-3" >
-                  <label class="input-group-text" for="photo">Photo</label>
-                  <input type="file" class="form-control" id="photo" >
+                  <label class="form-label" for="photo">Photo</label>
+                  <input type="file" class="form-control" id="photo" name="photo" >
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>
