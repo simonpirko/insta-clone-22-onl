@@ -4,6 +4,8 @@ import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Country;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class JdbcCountryStorage implements CountryStorage{
@@ -12,6 +14,7 @@ public class JdbcCountryStorage implements CountryStorage{
 
     private final String GET_BY_ID = "select * from \"Country\" where id = ?";
     private final String GET_BY_COUNTRY_NAME = "select * from \"Country\" where name = ?";
+    private final String GET_ALL = "select * from \"Country\"";
 
     private JdbcCountryStorage() {}
 
@@ -67,4 +70,24 @@ public class JdbcCountryStorage implements CountryStorage{
                 }
                 return Optional.empty();
             }
+
+    @Override
+    public List<Country> getAll() {
+        List<Country> allCountries = new ArrayList<>();
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL)) {
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Country country = new Country();
+                country.setId(resultSet.getInt(1));
+                country.setName(resultSet.getString(2));
+                allCountries.add(country);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return new ArrayList<>();
+    }
+}
