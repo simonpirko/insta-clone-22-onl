@@ -48,7 +48,8 @@ public class RegistrationServlet extends HttpServlet {
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
-        Country country = new Country( 3, req.getParameter(COUNTRY)); //todo change id
+        Country country = new Country();
+        country.setId(Integer.parseInt(req.getParameter(COUNTRY)));//todo сделать как-то иначе
         String photo = req.getParameter(PHOTO);
 
         User user = User.builder()
