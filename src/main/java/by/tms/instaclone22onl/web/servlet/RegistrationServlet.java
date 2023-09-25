@@ -6,17 +6,23 @@ import by.tms.instaclone22onl.service.CountryService;
 import by.tms.instaclone22onl.service.UserService;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/register")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 5 * 5
+)
 public class RegistrationServlet extends HttpServlet {
     private final static String NAME = "name";
     private final static String SURNAME = "surname";
@@ -43,14 +49,14 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        InputStream photoInputStream = req.getPart(PHOTO).getInputStream();
         String name = req.getParameter(NAME);
         String surname = req.getParameter(SURNAME);
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
-        Country country = new Country();
-        country.setId(Integer.parseInt(req.getParameter(COUNTRY)));//todo сделать как-то иначе
-        String photo = req.getParameter(PHOTO);
+        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).orElse(new Country());
+
 
         User user = User.builder()
                 .setName(name)
@@ -59,7 +65,7 @@ public class RegistrationServlet extends HttpServlet {
                 .setEmail(email)
                 .setPassword(password)
                 .setCountry(country)
-                .setPhoto(photo)
+                .setPhoto(Base64.getEncoder().encodeToString(photoInputStream.readAllBytes()))
                 .build();
         Optional<User> byUsername = userService.getUserByName(username);
         if (byUsername.isEmpty()) {
