@@ -21,6 +21,59 @@ public class User {
     private List<Comment> comments;
     private List<Like> likes;
 
+    public static UserBuilder builder() {
+        return new User().new UserBuilder();
+    }
+
+    public class UserBuilder {
+        private UserBuilder() {
+        }
+
+        public UserBuilder setId(int id) {
+            User.this.id = id;
+            return this;
+        }
+
+        public UserBuilder setName(String name) {
+            User.this.name = name;
+            return this;
+        }
+
+        public UserBuilder setSurname(String surname) {
+            User.this.surname = surname;
+            return this;
+        }
+
+        public UserBuilder setUsername(String username) {
+            User.this.username = username;
+            return this;
+        }
+
+        public UserBuilder setPassword(String password) {
+            User.this.password = password;
+            return this;
+        }
+
+        public UserBuilder setEmail(String email) {
+            User.this.email = email;
+            return this;
+        }
+
+        public UserBuilder setCountry(Country country) {
+            User.this.country = country;
+            return this;
+        }
+
+        public UserBuilder setPhoto(String photo) {
+            User.this.photo = photo;
+            return this;
+        }
+
+        public User build() {
+            return User.this;
+        }
+    }
+
     public int getId() {
         return id;
     }
