@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
     <title>Registration</title>
@@ -29,16 +30,14 @@
                 <div class="mb-3">
                   <label for="country" class="form-label">Country</label>
                   <select class="form-select" id="country" name="country">
-
-                    <option>${countries[0].getName()}</option>
-                    <option>${countries[1].getName()}</option>
-                    <option>${countries[2].getName()}</option>
-
+                      <c:forEach var="country" items="${countries}">
+                          <option value="${country.getId()}">${country.getName()}</option>
+                      </c:forEach>
                   </select>
                 </div>
                 <div class="mb-3" >
                   <label class="input-group-text" for="photo">Photo</label>
-                  <input type="file" class="form-control" id="photo" enctype = "multipart/form-data">
+                  <input type="file" class="form-control" id="photo" >
                 </div>
                 <div class="mb-3">
                     <label for="username" class="form-label">Username</label>

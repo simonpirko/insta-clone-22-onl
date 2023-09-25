@@ -12,9 +12,9 @@ public class JdbcCountryStorage implements CountryStorage{
 
     private static JdbcCountryStorage instance;
 
-    private final String GET_BY_ID = "select * from \"Country\" where id = ?";
-    private final String GET_BY_COUNTRY_NAME = "select * from \"Country\" where name = ?";
-    private final String GET_ALL = "select * from \"Country\"";
+    private final String GET_BY_ID = "select * from \"country\" where id = ?";
+    private final String GET_BY_COUNTRY_NAME = "select * from \"country\" where name = ?";
+    private final String GET_ALL = "select * from \"country\"";
 
     private JdbcCountryStorage() {}
 
@@ -88,6 +88,6 @@ public class JdbcCountryStorage implements CountryStorage{
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return allCountries;
     }
 }
