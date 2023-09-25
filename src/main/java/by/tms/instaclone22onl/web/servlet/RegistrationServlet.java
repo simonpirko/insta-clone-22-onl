@@ -36,6 +36,7 @@ public class RegistrationServlet extends HttpServlet {
     private static final String REGISTRATION_FAILED = "Registration failed. Check the entered data!";
 
     private static final String REG_PATH = "/pages/register.jsp";
+    private static final String LOG_IN_PATH = "/login";
 
     private final UserService userService = UserService.getInstance();
     private final CountryService countryService = CountryService.getInstance();
@@ -70,7 +71,7 @@ public class RegistrationServlet extends HttpServlet {
         Optional<User> byUsername = userService.getUserByName(username);
         if (byUsername.isEmpty()) {
             UserService.getInstance().add(user);
-            resp.sendRedirect("/");
+            resp.sendRedirect(LOG_IN_PATH);
             return;
         } else {
             req.setAttribute("message", USER_ALREADY_EXISTS);
