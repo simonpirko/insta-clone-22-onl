@@ -11,10 +11,10 @@ import java.io.IOException;
  * @author Simon Pirko on 19.09.23
  */
 
-@WebServlet("/")
-public class IndexServlet extends HttpServlet {
-  @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    getServletContext().getRequestDispatcher("/pages/index.jps").forward(req, resp);
-  }
-}
+//@WebServlet("/")
+//public class IndexServlet extends HttpServlet {
+//  @Override
+//  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//    getServletContext().getRequestDispatcher("/pages/index.jps").forward(req, resp);
+//  }
+//}
