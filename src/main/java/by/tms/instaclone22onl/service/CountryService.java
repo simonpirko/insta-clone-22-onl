@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.storage.CountryStorage.*;
 
 
+import java.util.List;
 import java.util.Optional;
 
 public class CountryService {
@@ -27,5 +28,9 @@ public class CountryService {
 
     public Optional<Country> getByName(String name) {
         return storage.getByName(name);
+    }
+
+    public List<Country> getAll() {
+        return storage.getAll();
     }
 }

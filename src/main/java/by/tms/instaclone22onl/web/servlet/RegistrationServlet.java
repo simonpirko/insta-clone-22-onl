@@ -2,6 +2,7 @@ package by.tms.instaclone22onl.web.servlet;
 
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.service.CountryService;
 import by.tms.instaclone22onl.service.UserService;
 
 import javax.servlet.ServletException;
@@ -31,13 +32,11 @@ public class RegistrationServlet extends HttpServlet {
     private static final String REG_PATH = "/pages/register.jsp";
 
     private final UserService userService = UserService.getInstance();
+    private final CountryService countryService = CountryService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Country> countryList = new ArrayList<>();
-        countryList.add(new Country(1, "Belarus"));
-        countryList.add(new Country(2, "Russia"));
-        countryList.add(new Country(3, "USA"));
+        List<Country> countryList = countryService.getAll();
         req.setAttribute("countries", countryList);
         getServletContext().getRequestDispatcher(REG_PATH).forward(req, resp);
     }
