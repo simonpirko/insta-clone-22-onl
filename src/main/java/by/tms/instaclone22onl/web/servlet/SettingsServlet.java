@@ -17,7 +17,7 @@ public class SettingsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        if (req.getSession().getAttribute("currentUser") == null){
-            resp.sendRedirect(req.getContextPath() + "/pages/login.jsp");
+            resp.sendRedirect("/pages/login.jsp");
         } else {
            getServletContext().getRequestDispatcher("/pages/settings.j sp").forward(req, resp);
        }
@@ -40,7 +40,7 @@ public class SettingsServlet extends HttpServlet {
         currentUser.setPassword(password);
 
        if (req.getSession().getAttribute("currentUser") == null){
-            resp.sendRedirect(req.getContextPath() + "/pages/login.jsp");
+            resp.sendRedirect("/pages/login.jsp");
         } else {
            try(Connection connection = JdbcConnection.getConnection();
                PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_DATA)) {
@@ -55,9 +55,9 @@ public class SettingsServlet extends HttpServlet {
                int rowsAffected = preparedStatement.executeUpdate();
 
                if (rowsAffected > 0) {
-                   resp.sendRedirect(req.getContextPath() + "/pages/settings.jsp");
+                   resp.sendRedirect("/pages/settings.jsp");
                } else {
-                   resp.sendRedirect(req.getContextPath() + "/pages/error.jsp");
+                   resp.sendRedirect("/pages/error.jsp");
                }
            } catch (SQLException e) {
                throw new RuntimeException(e);
