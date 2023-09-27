@@ -23,14 +23,14 @@ public final class JdbcLikeStorage implements LikeStorage {
                         on h.country_id  = c.id
                         where pl.post_id =  ?""";
     private final String GET_BY_USER = """                 
-            select p.id, p.photo, p.description from "post_like" pl
+            select p.id, p.photo, p.description, p.created_at from "post_like" pl
             join "post" p
             on pl.post_id = p.id
             where pl.author_id = ?""";
 
     private final String GET_BY_USER_POST = "select * from \"post_like\" where author_id = ? and post_id = ?";
     private final String SELECT_ALL = """
-            select h.*, c.name, p.id, p.photo, p.description from "post_like" pl
+            select h.*, c.name, p.id, p.photo, p.description, p.created_at from "post_like" pl
             join "human" h
             on pl.author_id = h.id
             join country c
@@ -94,6 +94,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 }
 
                 post.setDescription(resultSet.getString(3));
+                post.setCreatedAt(resultSet.getTimestamp(4).toLocalDateTime());
 
                 Like like = new Like();
                 like.setUser(user);
@@ -222,6 +223,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                     post.setPhoto(Base64.getEncoder().encodeToString(image));
                 }
                 post.setDescription(resultSet.getString(12));
+                post.setCreatedAt(resultSet.getTimestamp(13).toLocalDateTime());
 
                 Like like = new Like();
                 like.setUser(user);

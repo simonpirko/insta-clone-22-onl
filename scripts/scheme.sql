@@ -27,6 +27,7 @@ create table if not exists "post" (
                                       author_id int,
                                       photo bytea,
                                       description varchar(250),
+                                      created_at timestamp,
                                       foreign key (author_id) references "human"(id)
 );
 

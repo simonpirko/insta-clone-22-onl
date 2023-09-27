@@ -17,11 +17,12 @@ public class JdbcPostStorage implements PostStorage {
     public void addPost(Post post) {
         try {
             Connection connection = JdbcConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into post(author_id, photo, description) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into post(author_id, photo, description, created_at) values (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, post.getUser().getId());
             preparedStatement.setBytes(2, Base64.getDecoder().decode(post.getPhoto()));
             preparedStatement.setString(3, post.getDescription());
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(post.getCreatedAt()));
             preparedStatement.execute();
             preparedStatement.close();
 
@@ -46,19 +47,20 @@ public class JdbcPostStorage implements PostStorage {
                 post.setId(resultSet.getInt(1));
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
+                post.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
 
                 User user = new User();
-                user.setId(resultSet.getInt(5));
-                user.setName(resultSet.getString(6));
-                user.setSurname(resultSet.getString(7));
-                user.setUsername(resultSet.getString(8));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(9)));
-                user.setEmail(resultSet.getString(10));
-                user.setPassword(resultSet.getString(11));
+                user.setId(resultSet.getInt(6));
+                user.setName(resultSet.getString(7));
+                user.setSurname(resultSet.getString(8));
+                user.setUsername(resultSet.getString(9));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)));
+                user.setEmail(resultSet.getString(11));
+                user.setPassword(resultSet.getString(12));
 
                 Country country = new Country(
-                        resultSet.getInt(13),
-                        resultSet.getString(12)
+                        resultSet.getInt(14),
+                        resultSet.getString(15)
                 );
 
                 user.setCountry(country);
@@ -86,18 +88,19 @@ public class JdbcPostStorage implements PostStorage {
                 post.setId(resultSet.getInt(1));
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
+                post.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
 
-                user.setId(resultSet.getInt(5));
-                user.setName(resultSet.getString(6));
-                user.setSurname(resultSet.getString(7));
-                user.setUsername(resultSet.getString(8));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(9)));
-                user.setEmail(resultSet.getString(10));
-                user.setPassword(resultSet.getString(11));
+                user.setId(resultSet.getInt(6));
+                user.setName(resultSet.getString(7));
+                user.setSurname(resultSet.getString(8));
+                user.setUsername(resultSet.getString(9));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)));
+                user.setEmail(resultSet.getString(11));
+                user.setPassword(resultSet.getString(12));
 
                 Country country = new Country(
-                        resultSet.getInt(13),
-                        resultSet.getString(12)
+                        resultSet.getInt(14),
+                        resultSet.getString(15)
                 );
 
                 user.setCountry(country);
@@ -127,19 +130,20 @@ public class JdbcPostStorage implements PostStorage {
                 post.setId(resultSet.getInt(1));
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
                 post.setDescription(resultSet.getString(4));
+                post.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
 
                 User user = new User();
-                user.setId(resultSet.getInt(5));
-                user.setName(resultSet.getString(6));
-                user.setSurname(resultSet.getString(7));
-                user.setUsername(resultSet.getString(8));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(9)));
-                user.setEmail(resultSet.getString(10));
-                user.setPassword(resultSet.getString(11));
+                user.setId(resultSet.getInt(6));
+                user.setName(resultSet.getString(7));
+                user.setSurname(resultSet.getString(8));
+                user.setUsername(resultSet.getString(9));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)));
+                user.setEmail(resultSet.getString(11));
+                user.setPassword(resultSet.getString(12));
 
                 Country country = new Country(
-                        resultSet.getInt(13),
-                        resultSet.getString(12)
+                        resultSet.getInt(14),
+                        resultSet.getString(15)
                 );
 
                 user.setCountry(country);
@@ -193,11 +197,12 @@ public class JdbcPostStorage implements PostStorage {
         if (post.isPresent()){
             try {
                 Connection connection = JdbcConnection.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Post SET photo = ?, description = ? WHERE id = ?");
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE Post SET photo = ?, description = ?, created_at = ? WHERE id = ?");
 
                 preparedStatement.setBytes(1, Base64.getDecoder().decode(newPost.getPhoto()));
                 preparedStatement.setString(2, newPost.getDescription());
-                preparedStatement.setInt(3, id);
+                preparedStatement.setTimestamp(3, Timestamp.valueOf(newPost.getCreatedAt()));
+                preparedStatement.setInt(4, id);
 
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
