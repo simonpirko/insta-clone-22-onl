@@ -6,6 +6,7 @@ package by.tms.instaclone22onl.storage.UserStorage;
 
 import by.tms.instaclone22onl.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserStorage {
@@ -13,4 +14,5 @@ public interface UserStorage {
     void add(User user);
     Optional<User> getById(int id);
     Optional<User> getByUsername(String username);
+    List<User> getUsersWithUsernameContaining(String username);
 }

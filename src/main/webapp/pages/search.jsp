@@ -13,11 +13,12 @@
 <body>
 
 <form action="/search" method="post">
-    <input type="text" username = "username" placeholder="OtherUsername">
+    <input type="text" name = "username" placeholder="Username">
     <button>Search</button>
 
 </form>
 
+<h3></h3>
 <p>${message}</p>
 
 </body>

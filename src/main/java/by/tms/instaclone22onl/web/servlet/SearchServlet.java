@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/search")
@@ -25,17 +27,26 @@ public class SearchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
-        req.setAttribute("OtherUsername", username);
 
-        Optional <User> userByUsername = userService.getUserByName(username);
-        if(userByUsername.isPresent()){
-            User user = userByUsername.get();
-            userByUsername.toString().substring()
-            if(userByUsername.toString().equalsIgnoreCase())
 
+        List <User> usersByUsername = userService.getUsersWithUsernameContaining(username);
+
+        if(!usersByUsername.isEmpty()){
+//            User user = userByUsername.get();
+//            usernamesList.add(userByUsername);
+//
+//
+//            if(userByUsername.toString().contains(username)){
+//                usernamesList.add(userByUsername);
+//            }
+
+            req.setAttribute("message", usersByUsername);
+
+//resp.sendRedirect("/search");
         }
         else {
             req.setAttribute("message", "Username not found!");
         }
+        getServletContext().getRequestDispatcher("/pages/search.jsp").forward(req, resp);
     }
 }

@@ -18,6 +18,8 @@ public class JdbcUserStorage implements UserStorage {
     private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
     private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
+private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username like ?" +
+                                                  "order by username";
 
     private JdbcUserStorage() {}
 
@@ -117,5 +119,44 @@ public class JdbcUserStorage implements UserStorage {
         }
 
         return Optional.empty();
+    }
+
+
+    @Override
+   public List<User> getUsersWithUsernameContaining(String keyword){
+        List<User> userList = new ArrayList<>();
+
+        try(Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USERNAME_CONTAINING);
+            preparedStatement.setString(1, "%" + keyword + "%");
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                User user = new User();
+
+                user.setId(resultSet.getInt(1));
+                user.setName(resultSet.getString(2));
+                user.setSurname(resultSet.getString(3));
+                user.setUsername(resultSet.getString(4));
+                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
+                user.setEmail(resultSet.getString(6));
+                user.setPassword(resultSet.getString(7));
+
+                Country country = new Country(
+                        resultSet.getInt(9),
+                        resultSet.getString(10)
+                );
+
+                user.setCountry(country);
+
+                userList.add(user);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return userList;
+
     }
 }
