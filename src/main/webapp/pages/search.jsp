@@ -8,9 +8,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Search</title>
 </head>
 <body>
+
+<form action="/search" method="post">
+    <input type="text" username = "username" placeholder="OtherUsername">
+    <button>Search</button>
+
+</form>
+
+<p>${message}</p>
 
 </body>
 </html>
