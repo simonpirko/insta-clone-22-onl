@@ -41,6 +41,10 @@
                 <input type="password"  name="password" class="form-control" id="6" placeholder="Password">
                 <label for="6">Password</label>
             </div>
+            <div class="form-floating mb-3">
+                <input type="text"  name="country" class="form-control" id="7" placeholder="name3@example.com">
+                <label for="7">Country</label>
+            </div>
                 <button type="submit" class="btn btn-primary">Save changes</button>
         </form>
     </div>
