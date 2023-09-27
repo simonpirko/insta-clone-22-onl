@@ -15,11 +15,14 @@ public class JdbcUserStorage implements UserStorage {
 
     private static JdbcUserStorage instance;
 
-    private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
+    private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, countryId) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
     private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
-private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" h join \"country\" c on h.country_id = c.id where lower (h.username) like lower (?)" +
-                                                  " order by username";
+    private final String UPDATE_USER_DATA = "UPDATE \"human\" SET name = ?, surname = ?, username = ?, photo = ?, email = ?, password = ?\n" +
+            "WHERE id = ?";
+    private final String UPDATE_USER_COUNTRY = "UPDATE \"country\" SET name = ? WHERE user_id = ?";
+    private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" h join \"country\" c on h.country_id = c.id where lower (h.username) like lower (?)" +
+            " order by username";
 
     private JdbcUserStorage() {}
 
@@ -119,6 +122,38 @@ private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" h joi
         }
 
         return Optional.empty();
+    }
+
+    public void updateById(User user) {
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_DATA)) {
+
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getSurname());
+            preparedStatement.setString(3, user.getUsername());
+            preparedStatement.setString(4, Arrays.toString(Base64.getDecoder().decode(user.getPhoto())));
+            preparedStatement.setString(5, user.getEmail());
+            preparedStatement.setString(6, user.getPassword());
+            preparedStatement.setInt(7, user.getId());
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void updateUserCountry(int userId, String country) {
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_COUNTRY)) {
+
+            preparedStatement.setString(1, country);
+            preparedStatement.setInt(2, userId);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
