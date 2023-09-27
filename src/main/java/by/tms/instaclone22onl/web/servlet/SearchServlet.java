@@ -26,23 +26,15 @@ public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String username = req.getParameter("username");
 
+        String username = req.getParameter("OtherUsername");
 
         List <User> usersByUsername = userService.getUsersWithUsernameContaining(username);
 
         if(!usersByUsername.isEmpty()){
-//            User user = userByUsername.get();
-//            usernamesList.add(userByUsername);
-//
-//
-//            if(userByUsername.toString().contains(username)){
-//                usernamesList.add(userByUsername);
-//            }
 
             req.setAttribute("message", usersByUsername);
 
-//resp.sendRedirect("/search");
         }
         else {
             req.setAttribute("message", "Username not found!");

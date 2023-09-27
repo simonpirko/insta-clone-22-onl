@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class JdbcConnection {
 
-    private static final String URL = "jdbc:postgresql://localhost:5432/postgres";
+    private static final String URL = "jdbc:postgresql://localhost:5432/Instagram";
     private static final String USERNAME = "postgres";
     private static final String PASSWORD = "root";
 

@@ -18,8 +18,8 @@ public class JdbcUserStorage implements UserStorage {
     private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
     private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
-private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username like ?" +
-                                                  "order by username";
+private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" h join \"country\" c on h.country_id = c.id where lower (h.username) like lower (?)" +
+                                                  " order by username";
 
     private JdbcUserStorage() {}
 
@@ -128,6 +128,7 @@ private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" join 
 
         try(Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USERNAME_CONTAINING);
+
             preparedStatement.setString(1, "%" + keyword + "%");
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -139,7 +140,12 @@ private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" join 
                 user.setName(resultSet.getString(2));
                 user.setSurname(resultSet.getString(3));
                 user.setUsername(resultSet.getString(4));
+
+                byte[] image = resultSet.getBytes(5);
+                if(image != null) {
                 user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
+                }
+
                 user.setEmail(resultSet.getString(6));
                 user.setPassword(resultSet.getString(7));
 
