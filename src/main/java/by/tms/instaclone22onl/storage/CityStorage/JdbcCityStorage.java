@@ -34,7 +34,7 @@ public class JdbcCityStorage implements CityStorage {
 
             if (resultSet.next()){
 
-                City city = new City(id);
+                City city = new City();
                 city.setId(resultSet.getInt(1));
                 city.setName(resultSet.getString(2));
 
@@ -61,7 +61,7 @@ public class JdbcCityStorage implements CityStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
 
-                City city = new City(name);
+                City city = new City();
                 city.setId(resultSet.getInt(1));
                 city.setName(resultSet.getString(2));
 
