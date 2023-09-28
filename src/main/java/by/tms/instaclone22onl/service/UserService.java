@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
 import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
 
+import java.util.List;
 import java.util.Optional;
 
 public class UserService {
@@ -32,4 +33,6 @@ public class UserService {
     public Optional<User> getUserByName(String username) {
         return userStorage.getByUsername(username);
     }
+
+    public List<User> getUsersWithUsernameContaining(String keyword){ return userStorage.getUsersWithUsernameContaining(keyword); }
 }
