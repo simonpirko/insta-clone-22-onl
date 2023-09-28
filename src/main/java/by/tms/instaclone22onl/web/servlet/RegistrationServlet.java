@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.service.CountryService;
 import by.tms.instaclone22onl.service.UserService;
+import by.tms.instaclone22onl.utils.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -40,6 +41,7 @@ public class RegistrationServlet extends HttpServlet {
 
     private final UserService userService = UserService.getInstance();
     private final CountryService countryService = CountryService.getInstance();
+    private final Validator validator = new Validator();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -79,6 +81,10 @@ public class RegistrationServlet extends HttpServlet {
 
         if (!byUsername.isPresent()) {
             req.setAttribute("errormessage", REGISTRATION_FAILED);
+        }
+
+        if (!validator.validate(user)) {
+            req.setAttribute("invalid data", REGISTRATION_FAILED);
         }
 
         getServletContext().getRequestDispatcher(REG_PATH).forward(req, resp);
