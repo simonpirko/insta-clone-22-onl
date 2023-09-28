@@ -70,6 +70,7 @@ public class JdbcCommentStorage implements CommentStorage {
                 post.setUser(user);
                 post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(6)));
                 post.setDescription(resultSet.getString(7));
+                post.setCreatedAt(resultSet.getTimestamp(8).toLocalDateTime());
 
                 comment.setPost(post);
 

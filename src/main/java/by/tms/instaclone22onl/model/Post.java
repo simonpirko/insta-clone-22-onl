@@ -4,6 +4,7 @@ package by.tms.instaclone22onl.model;
     @author Ilya Moiseenko on 19.09.23
 */
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class Post {
@@ -12,6 +13,7 @@ public class Post {
     private User user;
     private String photo;
     private String description;
+    private LocalDateTime createdAt;
     private List<Comment> comments;
     private List<Like> likes;
 
@@ -47,6 +49,14 @@ public class Post {
         this.description = description;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
@@ -70,6 +80,7 @@ public class Post {
                 ", user=" + user +
                 ", photo='" + photo + '\'' +
                 ", description='" + description + '\'' +
+                ", createdAt='" + createdAt + '\'' +
                 '}';
     }
 }
