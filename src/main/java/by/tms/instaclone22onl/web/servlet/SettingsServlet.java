@@ -17,7 +17,7 @@ public class SettingsServlet extends HttpServlet {
        if (req.getSession().getAttribute("currentUser") == null){
             resp.sendRedirect("/pages/login.jsp");
         } else {
-           getServletContext().getRequestDispatcher("/pages/settings.j sp").forward(req, resp);
+           getServletContext().getRequestDispatcher("/pages/settings.jsp").forward(req, resp);
        }
     }
 
@@ -25,6 +25,7 @@ public class SettingsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         User currentUser = (User) req.getSession().getAttribute("currentUser");
+
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
         String username = req.getParameter("username");
