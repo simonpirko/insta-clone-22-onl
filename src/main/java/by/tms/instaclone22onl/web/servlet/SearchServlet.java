@@ -33,7 +33,7 @@ public class SearchServlet extends HttpServlet {
 
         if(!usersByUsername.isEmpty()){
 
-            req.setAttribute("message", usersByUsername);
+            req.setAttribute("users", usersByUsername);
 
         }
         else {

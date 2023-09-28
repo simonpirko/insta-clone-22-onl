@@ -124,12 +124,12 @@ private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" h joi
 
     @Override
    public List<User> getUsersWithUsernameContaining(String keyword){
-        List<User> userList = new ArrayList<>();
+        List<User> usersList = new ArrayList<>();
 
         try(Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USERNAME_CONTAINING);
 
-            preparedStatement.setString(1, "%" + keyword + "%");
+            preparedStatement.setString(1, keyword + "%");        //preparedStatement.setString(1, "%" + keyword + "%");
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -156,13 +156,13 @@ private final String GET_BY_USERNAME_CONTAINING = "select * from \"human\" h joi
 
                 user.setCountry(country);
 
-                userList.add(user);
+                usersList.add(user);
             }
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return userList;
+        return usersList;
 
     }
 }

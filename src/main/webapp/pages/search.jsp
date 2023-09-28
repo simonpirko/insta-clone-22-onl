@@ -18,13 +18,17 @@
     <input type="text" name = "OtherUsername" placeholder="Username">
     <button>Search</button>
 
-    <c:forEach var="username" items="${username}">
-        <option value="${user.getUsername()}">${username}</option>
-    </c:forEach>
+    <ul>
+        <c:forEach var="user" items="${users}">
+
+            <li> ${user.getUsername()} </li>
+
+        </c:forEach>
+
+    </ul>
 
 </form>
 
-<h3></h3>
 <p>${message}</p>
 
 </body>
