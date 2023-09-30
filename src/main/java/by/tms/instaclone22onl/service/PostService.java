@@ -2,6 +2,8 @@ package by.tms.instaclone22onl.service;
 
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.storage.CountryStorage.CountryStorage;
+import by.tms.instaclone22onl.storage.CountryStorage.JdbcCountryStorage;
 import by.tms.instaclone22onl.storage.PostStorage.JdbcPostStorage;
 import by.tms.instaclone22onl.storage.PostStorage.PostStorage;
 
@@ -9,8 +11,17 @@ import java.util.List;
 import java.util.Optional;
 
 public class PostService {
+    private static PostService instance;
+    private final PostStorage postStorage = JdbcPostStorage.getInstance();
 
-    private final PostStorage postStorage = new JdbcPostStorage();
+    public static PostService getInstance() {
+        if (instance == null) {
+            instance = new PostService();
+        }
+        return instance;
+    }
+
+    //private final PostStorage postStorage = new JdbcPostStorage();
 
     public void addPost(Post post){
         postStorage.addPost(post);
