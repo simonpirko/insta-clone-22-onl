@@ -30,6 +30,7 @@ public class SetLikeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String myLikeFlag = req.getParameter("likeFlag");
 
         User user = (User) req.getSession().getAttribute("currentUser");
         Like like = (Like) req.getSession().getAttribute("like");
