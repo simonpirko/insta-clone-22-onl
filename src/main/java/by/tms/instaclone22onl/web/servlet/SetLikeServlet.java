@@ -30,18 +30,25 @@ public class SetLikeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String myLikeFlag = req.getParameter("likeFlag");
 
         User user = (User) req.getSession().getAttribute("currentUser");
-        Like like = (Like) req.getSession().getAttribute("like");
-        Post post = (Post) req.getSession().getAttribute("post");
-
-//        List<Like> likesList = likeService.getAll();
-        Optional <Like> requiredLike = likeService.getByUserPost(user, post);
-
-        if(requiredLike.isEmpty()){
-            likeService.add(like);
+        int postId = Integer.parseInt(req.getParameter("postId"));
+        Optional<Post> post = postService.getPost(postId);
+        if(post.isEmpty()){
+            req.setAttribute("message", "Post not found!");
         }
 
+        else{
+            Optional <Like> requiredLike = likeService.getByUserPost(user, post.get());
+
+            if(requiredLike.isEmpty()){
+                Like like = requiredLike.get();
+                likeService.add(like);
+            }
+        }
+
+        getServletContext().getRequestDispatcher("/pages/like.jsp").forward(req, resp);
+
     }
+
 }
