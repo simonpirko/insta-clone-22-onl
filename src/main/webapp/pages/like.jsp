@@ -19,22 +19,26 @@
 <div class="container">
     <div class="col-sm-3">
 
+        <form action="/like" method="post">
 
+            <button type="submit" class="btn btn-primary">
+                <c:choose>
+                    <c:when test="${hasLike}">
+                        <i class="bi bi-heart-fill"></i>
+                    </c:when>
+
+                    <c:otherwise>
+                        <i class="bi bi-heart"></i>
+                    </c:otherwise>
+                </c:choose>
+            </button>
+
+        </form>
 
     </div>
 </div>
 
-<from action="/like" method="post">
-<%--    <input type="button" name=""--%>
-    <c:if test="${likeFlag}">
 
-            <h1>Like!</h1>
-
-
-    </c:if>
-
-
-</from>
 
 
 </body>

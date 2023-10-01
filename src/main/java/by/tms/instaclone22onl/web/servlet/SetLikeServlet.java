@@ -31,11 +31,14 @@ public class SetLikeServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        User user = (User) req.getSession().getAttribute("currentUser");
+
+        User user = (User) req.getSession().getAttribute("user");
         int postId = Integer.parseInt(req.getParameter("postId"));
         Optional<Post> post = postService.getPost(postId);
         if(post.isEmpty()){
             req.setAttribute("message", "Post not found!");
+            req.setAttribute("hasLike", false);
+
         }
 
         else{
@@ -44,8 +47,16 @@ public class SetLikeServlet extends HttpServlet {
             if(requiredLike.isEmpty()){
                 Like like = requiredLike.get();
                 likeService.add(like);
+                req.setAttribute("hasLike", true);
             }
+
+            else {
+                likeService.deleteByUserPost(user, post.get());
+                req.setAttribute("hasLike", false);
+            }
+
         }
+
 
         getServletContext().getRequestDispatcher("/pages/like.jsp").forward(req, resp);
 
