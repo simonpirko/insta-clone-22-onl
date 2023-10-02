@@ -17,16 +17,16 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- тут будут навигационные ссылки в заголовке в зависимости от наличия или отсутствия регистрации юзера -->
+            <!-- пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                       <c:if test="${sessionScope.user != null}">
-                        <a class="nav-link" aria-current="page" href="/#">Home</a>   <%-- Вставить ссылку на страницу по готовности! --%>
+                        <a class="nav-link" aria-current="page" href="/">Home</a>   <%-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ! --%>
                       </c:if>
                     </ul>
 
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                               <c:if test="${sessionScope.user != null}">
-                                <a class="nav-link" aria-current="page" href="/#">Create post</a>    <%-- Вставить ссылку на страницу по готовности! --%>
+                                <a class="nav-link" aria-current="page" href="/create-post">Create post</a>    <%-- пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ! --%>
                               </c:if>
                     </ul>
 
