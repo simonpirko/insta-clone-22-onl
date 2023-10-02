@@ -10,6 +10,43 @@ public class Comment {
     private Post post;
     private String text;
 
+    public Comment() {
+    }
+
+    public static Comment.CommentBuilder builder() {
+        return new Comment().new CommentBuilder();
+    }
+
+    public class CommentBuilder {
+        private CommentBuilder() {
+        }
+
+        public Comment.CommentBuilder setId(int id) {
+            Comment.this.id = id;
+            return this;
+        }
+
+        public Comment.CommentBuilder setText(String text) {
+            Comment.this.text = text;
+            return this;
+        }
+
+        public Comment.CommentBuilder setUser(User user) {
+            Comment.this.user = user;
+            return this;
+        }
+
+        public Comment.CommentBuilder setPost(Post post) {
+            Comment.this.post = post;
+            return this;
+        }
+
+        public Comment build() {
+            return Comment.this;
+        }
+    }
+
+
     public int getId() {
         return id;
     }

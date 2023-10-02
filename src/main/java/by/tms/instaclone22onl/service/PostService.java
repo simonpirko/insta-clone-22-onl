@@ -10,7 +10,18 @@ import java.util.Optional;
 
 public class PostService {
 
-    private final PostStorage postStorage = new JdbcPostStorage();
+    private static PostService instance;
+
+    private final PostStorage postStorage = JdbcPostStorage.getInstance();
+
+    private PostService() {}
+
+    public static PostService getInstance() {
+        if (instance == null) {
+            instance = new PostService();
+        }
+        return instance;
+    }
 
     public void addPost(Post post){
         postStorage.addPost(post);
