@@ -14,27 +14,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebServlet("/user/addcomment") //todo какой путь???
+@WebServlet("/user/create-comment")
 public class AddCommentServlet extends HttpServlet {
 
     private final PostService postService = PostService.getInstance();
     private final CommentService commentService = CommentService.getInstance();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        getServletContext().getRequestDispatcher("").forward(req, resp); //todo jsp на страницу просмотра отдельного поста
-
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getAttribute("user");
+        User user = ((User) req.getSession().getAttribute("user"));
 
-        int postId = Integer.parseInt(req.getParameter("postId"));
+        int postId = Integer.parseInt(req.getParameter("post_id"));
         Optional<Post> post = postService.getPost(postId);
 
         if (post.isPresent()) {
-            String commentText = req.getParameter("commentText");
+            String commentText = req.getParameter("commentMessage");
             Comment comment = Comment.builder()
                     .setUser(user)
                     .setPost(post.get())
@@ -42,7 +36,7 @@ public class AddCommentServlet extends HttpServlet {
                     .build();
 
             commentService.add(comment);
-            resp.sendRedirect(req.getContextPath() + "user/viewpost?id=" + postId);//todo написать путь на страницу просмотра отдельного поста
+            resp.sendRedirect("/user/viewpost?id=" + postId);
         } else {
             req.setAttribute("errormessage", "Post don't found.");
         }
