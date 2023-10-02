@@ -5,16 +5,14 @@ import by.tms.instaclone22onl.model.Comment;
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.PostStorage.JdbcPostStorage;
-import by.tms.instaclone22onl.storage.PostStorage.PostStorage;
-import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
-import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 public class JdbcCommentStorage implements CommentStorage {
@@ -84,7 +82,8 @@ public class JdbcCommentStorage implements CommentStorage {
     }
 
     @Override
-    public Optional<Comment> getByPost(Post post) {
+    public Optional<List<Comment>> getByPost(Post post) {
+        List<Comment> comments = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST);
@@ -92,7 +91,7 @@ public class JdbcCommentStorage implements CommentStorage {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 Comment comment = new Comment();
 
                 //comment.setUser(user);
@@ -118,12 +117,13 @@ public class JdbcCommentStorage implements CommentStorage {
 
                 comment.setUser(user);
 
-                return Optional.of(comment);
+                comments.add(comment);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return Optional.empty();
+
+        return Optional.of(comments);
     }
 
 }
