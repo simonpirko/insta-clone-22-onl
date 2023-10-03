@@ -18,11 +18,8 @@ public class JdbcUserStorage implements UserStorage {
     private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
     private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
-    private final String UPDATE_USER_DATA = "UPDATE human SET name = ?, surname = ?, username = ?, photo = ?, email = ?, password = ?, country_id = ?\n" +
-                                            "FROM country\n" +
-                                            "WHERE human.id = country.id\n" +
-                                            "AND human.id = ?;";
-    private final String UPDATE_USER_COUNTRY = "UPDATE \"human\" SET country_id = ? WHERE id = ?";
+    private final String UPDATE_USER_DATA = "UPDATE \"human\" SET name = ?, surname = ?, username = ?, photo = ?, email = ?, password = ?, country_id = ?\n" +
+                                            "WHERE id = ?";
 
     private JdbcUserStorage() {
     }
@@ -134,30 +131,17 @@ public class JdbcUserStorage implements UserStorage {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_DATA)) {
 
-            updateUserCountry(user.getId(), user.getCountry().getId());
-
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getSurname());
             preparedStatement.setString(3, user.getUsername());
-            preparedStatement.setString(4, Arrays.toString(Base64.getDecoder().decode(user.getPhoto())));
-            preparedStatement.setString(5, user.getEmail());
-            preparedStatement.setString(6, user.getPassword());
-            preparedStatement.setInt(7, user.getId());
+            preparedStatement.setInt(4, user.getCountry().getId());
+            preparedStatement.setString(5, Arrays.toString(Base64.getDecoder().decode(user.getPhoto())));
+            preparedStatement.setString(6, user.getEmail());
+            preparedStatement.setString(7, user.getPassword());
+            preparedStatement.setInt(8, user.getId());
 
             preparedStatement.executeUpdate();
 
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    public void updateUserCountry(int userId, int countryId) {
-        try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_COUNTRY)) {
-
-            preparedStatement.setInt(1, countryId);
-            preparedStatement.setInt(2, userId);
-
-            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

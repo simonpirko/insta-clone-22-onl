@@ -25,22 +25,21 @@ public class SettingsServlet extends HttpServlet {
     private final CountryService countryService = CountryService.getInstance();
     private final Validator validator = new Validator();
     private final UserStorage storage = JdbcUserStorage.getInstance();
-    private Country country;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Country> countryList = countryService.getAll();
         req.setAttribute("countries", countryList);
+
         getServletContext().getRequestDispatcher("/pages/settings.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int countryId = Integer.parseInt(req.getParameter("country_id"));
-        country.setId(countryId);
 
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
         String username = req.getParameter("username");
+        Country country = countryService.getById(Integer.parseInt(req.getParameter("country"))).orElse(new Country());
         InputStream photo = req.getPart("photo").getInputStream();
         String email = req.getParameter("email");
         String password = req.getParameter("password");
