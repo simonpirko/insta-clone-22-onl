@@ -17,6 +17,63 @@ public class Post {
     private List<Comment> comments;
     private List<Like> likes;
 
+    private Post() {}
+
+    public static PostBuilder builder() {
+        return new Post().new PostBuilder();
+    }
+
+    public class PostBuilder {
+
+        private PostBuilder() {}
+
+        public PostBuilder id(int id) {
+            Post.this.id = id;
+
+            return this;
+        }
+
+        public PostBuilder user(User user) {
+            Post.this.user = user;
+
+            return this;
+        }
+
+        public PostBuilder photo(String photo) {
+            Post.this.photo = photo;
+
+            return this;
+        }
+
+        public PostBuilder description(String description) {
+            Post.this.description = description;
+
+            return this;
+        }
+
+        public PostBuilder comments(List<Comment> comments) {
+            Post.this.comments = comments;
+
+            return this;
+        }
+
+        public PostBuilder createdAt(LocalDateTime localDateTime) {
+            Post.this.createdAt = localDateTime;
+
+            return this;
+        }
+
+        public PostBuilder likes(List<Like> likes) {
+            Post.this.likes = likes;
+
+            return this;
+        }
+
+        public Post build() {
+            return Post.this;
+        }
+    }
+
     public int getId() {
         return id;
     }
