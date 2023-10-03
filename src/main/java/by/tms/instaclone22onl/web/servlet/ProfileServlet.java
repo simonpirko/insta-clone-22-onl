@@ -16,7 +16,7 @@ import java.util.Optional;
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
     private final UserService userService = UserService.getInstance();
-    private final PostService postService = new PostService();
+    private final PostService postService = PostService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
