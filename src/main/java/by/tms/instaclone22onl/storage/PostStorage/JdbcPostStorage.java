@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.storage.CountryStorage.JdbcCountryStorage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class JdbcPostStorage implements PostStorage {
+    private static JdbcPostStorage instance;
+    private JdbcPostStorage() {}
+
+    public static JdbcPostStorage getInstance() {
+        if (instance == null)
+            instance = new JdbcPostStorage();
+
+        return instance;
+    }
 
     private static JdbcPostStorage instance;
 
@@ -143,7 +153,7 @@ public class JdbcPostStorage implements PostStorage {
                 Post post = Post
                         .builder()
                         .id(resultSet.getInt(1))
-                        .photo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(3)))
                         .description(resultSet.getString(4))
                         .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
                         .build();
