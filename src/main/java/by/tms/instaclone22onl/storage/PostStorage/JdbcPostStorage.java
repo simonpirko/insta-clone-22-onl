@@ -16,7 +16,7 @@ public class JdbcPostStorage implements PostStorage {
     private static JdbcPostStorage instance;
 
     private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
-
+  
     private JdbcPostStorage() {}
 
     public static JdbcPostStorage getInstance() {
@@ -143,7 +143,7 @@ public class JdbcPostStorage implements PostStorage {
                 Post post = Post
                         .builder()
                         .id(resultSet.getInt(1))
-                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(3)))
+                        .photo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
                         .description(resultSet.getString(4))
                         .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
                         .build();
