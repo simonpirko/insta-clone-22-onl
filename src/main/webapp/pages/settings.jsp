@@ -29,23 +29,30 @@
                 <input type="text" name="username" class="form-control" id="3" placeholder="name3@example.com">
                 <label for="3">User name</label>
             </div>
-            <div class="input-group mb-3">
-                <button class="btn btn-outline-secondary" type="button" id="4">Button</button>
-                <input type="file" name="photo" class="form-control" id="inputGroupFile03" aria-describedby="4" aria-label="Upload">
+            <div class="mb-3" >
+                <label class="form-label" for="4"></label>
+                <input type="file" class="form-control" id="4" name="photo" >
+            </div>
+            <div class="mb-3">
+                <label for="5" class="form-label"></label>
+                <select class="form-select" id = "5" aria-label="Default select example">
+                    <option selected>Country</option>
+                    <c:forEach var="country" items="${countries}">
+                        <option value="${country.getId()}">${country.getName()}</option>
+                    </c:forEach>
+                </select>
             </div>
             <div class="form-floating mb-3">
-                <input type="email" name="email" class="form-control" id="5" placeholder="name4@example.com">
-                <label for="5">Email address</label>
+                <input type="email" name="email" class="form-control" id="6" placeholder="name4@example.com">
+                <label for="6">Email address</label>
             </div>
             <div class="form-floating mb-3">
-                <input type="password"  name="password" class="form-control" id="6" placeholder="Password">
-                <label for="6">Password</label>
+                <input type="password"  name="password" class="form-control" id="7" placeholder="Password">
+                <label for="7">Password</label>
             </div>
-            <div class="form-floating mb-3">
-                <input type="text"  name="country" class="form-control" id="7" placeholder="name3@example.com">
-                <label for="7">Country</label>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button class="btn btn-dark" type="submit">Save changes</button>
             </div>
-                <button type="submit" class="btn btn-primary">Save changes</button>
         </form>
     </div>
 </div>
