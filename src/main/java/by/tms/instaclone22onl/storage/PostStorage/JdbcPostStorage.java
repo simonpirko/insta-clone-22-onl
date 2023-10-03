@@ -15,6 +15,8 @@ public class JdbcPostStorage implements PostStorage {
 
     private static JdbcPostStorage instance;
 
+    private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
+  
     private JdbcPostStorage() {}
 
     public static JdbcPostStorage getInstance() {
@@ -132,14 +134,12 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public List<Post> getAllPost() {
         List<Post> posts = new ArrayList<>();
-        try {
-            Connection connection =JdbcConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
-                    " on post.author_id = human.id  join country on human.country_id = country.id");
+
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-
                 Post post = Post
                         .builder()
                         .id(resultSet.getInt(1))
@@ -167,7 +167,6 @@ public class JdbcPostStorage implements PostStorage {
 
                 posts.add(post);
             }
-            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -9,6 +9,10 @@ import by.tms.instaclone22onl.storage.LikeStorage.LikeStorage;
 import java.util.List;
 import java.util.Optional;
 
+/*
+    @author Ilya Moiseenko on 2.10.23
+*/
+
 public class LikeService {
 
     private static LikeService instance;
