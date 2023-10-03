@@ -26,7 +26,7 @@ public class JdbcPostStorage implements PostStorage {
     private static JdbcPostStorage instance;
 
     private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
-
+  
     private JdbcPostStorage() {}
 
     public static JdbcPostStorage getInstance() {
