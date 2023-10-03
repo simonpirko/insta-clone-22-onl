@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.model.Comment;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface CommentStorage {
@@ -12,5 +13,5 @@ public interface CommentStorage {
 
     Optional<Comment> getByUser(User user);
 
-    Optional<Comment> getByPost(Post post);
+    Optional<List<Comment>> getByPost(Post post);
 }

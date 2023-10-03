@@ -36,6 +36,17 @@ public class JdbcPostStorage implements PostStorage {
         return instance;
     }
 
+    private static JdbcPostStorage instance;
+
+    private JdbcPostStorage() {}
+
+    public static JdbcPostStorage getInstance() {
+        if (instance == null) {
+            instance = new JdbcPostStorage();
+        }
+        return instance;
+    }
+
     @Override
     public void addPost(Post post) {
         try {

@@ -43,7 +43,7 @@
                             </c:if>
                         </div>
                         <div class="col-sm-3 align-self-center text-end">
-                            ${likes}
+                            ${post.getLikes().size()}
                         </div>
                         <c:if test="${like == false}">
                             <form action="/like" method="post" class="col-sm-1 align-self-center text-center">

@@ -32,7 +32,6 @@ public class ViewPostServlet extends HttpServlet {
 
         if (postById.isPresent()) {
             Post post = postById.get();
-            List<Like> likes = likeService.findAllByPost(post);
 
             User user = (User) req.getSession().getAttribute("user");
 
@@ -44,7 +43,6 @@ public class ViewPostServlet extends HttpServlet {
                 req.setAttribute("like", false);
 
             req.setAttribute("post", post);
-            req.setAttribute("likes", likes.size());
 
             getServletContext().getRequestDispatcher("/pages/viewpost.jsp").forward(req, resp);
         }
