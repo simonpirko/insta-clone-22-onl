@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.storage.CountryStorage.JdbcCountryStorage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,6 +13,28 @@ import java.util.List;
 import java.util.Optional;
 
 public class JdbcPostStorage implements PostStorage {
+    private static JdbcPostStorage instance;
+    private JdbcPostStorage() {}
+
+    public static JdbcPostStorage getInstance() {
+        if (instance == null)
+            instance = new JdbcPostStorage();
+
+        return instance;
+    }
+
+    private static JdbcPostStorage instance;
+
+    private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
+  
+    private JdbcPostStorage() {}
+
+    public static JdbcPostStorage getInstance() {
+        if (instance == null)
+            instance = new JdbcPostStorage();
+
+        return instance;
+    }
 
     private static JdbcPostStorage instance;
 
@@ -53,12 +76,13 @@ public class JdbcPostStorage implements PostStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-
-                Post post = new Post();
-                post.setId(resultSet.getInt(1));
-                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
-                post.setDescription(resultSet.getString(4));
-                post.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .photo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
+                        .description(resultSet.getString(4))
+                        .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
+                        .build();
 
                 User user = new User();
                 user.setId(resultSet.getInt(6));
@@ -95,11 +119,13 @@ public class JdbcPostStorage implements PostStorage {
             preparedStatement.setString(1, user.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                Post post = new Post();
-                post.setId(resultSet.getInt(1));
-                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
-                post.setDescription(resultSet.getString(4));
-                post.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .photo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
+                        .description(resultSet.getString(4))
+                        .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
+                        .build();
 
                 user.setId(resultSet.getInt(6));
                 user.setName(resultSet.getString(7));
@@ -129,19 +155,19 @@ public class JdbcPostStorage implements PostStorage {
     @Override
     public List<Post> getAllPost() {
         List<Post> posts = new ArrayList<>();
-        try {
-            Connection connection =JdbcConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("select  * from post join human" +
-                    " on post.author_id = human.id  join country on human.country_id = country.id");
+
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-
-                Post post = new Post();
-                post.setId(resultSet.getInt(1));
-                post.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(3)));
-                post.setDescription(resultSet.getString(4));
-                post.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(3)))
+                        .description(resultSet.getString(4))
+                        .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
+                        .build();
 
                 User user = new User();
                 user.setId(resultSet.getInt(6));
@@ -162,7 +188,6 @@ public class JdbcPostStorage implements PostStorage {
 
                 posts.add(post);
             }
-            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
