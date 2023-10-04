@@ -16,7 +16,7 @@
 <body>
 <div class="container">
     <div class="row justify-content-center">
-        <form class="mt-5 w-25" action="/settings" method="post">
+        <form class="mt-5 w-25" action="/settings" method="post" enctype="multipart/form-data">
             <div class="form-floating mb-3">
                 <input type="text" name="name" class="form-control" id="1" placeholder="name@example.com">
                 <label for="1">First name</label>
@@ -35,7 +35,7 @@
             </div>
             <div class="mb-3">
                 <label for="5" class="form-label"></label>
-                <select class="form-select" id = "5" aria-label="Default select example">
+                <select class="form-select" id = "5" name="country" aria-label="Default select example">
                     <option selected>Country</option>
                     <c:forEach var="country" items="${countries}">
                         <option value="${country.getId()}">${country.getName()}</option>

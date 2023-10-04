@@ -9,6 +9,7 @@ import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
 import by.tms.instaclone22onl.utils.Validator;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +21,11 @@ import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/settings")
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 5 * 5
+)
 public class SettingsServlet extends HttpServlet {
     private final UserService userService = UserService.getInstance();
     private final CountryService countryService = CountryService.getInstance();
@@ -36,6 +42,17 @@ public class SettingsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
+        /*String countryParam = req.getParameter("country");
+        Country country = new Country();
+        if (countryParam != null && !countryParam.isEmpty()) {
+            int countryId = Integer.parseInt(countryParam);
+            Optional<Country> optionalCountry = countryService.getById(countryId);
+            if (optionalCountry.isPresent()) {
+                country = optionalCountry.get();
+            }
+        }*/
+
+
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
         String username = req.getParameter("username");
@@ -43,7 +60,6 @@ public class SettingsServlet extends HttpServlet {
         InputStream photo = req.getPart("photo").getInputStream();
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        int userId = Integer.parseInt(req.getParameter("id"));
 
         User user = User.builder()
                 .setName(name)
@@ -53,14 +69,13 @@ public class SettingsServlet extends HttpServlet {
                 .setPhoto(Base64.getEncoder().encodeToString(photo.readAllBytes()))
                 .setEmail(email)
                 .setPassword(password)
-                .setId(userId)
                 .build();
 
 
         Optional<User> byUsername = userService.getUserByName(username);
 
        if (byUsername.isEmpty()){
-           UserService.getInstance().add(user);
+           //UserService.getInstance().add(user);
            resp.sendRedirect("/pages/login.jsp");
         } else {
           try {
