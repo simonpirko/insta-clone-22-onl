@@ -26,7 +26,7 @@ public class PostService {
         if (instance == null) {
             instance = new PostService();
         }
-      
+
         return instance;
     }
 
