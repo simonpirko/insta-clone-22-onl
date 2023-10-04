@@ -62,6 +62,7 @@ public final class JdbcLikeStorage implements LikeStorage {
 
             preparedStatement.setInt(1, like.getUser().getId());
             preparedStatement.setInt(2, like.getPost().getId());
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(like.getCreatedAt()));
 
             preparedStatement.execute();
 
@@ -101,6 +102,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 Like like = new Like();
                 like.setUser(user);
                 like.setPost(post);
+                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
                 likeList.add(like);
             }
 
@@ -148,6 +150,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 Like like = new Like();
                 like.setUser(user);
                 like.setPost(post);
+                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
 
                 likeList.add(like);
             }
@@ -174,6 +177,7 @@ public final class JdbcLikeStorage implements LikeStorage {
 
                 like.setUser(user);
                 like.setPost(post);
+                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
 
                 return Optional.of(like);
             }
@@ -232,6 +236,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 Like like = new Like();
                 like.setUser(user);
                 like.setPost(post);
+                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
 
                 allLikes.add(like);
             }
