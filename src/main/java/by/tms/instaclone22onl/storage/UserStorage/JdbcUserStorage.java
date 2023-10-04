@@ -18,7 +18,7 @@ public class JdbcUserStorage implements UserStorage {
     private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
     private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
-    private final String UPDATE_USER_DATA = "UPDATE \"human\" SET name = ?, surname = ?, username = ?, photo = ?, email = ?, password = ?, country_id = ?\n" +
+    private final String UPDATE_USER_DATA = "UPDATE human SET name = ?, surname = ?, username = ?, photo = ?, email = ?, password = ? /*country_id = ?*/\n" +
                                             "WHERE id = ?";
 
     private JdbcUserStorage() {
