@@ -18,7 +18,7 @@ public class JdbcUserStorage implements UserStorage {
     private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
     private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
     private final String GET_BY_USERNAME_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".username = ?";
-    private final String UPDATE_USER_DATA = "UPDATE human SET name = ?, surname = ?, username = ?, photo = ?, email = ?, password = ? /*country_id = ?*/\n" +
+    private final String UPDATE_USER_DATA = "UPDATE human SET name = ?, surname = ?, username = ?, country_id = ?, photo = ?, email = ?, password = ?\n" +
                                             "WHERE id = ?";
 
     private JdbcUserStorage() {
@@ -130,13 +130,12 @@ public class JdbcUserStorage implements UserStorage {
             preparedStatement.setString(2, user.getSurname());
             preparedStatement.setString(3, user.getUsername());
             preparedStatement.setInt(4, user.getCountry().getId());
-            preparedStatement.setString(5, Arrays.toString(Base64.getDecoder().decode(user.getPhoto())));
+            preparedStatement.setBytes(5, Base64.getDecoder().decode(user.getPhoto()));
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setString(7, user.getPassword());
             preparedStatement.setInt(8, user.getId());
 
             preparedStatement.executeUpdate();
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

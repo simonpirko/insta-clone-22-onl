@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet("/settings")
 @MultipartConfig(
@@ -27,7 +26,6 @@ import java.util.Optional;
         maxRequestSize = 1024 * 1024 * 5 * 5
 )
 public class SettingsServlet extends HttpServlet {
-    private final UserService userService = UserService.getInstance();
     private final CountryService countryService = CountryService.getInstance();
     private final Validator validator = new Validator();
     private final UserStorage storage = JdbcUserStorage.getInstance();
@@ -42,17 +40,6 @@ public class SettingsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        /*String countryParam = req.getParameter("country");
-        Country country = new Country();
-        if (countryParam != null && !countryParam.isEmpty()) {
-            int countryId = Integer.parseInt(countryParam);
-            Optional<Country> optionalCountry = countryService.getById(countryId);
-            if (optionalCountry.isPresent()) {
-                country = optionalCountry.get();
-            }
-        }*/
-
-
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
         String username = req.getParameter("username");
@@ -61,20 +48,17 @@ public class SettingsServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        User user = User.builder()
-                .setName(name)
-                .setSurname(surname)
-                .setUsername(username)
-                .setCountry(country)
-                .setPhoto(Base64.getEncoder().encodeToString(photo.readAllBytes()))
-                .setEmail(email)
-                .setPassword(password)
-                .build();
+       User user = (User) req.getSession().getAttribute("user");
 
+       user.setName(name);
+       user.setSurname(surname);
+       user.setUsername(username);
+       user.setCountry(country);
+       user.setPhoto(Base64.getEncoder().encodeToString(photo.readAllBytes()));
+       user.setEmail(email);
+       user.setPassword(password);
 
-        Optional<User> byUsername = userService.getUserByName(username);
-
-       if (byUsername.isEmpty()){
+       if (req.getSession().getAttribute("user") == null){
            UserService.getInstance().add(user);
            resp.sendRedirect("/pages/login.jsp");
         } else {
@@ -84,7 +68,6 @@ public class SettingsServlet extends HttpServlet {
           } catch (IOException e) {
               throw new RuntimeException(e);
           }
-
            if (!validator.validate(user)) {
                req.setAttribute("invalid data", 500);
            }
