@@ -75,7 +75,7 @@ public class SettingsServlet extends HttpServlet {
         Optional<User> byUsername = userService.getUserByName(username);
 
        if (byUsername.isEmpty()){
-           //UserService.getInstance().add(user);
+           UserService.getInstance().add(user);
            resp.sendRedirect("/pages/login.jsp");
         } else {
           try {
