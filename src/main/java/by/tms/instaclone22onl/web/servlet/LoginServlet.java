@@ -4,6 +4,7 @@ package by.tms.instaclone22onl.web.servlet;
     @author Ilya Moiseenko on 25.09.23
 */
 
+import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.service.UserService;
 
@@ -13,6 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Base64;
 import java.util.Optional;
 
 @WebServlet("/login")
