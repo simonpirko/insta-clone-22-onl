@@ -85,16 +85,18 @@ public final class JdbcLikeStorage implements LikeStorage {
             while (resultSet.next()) {
 
 
-                Post post = new Post();
-                post.setId(resultSet.getInt(1));
-                post.setUser(user);
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .description(resultSet.getString(3))
+                        .createdAt(resultSet.getTimestamp(4).toLocalDateTime())
+                        .user(user)
+                        .build();
+
                 byte[] image = resultSet.getBytes(2);
                 if (image != null) {
                     post.setPhoto(Base64.getEncoder().encodeToString(image));
                 }
-
-                post.setDescription(resultSet.getString(3));
-                post.setCreatedAt(resultSet.getTimestamp(4).toLocalDateTime());
 
                 Like like = new Like();
                 like.setUser(user);
@@ -214,16 +216,18 @@ public final class JdbcLikeStorage implements LikeStorage {
 
                 user.setCountry(country);
 
-                Post post = new Post();
-                post.setId(resultSet.getInt(10));
-                post.setUser(user);
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(10))
+                        .user(user)
+                        .description(resultSet.getString(12))
+                        .createdAt(resultSet.getTimestamp(13).toLocalDateTime())
+                        .build();
 
                 byte[] image1 = resultSet.getBytes(11);
                 if (image1 != null) {
                     post.setPhoto(Base64.getEncoder().encodeToString(image));
                 }
-                post.setDescription(resultSet.getString(12));
-                post.setCreatedAt(resultSet.getTimestamp(13).toLocalDateTime());
 
                 Like like = new Like();
                 like.setUser(user);

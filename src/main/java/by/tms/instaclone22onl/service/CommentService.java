@@ -5,9 +5,8 @@ import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.storage.CommentStorage.CommentStorage;
 import by.tms.instaclone22onl.storage.CommentStorage.JdbcCommentStorage;
-import by.tms.instaclone22onl.storage.PostStorage.PostStorage;
-import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
 
+import java.util.List;
 import java.util.Optional;
 
 public class CommentService {
@@ -25,7 +24,7 @@ public class CommentService {
     public void add(Comment comment) {storage.add(comment);}
 
 
-    public Optional<Comment> getByPost(Post post){return storage.getByPost(post); }
+    public Optional<List<Comment>> getByPost(Post post){return storage.getByPost(post); }
 
     public Optional<Comment> getByUser(User user){return  storage.getByUser(user);}
 }
