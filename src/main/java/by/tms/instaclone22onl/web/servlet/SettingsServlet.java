@@ -29,16 +29,24 @@ public class SettingsServlet extends HttpServlet {
     private final CountryService countryService = CountryService.getInstance();
     private final Validator validator = new Validator();
     private final UserStorage storage = JdbcUserStorage.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Country> countryList = countryService.getAll();
-        req.setAttribute("countries", countryList);
 
-        getServletContext().getRequestDispatcher("/pages/settings.jsp").forward(req, resp);
+            List<Country> countryList = countryService.getAll();
+            req.setAttribute("countries", countryList);
+
+            getServletContext().getRequestDispatcher("/pages/settings.jsp").forward(req, resp);
+
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        if (req.getSession().getAttribute("user") == null){
+            resp.sendRedirect("/pages/login.jsp");
+        } else {
+        User user = (User) req.getSession().getAttribute("user");
 
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");
@@ -48,29 +56,20 @@ public class SettingsServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-       User user = (User) req.getSession().getAttribute("user");
+        user.setName(name);
+        user.setSurname(surname);
+        user.setUsername(username);
+        user.setCountry(country);
+        user.setPhoto(Base64.getEncoder().encodeToString(photo.readAllBytes()));
+        user.setEmail(email);
+        user.setPassword(password);
 
-       user.setName(name);
-       user.setSurname(surname);
-       user.setUsername(username);
-       user.setCountry(country);
-       user.setPhoto(Base64.getEncoder().encodeToString(photo.readAllBytes()));
-       user.setEmail(email);
-       user.setPassword(password);
+        storage.updateById(user);
+        resp.sendRedirect("/pages/settings.jsp");
 
-       if (req.getSession().getAttribute("user") == null){
-           UserService.getInstance().add(user);
-           resp.sendRedirect("/pages/login.jsp");
-        } else {
-          try {
-              storage.updateById(user);
-              resp.sendRedirect("/pages/settings.jsp");
-          } catch (IOException e) {
-              throw new RuntimeException(e);
-          }
-           if (!validator.validate(user)) {
+        if (!validator.validate(user)) {
                req.setAttribute("invalid data", 500);
-           }
+        }
        }
     }
 }
