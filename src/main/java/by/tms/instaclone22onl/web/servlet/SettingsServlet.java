@@ -73,6 +73,10 @@ public class SettingsServlet extends HttpServlet {
         user.setEmail(email);
         user.setPassword(password);
 
+        if (!validator.validate(user)) {
+                req.setAttribute("invalid data", "Registration failed");
+        }
+
         storage.updateById(user);
         resp.sendRedirect("/pages/settings.jsp");
        }
