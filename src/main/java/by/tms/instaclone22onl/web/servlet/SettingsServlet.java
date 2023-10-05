@@ -30,6 +30,15 @@ public class SettingsServlet extends HttpServlet {
     private final Validator validator = new Validator();
     private final UserStorage storage = JdbcUserStorage.getInstance();
 
+    private final static String NAME = "name";
+    private final static String SURNAME = "surname";
+    private final static String USERNAME = "username";
+    private final static String EMAIL = "email";
+    private final static String PASSWORD = "password";
+    private final static String COUNTRY = "country";
+    private final static String PHOTO = "photo";
+
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -48,13 +57,13 @@ public class SettingsServlet extends HttpServlet {
         } else {
         User user = (User) req.getSession().getAttribute("user");
 
-        String name = req.getParameter("name");
-        String surname = req.getParameter("surname");
-        String username = req.getParameter("username");
-        Country country = countryService.getById(Integer.parseInt(req.getParameter("country"))).orElse(new Country());
-        InputStream photo = req.getPart("photo").getInputStream();
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
+        String name = req.getParameter(NAME);
+        String surname = req.getParameter(SURNAME);
+        String username = req.getParameter(USERNAME);
+        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).orElse(new Country());
+        InputStream photo = req.getPart(PHOTO).getInputStream();
+        String email = req.getParameter(EMAIL);
+        String password = req.getParameter(PASSWORD);
 
         user.setName(name);
         user.setSurname(surname);
@@ -66,10 +75,6 @@ public class SettingsServlet extends HttpServlet {
 
         storage.updateById(user);
         resp.sendRedirect("/pages/settings.jsp");
-
-        if (!validator.validate(user)) {
-               req.setAttribute("invalid data", 500);
-        }
        }
     }
 }
