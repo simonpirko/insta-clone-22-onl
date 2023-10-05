@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @WebServlet("/like")
@@ -34,6 +35,7 @@ public class LikeServlet extends HttpServlet {
             Like like = new Like();
             like.setPost(post);
             like.setUser(user);
+            like.setCreatedAt(LocalDateTime.now());
 
             likeService.save(like);
 

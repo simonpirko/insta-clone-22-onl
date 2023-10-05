@@ -34,6 +34,7 @@ create table if not exists "post" (
 CREATE TABLE "post_like"(
                             author_id int REFERENCES "human"(id),
                             post_id int REFERENCES "post"(id),
+                            created_at timestamp,
                             CONSTRAINT post_like_pk PRIMARY KEY(author_id, post_id)
 );
 
