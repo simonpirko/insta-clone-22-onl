@@ -15,10 +15,10 @@ insert into post values (2, 1, null, 'Test description by post #2', '2023-09-27 
 insert into post values (3, 2, null, 'Test description by post #3', '2023-09-27 19:58:30.2964321');
 insert into post values (4, 3, null, 'Test description by post #4', '2023-09-27 19:58:30.2964321');
 
-insert into post_like values (1, 1);
-insert into post_like values (1, 2);
-insert into post_like values (3, 3);
-insert into post_like values (4, 4);
+insert into post_like values (1, 1, '2023-09-27 19:58:30.2964321');
+insert into post_like values (1, 2, '2023-09-27 19:58:30.2964321');
+insert into post_like values (3, 3, '2023-09-27 19:58:30.2964321');
+insert into post_like values (4, 4, '2023-09-27 19:58:30.2964321');
 
 insert into comment values (1, 1, 'Great!');
 insert into comment values (2, 2, 'You are like a drop of water in the desert');

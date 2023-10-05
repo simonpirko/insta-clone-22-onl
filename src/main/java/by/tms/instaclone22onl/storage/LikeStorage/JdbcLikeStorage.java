@@ -14,23 +14,23 @@ import java.util.Optional;
 
 public final class JdbcLikeStorage implements LikeStorage {
 
-    private final String LIKE_INSERT = "insert into \"post_like\" (author_id, post_id) values (?, ?)";
+    private final String LIKE_INSERT = "insert into \"post_like\" (author_id, post_id, created_at) values (?, ?, ?)";
     private final String GET_BY_POST = """
-            select h.*, c.name  from "post_like" pl
+            select h.*, c.name, pl.created_at  from "post_like" pl
                         join "human" h
                         on pl.author_id = h.id
                         join "country" c     
                         on h.country_id  = c.id
                         where pl.post_id =  ?""";
     private final String GET_BY_USER = """                 
-            select p.id, p.photo, p.description, p.created_at from "post_like" pl
+            select p.id, p.photo, p.description, p.created_at, pl.created_at from "post_like" pl
             join "post" p
             on pl.post_id = p.id
             where pl.author_id = ?""";
 
     private final String GET_BY_USER_POST = "select * from \"post_like\" where author_id = ? and post_id = ?";
     private final String SELECT_ALL = """
-            select h.*, c.name, p.id, p.photo, p.description, p.created_at from "post_like" pl
+            select h.*, c.name, p.id, p.photo, p.description, p.created_at, pl.created_at from "post_like" pl
             join "human" h
             on pl.author_id = h.id
             join country c
@@ -56,6 +56,11 @@ public final class JdbcLikeStorage implements LikeStorage {
 
     @Override
     public boolean add(Like like) {
+        Optional<Like> existedLike = getByUserPost(like.getUser(), like.getPost());
+
+        if(existedLike.isPresent()){
+            return true;
+        }
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(LIKE_INSERT)) {
@@ -102,7 +107,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 Like like = new Like();
                 like.setUser(user);
                 like.setPost(post);
-                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
+                like.setCreatedAt(resultSet.getTimestamp(5).toLocalDateTime());
                 likeList.add(like);
             }
 
@@ -150,7 +155,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 Like like = new Like();
                 like.setUser(user);
                 like.setPost(post);
-                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
+                like.setCreatedAt(resultSet.getTimestamp(10).toLocalDateTime());
 
                 likeList.add(like);
             }
@@ -236,7 +241,7 @@ public final class JdbcLikeStorage implements LikeStorage {
                 Like like = new Like();
                 like.setUser(user);
                 like.setPost(post);
-                like.setCreatedAt(resultSet.getTimestamp(3).toLocalDateTime());
+                like.setCreatedAt(resultSet.getTimestamp(14).toLocalDateTime());
 
                 allLikes.add(like);
             }
