@@ -1,9 +1,6 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Like;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.model.*;
 import by.tms.instaclone22onl.storage.CommentStorage.CommentStorage;
 import by.tms.instaclone22onl.storage.CommentStorage.JdbcCommentStorage;
 import by.tms.instaclone22onl.storage.PostStorage.JdbcPostStorage;
@@ -61,6 +58,10 @@ public class PostService {
 
     public List<Post> getAllPost(){
         return postStorage.getAllPost();
+    }
+
+    public List<Post> getAllWithPageable(Page page){
+        return postStorage.findAllWithPageable(page);
     }
 
     public boolean deletePost(int id){

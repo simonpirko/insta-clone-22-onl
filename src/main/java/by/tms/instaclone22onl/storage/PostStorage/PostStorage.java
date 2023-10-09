@@ -1,5 +1,6 @@
 package by.tms.instaclone22onl.storage.PostStorage;
 
+import by.tms.instaclone22onl.model.Page;
 import by.tms.instaclone22onl.model.Post;
 import by.tms.instaclone22onl.model.User;
 
@@ -14,6 +15,8 @@ public interface PostStorage {
     Optional<Post> getPost(User user);
 
     List<Post> getAllPost();
+
+    List<Post> findAllWithPageable(Page page);
 
     boolean deletePost(int id);
 

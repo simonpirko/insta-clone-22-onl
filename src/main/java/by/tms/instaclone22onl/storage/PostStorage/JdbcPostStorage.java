@@ -1,9 +1,8 @@
 package by.tms.instaclone22onl.storage.PostStorage;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.model.*;
+import by.tms.instaclone22onl.service.PageService;
 import by.tms.instaclone22onl.storage.CountryStorage.JdbcCountryStorage;
 
 import java.sql.*;
@@ -17,7 +16,15 @@ public class JdbcPostStorage implements PostStorage {
     private static JdbcPostStorage instance;
 
     private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
-  
+  private final String SELECT_ALL_FOR_PAGE = """
+                                             SELECT * FROM post p  
+                                             JOIN human h  
+                                             ON p.author_id = h.id  
+                                             JOIN country cn  
+                                             ON h.country_id = cn.id 
+                                             LIMIT ? OFFSET ?
+                                             """;
+
     private JdbcPostStorage() {}
 
     public static JdbcPostStorage getInstance() {
@@ -173,6 +180,56 @@ public class JdbcPostStorage implements PostStorage {
         }
         return posts;
     }
+
+
+@Override
+public List<Post> findAllWithPageable(Page page){
+        PageService pageService = new PageService();
+List <Post> postsForPageList = new ArrayList<>();
+
+    try {
+        Connection connection = JdbcConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_FOR_PAGE);
+
+       preparedStatement.setInt(1, page.getLimit());
+       preparedStatement.setInt(2, pageService.getOffset(page));
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        while (resultSet.next()) {
+            Post post = Post
+                    .builder()
+                    .id(resultSet.getInt(1))
+                    .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(3)))
+                    .description(resultSet.getString(4))
+                    .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
+                    .build();
+
+            User user = User.builder()
+                    .setId(resultSet.getInt(6))
+                    .setName(resultSet.getString(7))
+                    .setSurname(resultSet.getString(8))
+                    .setUsername(resultSet.getString(9))
+                    .setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)))
+                    .build();
+
+            Country country = new Country(
+                    resultSet.getInt(13),
+                    resultSet.getString(15));
+
+            user.setCountry(country);
+            post.setUser(user);
+
+            postsForPageList.add(post);
+        }
+
+
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
+    }
+    return postsForPageList;
+
+}
 
     @Override
     public boolean deletePost(int id) {

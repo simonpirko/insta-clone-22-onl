@@ -139,7 +139,7 @@ public final class JdbcLikeStorage implements LikeStorage {
 
                 byte[] image = resultSet.getBytes(5);
                 if (image != null) {
-                    post.setPhoto(Base64.getEncoder().encodeToString(image));
+                    user.setPhoto(Base64.getEncoder().encodeToString(image));
                 }
 
                 user.setEmail(resultSet.getString(6));

@@ -5,6 +5,7 @@ package by.tms.instaclone22onl.web.servlet;
 */
 
 import by.tms.instaclone22onl.model.Post;
+import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.service.PostService;
 
 import javax.servlet.ServletException;
@@ -22,10 +23,20 @@ public class IndexServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Post> allPost = postService.getAllPost();
-        req.setAttribute("postList", allPost);
+//        List<Post> allPost = postService.getAllPost();
+//        req.setAttribute("postList", allPost);
 
-        getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
+//        getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
+
+
+        User user = (User) req.getSession().getAttribute("user");
+        if(user == null){
+            resp.sendRedirect("/pages/login.jsp");
+        }
+else {
+            resp.sendRedirect("/page?page=1");
+        }
+
     }
 
 }
