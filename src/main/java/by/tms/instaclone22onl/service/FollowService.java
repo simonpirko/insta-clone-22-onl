@@ -28,6 +28,9 @@ public class FollowService {
 
         return instance;
     }
+    public Optional<Follower> getFollowerById(int id) {
+        return followerStorage.getById(id);
+    }
     public void add (Follower follower) {
 
         followerStorage.add(follower);
