@@ -2,6 +2,9 @@ package by.tms.instaclone22onl.service;
 
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.storage.CountryStorage.*;
+import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
+import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
+import lombok.Getter;
 
 
 import java.util.List;
@@ -11,6 +14,8 @@ public class CountryService {
 
     private static CountryService instance;
     private final CountryStorage storage = JdbcCountryStorage.getInstance();
+    @Getter
+    private final UserStorage userStorage = JdbcUserStorage.getInstance();
 
     public static CountryService getInstance() {
         if (instance == null) {

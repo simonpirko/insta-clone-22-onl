@@ -10,14 +10,6 @@ public class City {
     private String name;
     private Country country;
 
-    public City(int id) {
-        this.id = id;
-    }
-
-    public City(String name) {
-        this.name = name;
-    }
-
     public int getId() {
         return id;
     }
