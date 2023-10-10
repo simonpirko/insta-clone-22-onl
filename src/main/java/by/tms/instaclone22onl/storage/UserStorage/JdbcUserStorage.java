@@ -168,7 +168,7 @@ import java.util.*;
         }
 
         @Override
-        public void updateById(User user) {
+        public void update(User user) {
             try (Connection connection = JdbcConnection.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_DATA)) {
 

@@ -14,5 +14,5 @@ public interface UserStorage {
     Optional<User> getById(int id);
     Optional<User> getByUsername(String username);
     List<User> getUsersWithUsernameContaining(String username);
-    void updateById(User user);
+    void update(User user);
 }
