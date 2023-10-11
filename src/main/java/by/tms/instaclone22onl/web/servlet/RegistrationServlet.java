@@ -58,18 +58,19 @@ public class RegistrationServlet extends HttpServlet {
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
-        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).orElse(new Country());
+        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).get();
 
 
         User user = User.builder()
-                .setName(name)
-                .setSurname(surname)
-                .setUsername(username)
-                .setEmail(email)
-                .setPassword(password)
-                .setCountry(country)
-                .setPhoto(Base64.getEncoder().encodeToString(photoInputStream.readAllBytes()))
+                .name(name)
+                .surname(surname)
+                .username(username)
+                .email(email)
+                .password(password)
+                .country(country)
+                .photo(Base64.getEncoder().encodeToString(photoInputStream.readAllBytes()))
                 .build();
+
         Optional<User> byUsername = userService.getUserByName(username);
         if (byUsername.isEmpty()) {
             UserService.getInstance().add(user);

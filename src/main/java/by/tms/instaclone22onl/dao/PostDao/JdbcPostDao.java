@@ -63,19 +63,22 @@ public class JdbcPostDao implements PostDao {
                         .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
                         .build();
 
-                User user = new User();
-                user.setId(resultSet.getInt(6));
-                user.setName(resultSet.getString(7));
-                user.setSurname(resultSet.getString(8));
-                user.setUsername(resultSet.getString(9));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)));
-                user.setEmail(resultSet.getString(11));
-                user.setPassword(resultSet.getString(12));
+                User user = User
+                        .builder()
+                        .id(resultSet.getInt(6))
+                        .name(resultSet.getString(7))
+                        .surname(resultSet.getString(8))
+                        .username(resultSet.getString(9))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(10)))
+                        .email(resultSet.getString(11))
+                        .password(resultSet.getString(12))
+                        .build();
 
-                Country country = new Country(
-                        resultSet.getInt(14),
-                        resultSet.getString(15)
-                );
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(14))
+                        .name(resultSet.getString(15))
+                        .build();
 
                 user.setCountry(country);
                 post.setUser(user);
@@ -101,26 +104,11 @@ public class JdbcPostDao implements PostDao {
                 Post post = Post
                         .builder()
                         .id(resultSet.getInt(1))
+                        .user(user)
                         .photo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
                         .description(resultSet.getString(4))
                         .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
                         .build();
-
-                user.setId(resultSet.getInt(6));
-                user.setName(resultSet.getString(7));
-                user.setSurname(resultSet.getString(8));
-                user.setUsername(resultSet.getString(9));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)));
-                user.setEmail(resultSet.getString(11));
-                user.setPassword(resultSet.getString(12));
-
-                Country country = new Country(
-                        resultSet.getInt(14),
-                        resultSet.getString(15)
-                );
-
-                user.setCountry(country);
-                post.setUser(user);
 
                 return Optional.of(post);
             }
@@ -148,19 +136,22 @@ public class JdbcPostDao implements PostDao {
                         .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
                         .build();
 
-                User user = new User();
-                user.setId(resultSet.getInt(6));
-                user.setName(resultSet.getString(7));
-                user.setSurname(resultSet.getString(8));
-                user.setUsername(resultSet.getString(9));
-                user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)));
-                user.setEmail(resultSet.getString(11));
-                user.setPassword(resultSet.getString(12));
+                User user = User
+                        .builder()
+                        .id(resultSet.getInt(6))
+                        .name(resultSet.getString(7))
+                        .surname(resultSet.getString(8))
+                        .username(resultSet.getString(9))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(10)))
+                        .email(resultSet.getString(11))
+                        .password(resultSet.getString(12))
+                        .build();
 
-                Country country = new Country(
-                        resultSet.getInt(14),
-                        resultSet.getString(15)
-                );
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(14))
+                        .name(resultSet.getString(15))
+                        .build();
 
                 user.setCountry(country);
                 post.setUser(user);

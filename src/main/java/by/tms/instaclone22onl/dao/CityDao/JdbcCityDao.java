@@ -34,13 +34,17 @@ public class JdbcCityDao implements CityDao {
 
             if (resultSet.next()){
 
-                City city = new City();
-                city.setId(resultSet.getInt(1));
-                city.setName(resultSet.getString(2));
+                City city = City
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
 
-                Country country = new Country(
-                        resultSet.getInt(4),
-                        resultSet.getString(5));
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(4))
+                        .name(resultSet.getString(5))
+                        .build();
 
                 city.setCountry(country);
 
@@ -61,13 +65,17 @@ public class JdbcCityDao implements CityDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
 
-                City city = new City();
-                city.setId(resultSet.getInt(1));
-                city.setName(resultSet.getString(2));
+                City city = City
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
 
-                Country country = new Country(
-                        resultSet.getInt(4),
-                        resultSet.getString(5));
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(4))
+                        .name(resultSet.getString(5))
+                        .build();
 
                 city.setCountry(country);
 

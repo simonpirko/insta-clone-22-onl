@@ -59,22 +59,22 @@ import java.util.*;
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    User user = new User();
+                    User user = User
+                            .builder()
+                            .id(resultSet.getInt(1))
+                            .name(resultSet.getString(2))
+                            .surname(resultSet.getString(3))
+                            .username(resultSet.getString(4))
+                            .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(5)))
+                            .email(resultSet.getString(6))
+                            .password(resultSet.getString(7))
+                            .build();
 
-                    user.setId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setSurname(resultSet.getString(3));
-                    user.setUsername(resultSet.getString(4));
-                    user.setPhoto(
-                            Base64.getEncoder().encodeToString(resultSet.getBytes(5))
-                    );
-                    user.setEmail(resultSet.getString(6));
-                    user.setPassword(resultSet.getString(7));
-
-                    Country country = new Country(
-                            resultSet.getInt(9),
-                            resultSet.getString(10)
-                    );
+                    Country country = Country
+                            .builder()
+                            .id(resultSet.getInt(9))
+                            .name(resultSet.getString(10))
+                            .build();
 
                     user.setCountry(country);
 
@@ -96,20 +96,22 @@ import java.util.*;
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 if (resultSet.next()) {
-                    User user = new User();
+                    User user = User
+                            .builder()
+                            .id(resultSet.getInt(1))
+                            .name(resultSet.getString(2))
+                            .surname(resultSet.getString(3))
+                            .username(resultSet.getString(4))
+                            .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(5)))
+                            .email(resultSet.getString(6))
+                            .password(resultSet.getString(7))
+                            .build();
 
-                    user.setId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setSurname(resultSet.getString(3));
-                    user.setUsername(resultSet.getString(4));
-                    user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
-                    user.setEmail(resultSet.getString(6));
-                    user.setPassword(resultSet.getString(7));
-
-                    Country country = new Country(
-                            resultSet.getInt(9),
-                            resultSet.getString(10)
-                    );
+                    Country country = Country
+                            .builder()
+                            .id(resultSet.getInt(9))
+                            .name(resultSet.getString(10))
+                            .build();
 
                     user.setCountry(country);
 
@@ -135,25 +137,22 @@ import java.util.*;
                 ResultSet resultSet = preparedStatement.executeQuery();
 
                 while (resultSet.next()){
-                    User user = new User();
+                    User user = User
+                            .builder()
+                            .id(resultSet.getInt(1))
+                            .name(resultSet.getString(2))
+                            .surname(resultSet.getString(3))
+                            .username(resultSet.getString(4))
+                            .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(5)))
+                            .email(resultSet.getString(6))
+                            .password(resultSet.getString(7))
+                            .build();
 
-                    user.setId(resultSet.getInt(1));
-                    user.setName(resultSet.getString(2));
-                    user.setSurname(resultSet.getString(3));
-                    user.setUsername(resultSet.getString(4));
-
-                    byte[] image = resultSet.getBytes(5);
-                    if(image != null) {
-                        user.setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(5)));
-                    }
-
-                    user.setEmail(resultSet.getString(6));
-                    user.setPassword(resultSet.getString(7));
-
-                    Country country = new Country(
-                            resultSet.getInt(9),
-                            resultSet.getString(10)
-                    );
+                    Country country = Country
+                            .builder()
+                            .id(resultSet.getInt(9))
+                            .name(resultSet.getString(10))
+                            .build();
 
                     user.setCountry(country);
 

@@ -56,16 +56,19 @@ public class JdbcCommentDao implements CommentDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                Comment comment = new Comment();
-
-                comment.setUser(user);
-                //comment.setPost();
-                comment.setText(resultSet.getString(3));
+                Comment comment = Comment
+                        .builder()
+                        .user(user)
+                        .text(resultSet.getString(3))
+                        .build();
 
                 Post post = Post
                         .builder()
                         .id(resultSet.getInt(2))
-                        .user(user).photo(Base64.getEncoder().encodeToString(resultSet.getBytes(6)))
+                        .user(user)
+                        .photo(
+                                Base64.getEncoder().encodeToString(resultSet.getBytes(6))
+                        )
                         .description(resultSet.getString(7))
                         .createdAt(resultSet.getTimestamp(8).toLocalDateTime())
                         .build();
@@ -92,26 +95,28 @@ public class JdbcCommentDao implements CommentDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Comment comment = new Comment();
+                Comment comment = Comment
+                        .builder()
+                        .post(post)
+                        .text(resultSet.getString(3))
+                        .build();
 
-                //comment.setUser(user);
-                comment.setPost(post);
-                comment.setText(resultSet.getString(3));
+                User user = User
+                        .builder()
+                        .id(resultSet.getInt(4))
+                        .name(resultSet.getString(5))
+                        .surname(resultSet.getString(6))
+                        .username(resultSet.getString(7))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(8)))
+                        .email(resultSet.getString(9))
+                        .password(resultSet.getString(10))
+                        .build();
 
-                User user = new User();
-                user.setId(resultSet.getInt(4));
-                user.setName(resultSet.getString(5));
-                user.setSurname(resultSet.getString(6));
-                user.setUsername(resultSet.getString(7));
-                user.setPhoto(
-                        Base64.getEncoder().encodeToString(resultSet.getBytes(8))
-                );
-                user.setEmail(resultSet.getString(9));
-                user.setPassword(resultSet.getString(10));
-                Country country = new Country(
-                        resultSet.getInt(12),
-                        resultSet.getString(13)
-                );
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(12))
+                        .name(resultSet.getString(13))
+                        .build();
 
                 user.setCountry(country);
 

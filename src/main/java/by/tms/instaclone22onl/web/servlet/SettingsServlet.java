@@ -57,7 +57,7 @@ public class SettingsServlet extends HttpServlet {
         String name = req.getParameter(NAME);
         String surname = req.getParameter(SURNAME);
         String username = req.getParameter(USERNAME);
-        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).orElse(new Country());
+        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).get();
         InputStream photo = req.getPart(PHOTO).getInputStream();
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);

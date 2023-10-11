@@ -34,10 +34,11 @@ public class JdbcCountryDao implements CountryDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                Country country = new Country(
-                    resultSet.getInt(1),
-                    resultSet.getString(2)
-                );
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
 
                 return Optional.of(country);
             }
@@ -47,29 +48,29 @@ public class JdbcCountryDao implements CountryDao {
         return Optional.empty();
     }
 
+    @Override
+    public Optional<Country> getByName (String name){
+        try {Connection connection = JdbcConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_COUNTRY_NAME);
+            preparedStatement.setString(1, name);
 
-            @Override
-            public Optional<Country> getByName (String name){
-                try {Connection connection = JdbcConnection.getConnection();
-                    PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_COUNTRY_NAME);
-                    preparedStatement.setString(1, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                    ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
 
-                    if (resultSet.next()) {
-                        Country country = new Country(
-                            resultSet.getInt(1),
-                            resultSet.getString(2)
-                        );
-
-                        return Optional.of(country);
-                    }
-
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                return Optional.empty();
+                return Optional.of(country);
             }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Optional.empty();
+    }
 
     @Override
     public List<Country> getAll() {
@@ -79,9 +80,12 @@ public class JdbcCountryDao implements CountryDao {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Country country = new Country();
-                country.setId(resultSet.getInt(1));
-                country.setName(resultSet.getString(2));
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
+
                 allCountries.add(country);
             }
 

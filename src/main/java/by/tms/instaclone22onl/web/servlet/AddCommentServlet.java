@@ -30,9 +30,9 @@ public class AddCommentServlet extends HttpServlet {
         if (post.isPresent()) {
             String commentText = req.getParameter("commentMessage");
             Comment comment = Comment.builder()
-                    .setUser(user)
-                    .setPost(post.get())
-                    .setText(commentText)
+                    .user(user)
+                    .post(post.get())
+                    .text(commentText)
                     .build();
 
             commentService.add(comment);
