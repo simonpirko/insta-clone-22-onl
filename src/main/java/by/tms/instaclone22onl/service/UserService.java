@@ -35,4 +35,5 @@ public class UserService {
     }
 
     public List<User> getUsersWithUsernameContaining(String keyword){ return userStorage.getUsersWithUsernameContaining(keyword); }
+    public void update(User user){userStorage.update(user);}
 }

@@ -3,6 +3,7 @@ package by.tms.instaclone22onl.web.servlet;
 import by.tms.instaclone22onl.model.Country;
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.service.CountryService;
+import by.tms.instaclone22onl.service.UserService;
 import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
 import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
 import by.tms.instaclone22onl.utils.Validator;
@@ -27,7 +28,7 @@ import java.util.List;
 public class SettingsServlet extends HttpServlet {
     private final CountryService countryService = CountryService.getInstance();
     private final Validator validator = new Validator();
-    private final UserStorage userStorage = countryService.getUserStorage();
+    private final UserService userService = UserService.getInstance();
 
     private final static String NAME = "name";
     private final static String SURNAME = "surname";
@@ -74,7 +75,7 @@ public class SettingsServlet extends HttpServlet {
         if (!validator.validate(user)) {
                 req.setAttribute("invalid data", "Registration failed");
         }
-        userStorage.update(user);
+        userService.update(user);
         resp.sendRedirect("/pages/settings.jsp");
        }
     }
