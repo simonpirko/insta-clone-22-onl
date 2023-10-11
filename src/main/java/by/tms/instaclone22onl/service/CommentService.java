@@ -1,17 +1,17 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.CommentStorage.CommentStorage;
-import by.tms.instaclone22onl.storage.CommentStorage.JdbcCommentStorage;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
+import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
 
 import java.util.List;
 import java.util.Optional;
 
 public class CommentService {
     private static CommentService instance;
-    private final CommentStorage storage = JdbcCommentStorage.getInstance();
+    private final CommentDao storage = JdbcCommentDao.getInstance();
     private CommentService(){
 
     }

@@ -1,11 +1,11 @@
-package by.tms.instaclone22onl.storage.PostStorage;
+package by.tms.instaclone22onl.dao.PostDao;
 
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 
 import java.util.List;
 import java.util.Optional;
-public interface PostStorage {
+public interface PostDao {
 
     void addPost(Post post);
 

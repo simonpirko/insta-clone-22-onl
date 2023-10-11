@@ -1,7 +1,7 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.PostService;
 
 import javax.servlet.ServletException;

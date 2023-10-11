@@ -1,10 +1,10 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.Like;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.LikeStorage.JdbcLikeStorage;
-import by.tms.instaclone22onl.storage.LikeStorage.LikeStorage;
+import by.tms.instaclone22onl.entity.Like;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.dao.LikeDao.JdbcLikeDao;
+import by.tms.instaclone22onl.dao.LikeDao.LikeDao;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ public class LikeService {
 
     private static LikeService instance;
 
-    private final LikeStorage likeStorage = JdbcLikeStorage.getInstance();
+    private final LikeDao likeDao = JdbcLikeDao.getInstance();
 
     private LikeService() {}
 
@@ -29,18 +29,18 @@ public class LikeService {
     }
 
     public void save(Like like) {
-        likeStorage.add(like);
+        likeDao.add(like);
     }
 
     public List<Like> findAllByPost(Post post) {
-        return likeStorage.getByPost(post);
+        return likeDao.getByPost(post);
     }
 
     public Optional<Like> findByUserAndPost(User user, Post post) {
-        return likeStorage.getByUserPost(user, post);
+        return likeDao.getByUserPost(user, post);
     }
 
     public void removeByUserAndPost(User user, Post post) {
-        likeStorage.deleteByUserPost(user, post);
+        likeDao.deleteByUserPost(user, post);
     }
 }

@@ -1,13 +1,13 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Like;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.CommentStorage.CommentStorage;
-import by.tms.instaclone22onl.storage.CommentStorage.JdbcCommentStorage;
-import by.tms.instaclone22onl.storage.PostStorage.JdbcPostStorage;
-import by.tms.instaclone22onl.storage.PostStorage.PostStorage;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Like;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
+import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
+import by.tms.instaclone22onl.dao.PostDao.JdbcPostDao;
+import by.tms.instaclone22onl.dao.PostDao.PostDao;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +16,8 @@ public class PostService {
 
     private static PostService instance;
 
-    private final PostStorage postStorage = JdbcPostStorage.getInstance();
-    private final CommentStorage commentStorage = JdbcCommentStorage.getInstance();
+    private final PostDao postDao = JdbcPostDao.getInstance();
+    private final CommentDao commentDao = JdbcCommentDao.getInstance();
     private final LikeService likeService = LikeService.getInstance();
 
     private PostService() {}
@@ -31,15 +31,15 @@ public class PostService {
     }
 
     public void addPost(Post post){
-        postStorage.addPost(post);
+        postDao.addPost(post);
     }
     public Optional<Post> getPost(int id) {
-        Optional<Post> optionalPost = postStorage.getPost(id);
+        Optional<Post> optionalPost = postDao.getPost(id);
 
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
 
-            Optional<List<Comment>> commentsByPost = commentStorage.getByPost(post);
+            Optional<List<Comment>> commentsByPost = commentDao.getByPost(post);
             List<Like> allLikesByPost = likeService.findAllByPost(post);
 
             if (commentsByPost.isPresent()) {
@@ -56,22 +56,22 @@ public class PostService {
     }
 
     public Optional<Post> getPost(User user){
-        return postStorage.getPost(user);
+        return postDao.getPost(user);
     }
 
     public List<Post> getAllPost(){
-        return postStorage.getAllPost();
+        return postDao.getAllPost();
     }
 
     public boolean deletePost(int id){
-        return postStorage.deletePost(id);
+        return postDao.deletePost(id);
     }
 
     public boolean deletePost(User user){
-        return postStorage.deletePost(user);
+        return postDao.deletePost(user);
     }
 
     public void updatePost(int id, Post newPost){
-        postStorage.updatePost(id, newPost);
+        postDao.updatePost(id, newPost);
     }
 }

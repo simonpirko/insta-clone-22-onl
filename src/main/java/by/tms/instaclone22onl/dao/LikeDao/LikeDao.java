@@ -1,13 +1,13 @@
-package by.tms.instaclone22onl.storage.LikeStorage;
+package by.tms.instaclone22onl.dao.LikeDao;
 
-import by.tms.instaclone22onl.model.Like;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Like;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface LikeStorage {
+public interface LikeDao {
     boolean add(Like like);
     List <Like> getByUser(User user);
     List <Like> getByPost(Post post);

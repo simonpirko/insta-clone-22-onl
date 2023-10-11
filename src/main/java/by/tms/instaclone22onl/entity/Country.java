@@ -1,14 +1,23 @@
-package by.tms.instaclone22onl.model;
+package by.tms.instaclone22onl.entity;
+
+import java.util.List;
 
 /*
     @author Ilya Moiseenko on 19.09.23
 */
 
-public class City {
+public class Country {
 
     private int id;
     private String name;
-    private Country country;
+    private List<City> cities;
+
+    public Country() {}
+
+    public Country(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public int getId() {
         return id;
@@ -26,20 +35,19 @@ public class City {
         this.name = name;
     }
 
-    public Country getCountry() {
-        return country;
+    public List<City> getCities() {
+        return cities;
     }
 
-    public void setCountry(Country country) {
-        this.country = country;
+    public void setCities(List<City> cities) {
+        this.cities = cities;
     }
 
     @Override
     public String toString() {
-        return "City{" +
+        return "Country{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", country=" + country +
                 '}';
     }
 }

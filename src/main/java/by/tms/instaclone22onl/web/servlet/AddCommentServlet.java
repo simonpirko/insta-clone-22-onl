@@ -1,8 +1,8 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CommentService;
 import by.tms.instaclone22onl.service.PostService;
 

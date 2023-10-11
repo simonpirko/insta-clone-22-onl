@@ -1,7 +1,7 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CountryService;
 import by.tms.instaclone22onl.service.UserService;
 import by.tms.instaclone22onl.utils.Validator;

@@ -1,10 +1,9 @@
-package by.tms.instaclone22onl.storage.PostStorage;
+package by.tms.instaclone22onl.dao.PostDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.CountryStorage.JdbcCountryStorage;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,17 +11,17 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class JdbcPostStorage implements PostStorage {
+public class JdbcPostDao implements PostDao {
 
-    private static JdbcPostStorage instance;
+    private static JdbcPostDao instance;
 
     private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
   
-    private JdbcPostStorage() {}
+    private JdbcPostDao() {}
 
-    public static JdbcPostStorage getInstance() {
+    public static JdbcPostDao getInstance() {
         if (instance == null)
-            instance = new JdbcPostStorage();
+            instance = new JdbcPostDao();
 
         return instance;
     }

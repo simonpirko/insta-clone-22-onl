@@ -1,6 +1,6 @@
 package by.tms.instaclone22onl.utils;
 
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.User;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

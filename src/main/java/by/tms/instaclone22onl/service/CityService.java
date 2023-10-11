@@ -1,14 +1,14 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.City;
-import by.tms.instaclone22onl.storage.CityStorage.CityStorage;
-import by.tms.instaclone22onl.storage.CityStorage.JdbcCityStorage;
+import by.tms.instaclone22onl.entity.City;
+import by.tms.instaclone22onl.dao.CityDao.CityDao;
+import by.tms.instaclone22onl.dao.CityDao.JdbcCityDao;
 
 import java.util.Optional;
 
 public class CityService {
     private static CityService instance;
-    private final CityStorage storage = JdbcCityStorage.getInstance();
+    private final CityDao storage = JdbcCityDao.getInstance();
 
     public static CityService getInstance(){
         if (instance == null){

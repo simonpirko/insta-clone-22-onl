@@ -1,27 +1,14 @@
-package by.tms.instaclone22onl.model;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
+package by.tms.instaclone22onl.entity;
 
 /*
     @author Ilya Moiseenko on 19.09.23
 */
 
-public class Country {
+public class City {
 
     private int id;
     private String name;
-    private List<City> cities;
-
-    public Country() {}
-
-    public Country(int id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+    private Country country;
 
     public int getId() {
         return id;
@@ -39,19 +26,20 @@ public class Country {
         this.name = name;
     }
 
-    public List<City> getCities() {
-        return cities;
+    public Country getCountry() {
+        return country;
     }
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
+    public void setCountry(Country country) {
+        this.country = country;
     }
 
     @Override
     public String toString() {
-        return "Country{" +
+        return "City{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", country=" + country +
                 '}';
     }
 }

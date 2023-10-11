@@ -1,25 +1,25 @@
-package by.tms.instaclone22onl.storage.CityStorage;
+package by.tms.instaclone22onl.dao.CityDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.City;
-import by.tms.instaclone22onl.model.Country;
+import by.tms.instaclone22onl.entity.City;
+import by.tms.instaclone22onl.entity.Country;
 
 import java.sql.*;
 import java.util.Optional;
 
-public class JdbcCityStorage implements CityStorage {
-    private static JdbcCityStorage instance;
+public class JdbcCityDao implements CityDao {
+    private static JdbcCityDao instance;
     private final String GET_BY_ID_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
                                                 "on \"сountry\".id = \"сity\".country_id\n" +
                                                 "WHERE \"сity\".id = ?";
     private final String GET_BY_NAME_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
                                                   "on \"сountry\".id = \"сity\".country_id\n" +
                                                   "WHERE \"сity\".name = ?;";
-    private JdbcCityStorage() {
+    private JdbcCityDao() {
     }
-    public static JdbcCityStorage getInstance(){
+    public static JdbcCityDao getInstance(){
         if (instance == null){
-            instance = new JdbcCityStorage();
+            instance = new JdbcCityDao();
         }
         return instance;
     }

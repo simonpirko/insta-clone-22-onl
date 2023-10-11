@@ -1,10 +1,10 @@
-package by.tms.instaclone22onl.storage.CommentStorage;
+package by.tms.instaclone22onl.dao.CommentDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,19 +15,19 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class JdbcCommentStorage implements CommentStorage {
+public class JdbcCommentDao implements CommentDao {
 
-    private static JdbcCommentStorage instance;
+    private static JdbcCommentDao instance;
 
     private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
     private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
     private final String GET_BY_POST = "select * from \"comment\" join \"human\" on \"comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"comment\".post_id = ?";
 
-    private JdbcCommentStorage() {}
+    private JdbcCommentDao() {}
 
-    public static JdbcCommentStorage getInstance() {
+    public static JdbcCommentDao getInstance() {
         if (instance == null)
-            instance = new JdbcCommentStorage();
+            instance = new JdbcCommentDao();
 
         return instance;
     }

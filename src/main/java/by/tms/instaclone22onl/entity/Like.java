@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.model;
+package by.tms.instaclone22onl.entity;
 
 /*
     @author Ilya Moiseenko on 19.09.23

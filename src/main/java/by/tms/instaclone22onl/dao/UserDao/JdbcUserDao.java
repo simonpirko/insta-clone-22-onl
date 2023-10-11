@@ -1,18 +1,18 @@
-package by.tms.instaclone22onl.storage.UserStorage;
+package by.tms.instaclone22onl.dao.UserDao;
 
 /*
     @author Ilya Moiseenko on 20.09.23
 */
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.User;
 
 import java.sql.*;
 import java.util.*;
-    public class JdbcUserStorage implements UserStorage {
+    public class JdbcUserDao implements UserDao {
 
-        private static JdbcUserStorage instance;
+        private static JdbcUserDao instance;
 
         private final String INSERT = "insert into \"human\" (name, surname, username, photo, email, password, country_id) values (?, ?, ?, ?, ?, ?, ?)";
         private final String GET_BY_ID_WITH_COUNTRY = "select * from \"human\" join \"country\" on \"human\".country_id = \"country\".id where \"human\".id = ?";
@@ -22,11 +22,11 @@ import java.util.*;
         private final String UPDATE_USER_DATA = "UPDATE human SET name = ?, surname = ?, username = ?, country_id = ?, photo = ?, email = ?, password = ?\n" +
                                                 "WHERE id = ?";
 
-        private JdbcUserStorage() {}
+        private JdbcUserDao() {}
 
-        public static JdbcUserStorage getInstance() {
+        public static JdbcUserDao getInstance() {
             if (instance == null)
-                instance = new JdbcUserStorage();
+                instance = new JdbcUserDao();
 
             return instance;
         }

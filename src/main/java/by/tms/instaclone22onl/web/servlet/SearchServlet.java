@@ -1,6 +1,6 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.UserService;
 
 import javax.servlet.ServletException;
@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {

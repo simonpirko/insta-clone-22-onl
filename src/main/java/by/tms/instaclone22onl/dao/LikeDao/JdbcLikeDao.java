@@ -1,10 +1,10 @@
-package by.tms.instaclone22onl.storage.LikeStorage;
+package by.tms.instaclone22onl.dao.LikeDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.Like;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.Like;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public final class JdbcLikeStorage implements LikeStorage {
+public final class JdbcLikeDao implements LikeDao {
 
     private final String LIKE_INSERT = "insert into \"post_like\" (author_id, post_id, created_at) values (?, ?, ?)";
     private final String GET_BY_POST = """
@@ -42,14 +42,14 @@ public final class JdbcLikeStorage implements LikeStorage {
     private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
     private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
 
-    private static JdbcLikeStorage instance;
+    private static JdbcLikeDao instance;
 
-    private JdbcLikeStorage() {
+    private JdbcLikeDao() {
     }
 
-    public static JdbcLikeStorage getInstance() {
+    public static JdbcLikeDao getInstance() {
         if (instance == null) {
-            instance = new JdbcLikeStorage();
+            instance = new JdbcLikeDao();
         }
         return instance;
     }

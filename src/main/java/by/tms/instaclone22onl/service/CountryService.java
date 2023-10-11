@@ -1,9 +1,9 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.storage.CountryStorage.*;
-import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
-import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.dao.CountryDao.*;
+import by.tms.instaclone22onl.dao.UserDao.JdbcUserDao;
+import by.tms.instaclone22onl.dao.UserDao.UserDao;
 import lombok.Getter;
 
 
@@ -13,9 +13,9 @@ import java.util.Optional;
 public class CountryService {
 
     private static CountryService instance;
-    private final CountryStorage storage = JdbcCountryStorage.getInstance();
+    private final CountryDao storage = JdbcCountryDao.getInstance();
     @Getter
-    private final UserStorage userStorage = JdbcUserStorage.getInstance();
+    private final UserDao userDao = JdbcUserDao.getInstance();
 
     public static CountryService getInstance() {
         if (instance == null) {
