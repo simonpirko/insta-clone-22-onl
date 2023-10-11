@@ -15,16 +15,19 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class JdbcCommentDao implements CommentDao {
+public class JdbcCommentDao implements CommentDao<Integer> {
 
+    // Fields
     private static JdbcCommentDao instance;
 
     private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
     private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
     private final String GET_BY_POST = "select * from \"comment\" join \"human\" on \"comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"comment\".post_id = ?";
 
+    // Constructors
     private JdbcCommentDao() {}
 
+    // Methods
     public static JdbcCommentDao getInstance() {
         if (instance == null)
             instance = new JdbcCommentDao();
@@ -33,7 +36,7 @@ public class JdbcCommentDao implements CommentDao {
     }
 
     @Override
-    public void add(Comment comment) {
+    public Optional<Integer> save(Comment comment) {
         try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
 
@@ -42,13 +45,20 @@ public class JdbcCommentDao implements CommentDao {
             preparedStatement.setString(3, comment.getText());
 
             preparedStatement.execute();
+
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next())
+                    return Optional.of(keys.getInt(1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return Optional.empty();
     }
 
     @Override
-    public Optional<Comment> getByUser(User user) {
+    public Optional<Comment> findAllByUser(User user) {
         try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER);
             preparedStatement.setInt(1, user.getId());
@@ -85,7 +95,7 @@ public class JdbcCommentDao implements CommentDao {
     }
 
     @Override
-    public Optional<List<Comment>> getByPost(Post post) {
+    public List<Comment> findAllByPost(Post post) {
         List<Comment> comments = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection()) {
@@ -128,7 +138,6 @@ public class JdbcCommentDao implements CommentDao {
             e.printStackTrace();
         }
 
-        return Optional.of(comments);
+        return comments;
     }
-
 }

@@ -4,18 +4,14 @@ import by.tms.instaclone22onl.entity.Like;
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface LikeDao {
-    boolean add(Like like);
-    List <Like> getByUser(User user);
-    List <Like> getByPost(Post post);
-    List<Like> getAll();
-    Optional<Like> getByUserPost(User user, Post post);
-    boolean deleteByUserPost(User user, Post post);
+public interface LikeDao<ID> {
 
-    boolean deleteByUser(User user);
-    boolean deleteByPost(Post post);
+    Optional<ID> save(Like like);
+    Iterable<Like> findAll();
+    Optional<Like> findByUserAndPost(User user, Post post);
+    void removeByUserAndPost(User user, Post post);
+    int findAllByPost(Post post);
 }
 

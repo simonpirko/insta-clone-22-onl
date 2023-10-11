@@ -3,22 +3,21 @@ package by.tms.instaclone22onl.dao.PostDao;
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
 
-import java.util.List;
 import java.util.Optional;
-public interface PostDao {
 
-    void addPost(Post post);
+public interface PostDao<ID> {
 
-    Optional<Post> getPost(int id);
+    Optional<ID> save(Post post);
 
-    Optional<Post> getPost(User user);
+    Optional<Post> findById(ID id);
 
-    List<Post> getAllPost();
+    Optional<Post> findByUser(User user);
 
-    boolean deletePost(int id);
+    Iterable<Post> findAll();
 
-    boolean deletePost(User user);
+    void removeById(ID id);
 
-    void updatePost(int id, Post newPost);
+    void removeByUser(User user);
 
+    void updatePost(ID id, Post newPost);
 }

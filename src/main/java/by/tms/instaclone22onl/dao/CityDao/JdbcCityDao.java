@@ -7,7 +7,9 @@ import by.tms.instaclone22onl.entity.Country;
 import java.sql.*;
 import java.util.Optional;
 
-public class JdbcCityDao implements CityDao {
+public class JdbcCityDao implements CityDao<Integer> {
+
+    // Fields
     private static JdbcCityDao instance;
     private final String GET_BY_ID_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
                                                 "on \"сountry\".id = \"сity\".country_id\n" +
@@ -15,8 +17,11 @@ public class JdbcCityDao implements CityDao {
     private final String GET_BY_NAME_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
                                                   "on \"сountry\".id = \"сity\".country_id\n" +
                                                   "WHERE \"сity\".name = ?;";
-    private JdbcCityDao() {
-    }
+
+    // Constructors
+    private JdbcCityDao() {}
+
+    // Methods
     public static JdbcCityDao getInstance(){
         if (instance == null){
             instance = new JdbcCityDao();
@@ -25,7 +30,7 @@ public class JdbcCityDao implements CityDao {
     }
 
     @Override
-    public Optional<City> getById(int id) {
+    public Optional<City> findById(Integer id) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_SQL_SCRIPT)){
 
@@ -57,7 +62,7 @@ public class JdbcCityDao implements CityDao {
     }
 
     @Override
-    public Optional<City> getByName(String name) {
+    public Optional<City> findByName(String name) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_NAME_SQL_SCRIPT)){
 

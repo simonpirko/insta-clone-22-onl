@@ -6,13 +6,13 @@ package by.tms.instaclone22onl.dao.UserDao;
 
 import by.tms.instaclone22onl.entity.User;
 
-import java.util.List;
 import java.util.Optional;
 
-public interface UserDao {
-    void add(User user);
-    Optional<User> getById(int id);
-    Optional<User> getByUsername(String username);
-    List<User> getUsersWithUsernameContaining(String username);
+public interface UserDao<ID> {
+
+    Optional<ID> save(User user);
+    Optional<User> findById(ID id);
+    Optional<User> findByUsername(String username);
+    Iterable<User> findUsersWithUsernameContaining(String username);
     void update(User user);
 }

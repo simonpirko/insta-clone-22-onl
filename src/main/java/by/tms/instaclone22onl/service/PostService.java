@@ -14,14 +14,16 @@ import java.util.Optional;
 
 public class PostService {
 
+    // Fields
     private static PostService instance;
 
-    private final PostDao postDao = JdbcPostDao.getInstance();
-    private final CommentDao commentDao = JdbcCommentDao.getInstance();
-    private final LikeService likeService = LikeService.getInstance();
+    private final PostDao<Integer> postDao = JdbcPostDao.getInstance();
+    private final CommentDao<Integer> commentDao = JdbcCommentDao.getInstance();
 
+    // Constructors
     private PostService() {}
 
+    // Methods
     public static PostService getInstance() {
         if (instance == null) {
             instance = new PostService();
@@ -30,24 +32,19 @@ public class PostService {
         return instance;
     }
 
-    public void addPost(Post post){
-        postDao.addPost(post);
+    public Optional<Integer> save(Post post){
+        return postDao.save(post);
     }
-    public Optional<Post> getPost(int id) {
-        Optional<Post> optionalPost = postDao.getPost(id);
+
+    public Optional<Post> findById(Integer id) {
+        Optional<Post> optionalPost = postDao.findById(id);
 
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
 
-            Optional<List<Comment>> commentsByPost = commentDao.getByPost(post);
-            List<Like> allLikesByPost = likeService.findAllByPost(post);
+            Iterable<Comment> commentsByPost = commentDao.findAllByPost(post);
 
-            if (commentsByPost.isPresent()) {
-                List<Comment> comments = commentsByPost.get();
-
-                post.setComments(comments);
-                post.setLikes(allLikesByPost);
-            }
+            post.setComments(commentsByPost);
 
             return Optional.of(post);
         }
@@ -55,20 +52,20 @@ public class PostService {
         return optionalPost;
     }
 
-    public Optional<Post> getPost(User user){
-        return postDao.getPost(user);
+    public Optional<Post> findPost(User user){
+        return postDao.findByUser(user);
     }
 
-    public List<Post> getAllPost(){
-        return postDao.getAllPost();
+    public Iterable<Post> findAll(){
+        return postDao.findAll();
     }
 
-    public boolean deletePost(int id){
-        return postDao.deletePost(id);
+    public void removeById(Integer id){
+        postDao.removeById(id);
     }
 
-    public boolean deletePost(User user){
-        return postDao.deletePost(user);
+    public void removeByUser(User user){
+        postDao.removeByUser(user);
     }
 
     public void updatePost(int id, Post newPost){

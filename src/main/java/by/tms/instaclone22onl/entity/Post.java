@@ -21,7 +21,7 @@ public class Post {
     private String photo;
     private String description;
     private LocalDateTime createdAt;
-    private List<Comment> comments;
+    private Iterable<Comment> comments;
     private List<Like> likes;
 
     @Override

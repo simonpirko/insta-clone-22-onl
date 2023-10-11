@@ -6,7 +6,6 @@ import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.dao.LikeDao.JdbcLikeDao;
 import by.tms.instaclone22onl.dao.LikeDao.LikeDao;
 
-import java.util.List;
 import java.util.Optional;
 
 /*
@@ -15,12 +14,15 @@ import java.util.Optional;
 
 public class LikeService {
 
+    // Fields
     private static LikeService instance;
 
-    private final LikeDao likeDao = JdbcLikeDao.getInstance();
+    private final LikeDao<Integer> likeDao = JdbcLikeDao.getInstance();
 
+    // Constructors
     private LikeService() {}
 
+    // Methods
     public static LikeService getInstance() {
         if (instance == null)
             return new LikeService();
@@ -28,19 +30,19 @@ public class LikeService {
         return instance;
     }
 
-    public void save(Like like) {
-        likeDao.add(like);
-    }
-
-    public List<Like> findAllByPost(Post post) {
-        return likeDao.getByPost(post);
+    public Optional<Integer> save(Like like) {
+        return likeDao.save(like);
     }
 
     public Optional<Like> findByUserAndPost(User user, Post post) {
-        return likeDao.getByUserPost(user, post);
+        return likeDao.findByUserAndPost(user, post);
     }
 
     public void removeByUserAndPost(User user, Post post) {
-        likeDao.deleteByUserPost(user, post);
+        likeDao.removeByUserAndPost(user, post);
+    }
+
+    public int findAllByPost(Post post) {
+        return likeDao.findAllByPost(post);
     }
 }

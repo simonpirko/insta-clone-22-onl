@@ -2,40 +2,37 @@ package by.tms.instaclone22onl.service;
 
 import by.tms.instaclone22onl.entity.Country;
 import by.tms.instaclone22onl.dao.CountryDao.*;
-import by.tms.instaclone22onl.dao.UserDao.JdbcUserDao;
-import by.tms.instaclone22onl.dao.UserDao.UserDao;
-import lombok.Getter;
 
-
-import java.util.List;
 import java.util.Optional;
 
 public class CountryService {
 
+    // Fields
     private static CountryService instance;
-    private final CountryDao storage = JdbcCountryDao.getInstance();
-    @Getter
-    private final UserDao userDao = JdbcUserDao.getInstance();
 
+    private final CountryDao<Integer> countryDao = JdbcCountryDao.getInstance();
+
+    // Constructors
+    private CountryService() {}
+
+    // Methods
     public static CountryService getInstance() {
         if (instance == null) {
             instance = new CountryService();
         }
+
         return instance;
     }
 
-    private CountryService() {
+    public Optional<Country> findById(Integer id) {
+        return countryDao.findById(id);
     }
 
-    public Optional<Country> getById(int id) {
-        return storage.getById(id);
+    public Optional<Country> findByName(String name) {
+        return countryDao.findByName(name);
     }
 
-    public Optional<Country> getByName(String name) {
-        return storage.getByName(name);
-    }
-
-    public List<Country> getAll() {
-        return storage.getAll();
+    public Iterable<Country> getAll() {
+        return countryDao.findAll();
     }
 }

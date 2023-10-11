@@ -12,22 +12,12 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public final class JdbcLikeDao implements LikeDao {
+public final class JdbcLikeDao implements LikeDao<Integer> {
+
+    // Fields
+    private static JdbcLikeDao instance;
 
     private final String LIKE_INSERT = "insert into \"post_like\" (author_id, post_id, created_at) values (?, ?, ?)";
-    private final String GET_BY_POST = """
-            select h.*, c.name, pl.created_at  from "post_like" pl
-                        join "human" h
-                        on pl.author_id = h.id
-                        join "country" c     
-                        on h.country_id  = c.id
-                        where pl.post_id =  ?""";
-    private final String GET_BY_USER = """                 
-            select p.id, p.photo, p.description, p.created_at, pl.created_at from "post_like" pl
-            join "post" p
-            on pl.post_id = p.id
-            where pl.author_id = ?""";
-
     private final String GET_BY_USER_POST = "select * from \"post_like\" where author_id = ? and post_id = ?";
     private final String SELECT_ALL = """
             select h.*, c.name, p.id, p.photo, p.description, p.created_at, pl.created_at from "post_like" pl
@@ -38,15 +28,12 @@ public final class JdbcLikeDao implements LikeDao {
             join post p
             on pl.post_id = p.id""";
     private final String DELETE_BY_USER_POST = "delete from \"post_like\" where author_id = ? and post_id = ?";
+    private final String FIND_ALL_BY_POST = "select count (*) from \"post_like\" where post_id = ?";
 
-    private final String DELETE_BY_USER = "delete from \"post_like\" where author_id = ?";
-    private final String DELETE_BY_POST = "delete from \"post_like\" where post_id = ?";
+    // Constructors
+    private JdbcLikeDao() {}
 
-    private static JdbcLikeDao instance;
-
-    private JdbcLikeDao() {
-    }
-
+    // Methods
     public static JdbcLikeDao getInstance() {
         if (instance == null) {
             instance = new JdbcLikeDao();
@@ -55,13 +42,7 @@ public final class JdbcLikeDao implements LikeDao {
     }
 
     @Override
-    public boolean add(Like like) {
-        Optional<Like> existedLike = getByUserPost(like.getUser(), like.getPost());
-
-        if(existedLike.isPresent()){
-            return true;
-        }
-
+    public Optional<Integer> save(Like like) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(LIKE_INSERT)) {
 
@@ -71,107 +52,19 @@ public final class JdbcLikeDao implements LikeDao {
 
             preparedStatement.execute();
 
-            return true;
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public List<Like> getByUser(User user) {
-        List<Like> likeList = new ArrayList<>();
-
-        try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER)) {
-
-            preparedStatement.setInt(1, user.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-
-
-                Post post = Post
-                        .builder()
-                        .id(resultSet.getInt(1))
-                        .description(resultSet.getString(3))
-                        .createdAt(resultSet.getTimestamp(4).toLocalDateTime())
-                        .user(user)
-                        .build();
-
-                byte[] image = resultSet.getBytes(2);
-                if (image != null) {
-                    post.setPhoto(Base64.getEncoder().encodeToString(image));
-                }
-
-                Like like = Like
-                        .builder()
-                        .user(user)
-                        .post(post)
-                        .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
-                        .build();
-
-                likeList.add(like);
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next())
+                    return Optional.of(keys.getInt(1));
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
-        return likeList;
+        return Optional.empty();
     }
 
     @Override
-    public List<Like> getByPost(Post post) {
-        List<Like> likeList = new ArrayList<>();
-
-        try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_POST)) {
-
-            preparedStatement.setInt(1, post.getId());
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            while (resultSet.next()) {
-
-                User user = User
-                        .builder()
-                        .id(resultSet.getInt(1))
-                        .name(resultSet.getString(2))
-                        .surname(resultSet.getString(3))
-                        .username(resultSet.getString(4))
-                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(5)))
-                        .email(resultSet.getString(6))
-                        .password(resultSet.getString(7))
-                        .build();
-
-                Country country = Country
-                        .builder()
-                        .id(resultSet.getInt(8))
-                        .name(resultSet.getString(9))
-                        .build();
-
-                user.setCountry(country);
-
-                Like like = Like
-                        .builder()
-                        .user(user)
-                        .post(post)
-                        .createdAt(resultSet.getTimestamp(10).toLocalDateTime())
-                        .build();
-
-                likeList.add(like);
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-
-        return likeList;
-    }
-
-
-    @Override
-    public Optional<Like> getByUserPost(User user, Post post) {
+    public Optional<Like> findByUserAndPost(User user, Post post) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER_POST)) {
 
@@ -197,9 +90,8 @@ public final class JdbcLikeDao implements LikeDao {
         return Optional.empty();
     }
 
-
     @Override
-    public List<Like> getAll() {
+    public List<Like> findAll() {
         List<Like> allLikes = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection();
@@ -253,9 +145,8 @@ public final class JdbcLikeDao implements LikeDao {
         return allLikes;
     }
 
-
     @Override
-    public boolean deleteByUserPost(User user, Post post) {
+    public void removeByUserAndPost(User user, Post post) {
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER_POST)) {
@@ -263,56 +154,28 @@ public final class JdbcLikeDao implements LikeDao {
             preparedStatement.setInt(1, user.getId());
             preparedStatement.setInt(2, post.getId());
 
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows > 0) {
-                return true;
-            }
-
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return false;
     }
 
-
     @Override
-    public boolean deleteByUser(User user) {
+    public int findAllByPost(Post post) {
+        int countOfLike = 0;
 
-        try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER)) {
-
-            preparedStatement.setInt(1, user.getId());
-
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows > 0) {
-                return true;
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return false;
-    }
-
-
-    @Override
-    public boolean deleteByPost(Post post) {
-
-        try (Connection connection = JdbcConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_POST)) {
-
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_POST);
             preparedStatement.setInt(1, post.getId());
 
-            int affectedRows = preparedStatement.executeUpdate();
-            if (affectedRows > 0) {
-                return true;
-            }
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next())
+                countOfLike = resultSet.getInt(1);
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
-        return false;
+
+        return countOfLike;
     }
-
-
 }

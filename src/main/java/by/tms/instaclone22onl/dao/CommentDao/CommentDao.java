@@ -7,11 +7,9 @@ import by.tms.instaclone22onl.entity.User;
 import java.util.List;
 import java.util.Optional;
 
-public interface CommentDao {
+public interface CommentDao<ID> {
 
-    void add(Comment comment);
-
-    Optional<Comment> getByUser(User user);
-
-    Optional<List<Comment>> getByPost(Post post);
+    Optional<ID> save(Comment comment);
+    Optional<Comment> findAllByUser(User user);
+    Iterable<Comment> findAllByPost(Post post);
 }
