@@ -30,7 +30,7 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        Optional<User> userByName = userService.getUserByName(username);
+        Optional<User> userByName = userService.findUserByName(username);
 
         if (userByName.isPresent()) {
             User user = userByName.get();

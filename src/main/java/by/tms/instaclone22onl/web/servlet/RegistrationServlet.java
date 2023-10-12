@@ -45,7 +45,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Country> countryList = countryService.getAll();
+        Iterable<Country> countryList = countryService.getAll();
         req.setAttribute("countries", countryList);
         getServletContext().getRequestDispatcher(REG_PATH).forward(req, resp);
     }
@@ -58,7 +58,7 @@ public class RegistrationServlet extends HttpServlet {
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
-        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).get();
+        Country country = countryService.findById(Integer.parseInt(req.getParameter(COUNTRY))).get();
 
 
         User user = User.builder()
@@ -71,9 +71,9 @@ public class RegistrationServlet extends HttpServlet {
                 .photo(Base64.getEncoder().encodeToString(photoInputStream.readAllBytes()))
                 .build();
 
-        Optional<User> byUsername = userService.getUserByName(username);
+        Optional<User> byUsername = userService.findUserByName(username);
         if (byUsername.isEmpty()) {
-            UserService.getInstance().add(user);
+            UserService.getInstance().save(user);
             resp.sendRedirect(LOG_IN_PATH);
             return;
         } else {

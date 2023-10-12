@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebServlet("/profile")
+@WebServlet("/user/profile")
 public class ProfileServlet extends HttpServlet {
     private final UserService userService = UserService.getInstance();
     private final PostService postService = PostService.getInstance();
@@ -22,12 +22,12 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String userName = req.getParameter("username");
-        Optional<User> userByName = userService.getUserByName(userName);
+        Optional<User> userByName = userService.findUserByName(userName);
 
         if (userByName.isPresent()){
             User user = userByName.get();
 
-            Optional<Post> posts = postService.getPost(user);
+            Optional<Post> posts = postService.findPost(user);
             req.setAttribute("post", posts);
             req.setAttribute("user", user);
         }

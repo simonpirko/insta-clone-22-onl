@@ -28,7 +28,7 @@ public class UnlikeServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user");
         int post_id = Integer.parseInt(req.getParameter("post_id"));
 
-        Optional<Post> postById = postService.getPost((post_id));
+        Optional<Post> postById = postService.findById((post_id));
         if (postById.isPresent()) {
             likeService.removeByUserAndPost(user, postById.get());
             resp.sendRedirect("/user/viewpost?id=" + post_id);

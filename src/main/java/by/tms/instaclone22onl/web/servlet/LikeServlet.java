@@ -27,7 +27,7 @@ public class LikeServlet extends HttpServlet {
         User user = (User) req.getSession().getAttribute("user");
         int postId = Integer.parseInt(req.getParameter("post_id"));
 
-        Optional<Post> postById = postService.getPost(postId);
+        Optional<Post> postById = postService.findById(postId);
         if (postById.isPresent()) {
             Post post = postById.get();
 

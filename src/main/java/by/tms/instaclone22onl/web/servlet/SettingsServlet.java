@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.entity.Country;
 import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CountryService;
 import by.tms.instaclone22onl.dao.UserDao.UserDao;
+import by.tms.instaclone22onl.service.UserService;
 import by.tms.instaclone22onl.utils.Validator;
 
 import javax.servlet.ServletException;
@@ -26,7 +27,7 @@ import java.util.List;
 public class SettingsServlet extends HttpServlet {
     private final CountryService countryService = CountryService.getInstance();
     private final Validator validator = new Validator();
-    private final UserDao userDao = countryService.getUserDao();
+    private final UserService userService = UserService.getInstance();
 
     private final static String NAME = "name";
     private final static String SURNAME = "surname";
@@ -39,7 +40,7 @@ public class SettingsServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-            List<Country> countryList = countryService.getAll();
+            Iterable<Country> countryList = countryService.getAll();
             req.setAttribute("countries", countryList);
 
             getServletContext().getRequestDispatcher("/pages/settings.jsp").forward(req, resp);
@@ -57,7 +58,7 @@ public class SettingsServlet extends HttpServlet {
         String name = req.getParameter(NAME);
         String surname = req.getParameter(SURNAME);
         String username = req.getParameter(USERNAME);
-        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).get();
+        Country country = countryService.findById(Integer.parseInt(req.getParameter(COUNTRY))).get();
         InputStream photo = req.getPart(PHOTO).getInputStream();
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
@@ -73,7 +74,8 @@ public class SettingsServlet extends HttpServlet {
         if (!validator.validate(user)) {
                 req.setAttribute("invalid data", "Registration failed");
         }
-        userDao.update(user);
+
+        userService.update(user);
         resp.sendRedirect("/pages/settings.jsp");
        }
     }

@@ -25,7 +25,7 @@ public class AddCommentServlet extends HttpServlet {
         User user = ((User) req.getSession().getAttribute("user"));
 
         int postId = Integer.parseInt(req.getParameter("post_id"));
-        Optional<Post> post = postService.getPost(postId);
+        Optional<Post> post = postService.findById(postId);
 
         if (post.isPresent()) {
             String commentText = req.getParameter("commentMessage");
@@ -35,7 +35,7 @@ public class AddCommentServlet extends HttpServlet {
                     .text(commentText)
                     .build();
 
-            commentService.add(comment);
+            commentService.save(comment);
             resp.sendRedirect("/user/viewpost?id=" + postId);
         } else {
             req.setAttribute("errormessage", "Post don't found.");

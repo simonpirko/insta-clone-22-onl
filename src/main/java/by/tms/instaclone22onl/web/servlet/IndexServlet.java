@@ -22,7 +22,7 @@ public class IndexServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Post> allPost = postService.getAllPost();
+        Iterable<Post> allPost = postService.findAll();
         req.setAttribute("postList", allPost);
 
         getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);

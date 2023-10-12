@@ -51,7 +51,7 @@ public class CreatePostServlet extends HttpServlet {
                 .createdAt(LocalDateTime.now())
                 .build();
 
-        postService.addPost(post);
+        postService.save(post);
 
         resp.sendRedirect("/");
     }

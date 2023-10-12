@@ -39,4 +39,8 @@ public class UserService {
     public Iterable<User> getUsersWithUsernameContaining(String keyword) {
         return userDao.findUsersWithUsernameContaining(keyword);
     }
+
+    public void update(User user) {
+        userDao.update(user);
+    }
 }
