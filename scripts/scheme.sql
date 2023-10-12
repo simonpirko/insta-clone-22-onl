@@ -43,3 +43,9 @@ create table if not exists "comment" (
                                          post_id int references "post"(id),
                                          text varchar(255) not null
 );
+create table  if not exists "follow" (
+                                          user int ,
+                                          userId int
+);
+
+

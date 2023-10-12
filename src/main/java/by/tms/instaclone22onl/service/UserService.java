@@ -3,6 +3,7 @@ package by.tms.instaclone22onl.service;
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
 import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
+import com.sun.jdi.connect.spi.Connection;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,4 +36,10 @@ public class UserService {
     }
 
     public List<User> getUsersWithUsernameContaining(String keyword){ return userStorage.getUsersWithUsernameContaining(keyword); }
+
+    public  void follow(int userId){userStorage.getById(userId);}
+
+    public  void unfollow(int userId){userStorage.getById(userId);}
+
+
 }
