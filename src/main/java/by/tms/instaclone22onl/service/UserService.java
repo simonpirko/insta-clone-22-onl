@@ -1,38 +1,46 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
-import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
+import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.dao.UserDao.JdbcUserDao;
+import by.tms.instaclone22onl.dao.UserDao.UserDao;
 
-import java.util.List;
 import java.util.Optional;
 
 public class UserService {
-    private static UserService instance;
-    private final UserStorage userStorage = JdbcUserStorage.getInstance();
 
+    // Fields
+    private static UserService instance;
+    private final UserDao<Integer> userDao = JdbcUserDao.getInstance();
+
+    // Constructors
+    private UserService() {}
+
+    // Methods
     public static UserService getInstance() {
         if (instance == null) {
             instance = new UserService();
         }
+
         return instance;
     }
 
-    private UserService() {
-
+    public Optional<Integer> save(User user) {
+        return userDao.save(user);
     }
 
-    public void add(User user) {
-        userStorage.add(user);
+    public Optional<User> findUserById(Integer id) {
+        return userDao.findById(id);
     }
 
-    public Optional<User> getUserById(int id) {
-        return userStorage.getById(id);
+    public Optional<User> findUserByName(String username) {
+        return userDao.findByUsername(username);
     }
 
-    public Optional<User> getUserByName(String username) {
-        return userStorage.getByUsername(username);
+    public Iterable<User> getUsersWithUsernameContaining(String keyword) {
+        return userDao.findUsersWithUsernameContaining(keyword);
     }
 
-    public List<User> getUsersWithUsernameContaining(String keyword){ return userStorage.getUsersWithUsernameContaining(keyword); }
+    public void update(User user) {
+        userDao.update(user);
+    }
 }

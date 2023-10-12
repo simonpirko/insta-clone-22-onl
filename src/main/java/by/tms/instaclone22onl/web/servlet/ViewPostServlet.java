@@ -1,8 +1,8 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Like;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Like;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.LikeService;
 import by.tms.instaclone22onl.service.PostService;
 
@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 /*
@@ -28,7 +27,7 @@ public class ViewPostServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         int postId = Integer.valueOf(req.getParameter("id"));
-        Optional<Post> postById = postService.getPost(postId);
+        Optional<Post> postById = postService.findById(postId);
 
         if (postById.isPresent()) {
             Post post = postById.get();

@@ -1,10 +1,10 @@
-package by.tms.instaclone22onl.storage.CommentStorage;
+package by.tms.instaclone22onl.dao.CommentDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,25 +15,28 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public class JdbcCommentStorage implements CommentStorage {
+public class JdbcCommentDao implements CommentDao<Integer> {
 
-    private static JdbcCommentStorage instance;
+    // Fields
+    private static JdbcCommentDao instance;
 
     private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
     private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
     private final String GET_BY_POST = "select * from \"comment\" join \"human\" on \"comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"comment\".post_id = ?";
 
-    private JdbcCommentStorage() {}
+    // Constructors
+    private JdbcCommentDao() {}
 
-    public static JdbcCommentStorage getInstance() {
+    // Methods
+    public static JdbcCommentDao getInstance() {
         if (instance == null)
-            instance = new JdbcCommentStorage();
+            instance = new JdbcCommentDao();
 
         return instance;
     }
 
     @Override
-    public void add(Comment comment) {
+    public Optional<Integer> save(Comment comment) {
         try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
 
@@ -42,13 +45,20 @@ public class JdbcCommentStorage implements CommentStorage {
             preparedStatement.setString(3, comment.getText());
 
             preparedStatement.execute();
+
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next())
+                    return Optional.of(keys.getInt(1));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        return Optional.empty();
     }
 
     @Override
-    public Optional<Comment> getByUser(User user) {
+    public Optional<Comment> findAllByUser(User user) {
         try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER);
             preparedStatement.setInt(1, user.getId());
@@ -56,16 +66,19 @@ public class JdbcCommentStorage implements CommentStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                Comment comment = new Comment();
-
-                comment.setUser(user);
-                //comment.setPost();
-                comment.setText(resultSet.getString(3));
+                Comment comment = Comment
+                        .builder()
+                        .user(user)
+                        .text(resultSet.getString(3))
+                        .build();
 
                 Post post = Post
                         .builder()
                         .id(resultSet.getInt(2))
-                        .user(user).photo(Base64.getEncoder().encodeToString(resultSet.getBytes(6)))
+                        .user(user)
+                        .photo(
+                                Base64.getEncoder().encodeToString(resultSet.getBytes(6))
+                        )
                         .description(resultSet.getString(7))
                         .createdAt(resultSet.getTimestamp(8).toLocalDateTime())
                         .build();
@@ -82,7 +95,7 @@ public class JdbcCommentStorage implements CommentStorage {
     }
 
     @Override
-    public Optional<List<Comment>> getByPost(Post post) {
+    public List<Comment> findAllByPost(Post post) {
         List<Comment> comments = new ArrayList<>();
 
         try (Connection connection = JdbcConnection.getConnection()) {
@@ -92,26 +105,28 @@ public class JdbcCommentStorage implements CommentStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Comment comment = new Comment();
+                Comment comment = Comment
+                        .builder()
+                        .post(post)
+                        .text(resultSet.getString(3))
+                        .build();
 
-                //comment.setUser(user);
-                comment.setPost(post);
-                comment.setText(resultSet.getString(3));
+                User user = User
+                        .builder()
+                        .id(resultSet.getInt(4))
+                        .name(resultSet.getString(5))
+                        .surname(resultSet.getString(6))
+                        .username(resultSet.getString(7))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(8)))
+                        .email(resultSet.getString(9))
+                        .password(resultSet.getString(10))
+                        .build();
 
-                User user = new User();
-                user.setId(resultSet.getInt(4));
-                user.setName(resultSet.getString(5));
-                user.setSurname(resultSet.getString(6));
-                user.setUsername(resultSet.getString(7));
-                user.setPhoto(
-                        Base64.getEncoder().encodeToString(resultSet.getBytes(8))
-                );
-                user.setEmail(resultSet.getString(9));
-                user.setPassword(resultSet.getString(10));
-                Country country = new Country(
-                        resultSet.getInt(12),
-                        resultSet.getString(13)
-                );
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(12))
+                        .name(resultSet.getString(13))
+                        .build();
 
                 user.setCountry(country);
 
@@ -123,7 +138,6 @@ public class JdbcCommentStorage implements CommentStorage {
             e.printStackTrace();
         }
 
-        return Optional.of(comments);
+        return comments;
     }
-
 }
