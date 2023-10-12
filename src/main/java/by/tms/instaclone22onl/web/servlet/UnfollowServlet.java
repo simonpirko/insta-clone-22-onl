@@ -18,6 +18,5 @@ public class UnfollowServlet extends HttpServlet {
         int userId = Integer.parseInt(req.getParameter("userId"));
         userService.unfollow(userId );
         resp.sendRedirect("/user/?id =" + userId);
-
     }
 }
