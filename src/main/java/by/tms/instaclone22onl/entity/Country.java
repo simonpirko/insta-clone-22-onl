@@ -4,8 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 /*
     @author Ilya Moiseenko on 19.09.23
 */
@@ -17,7 +15,7 @@ public class Country {
 
     private int id;
     private String name;
-    private List<City> cities;
+    private Iterable<City> cities;
 
     @Override
     public String toString() {

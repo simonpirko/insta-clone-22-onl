@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +21,7 @@ public class Post {
     private String description;
     private LocalDateTime createdAt;
     private Iterable<Comment> comments;
-    private List<Like> likes;
+    private Iterable<Like> likes;
 
     @Override
     public String toString() {

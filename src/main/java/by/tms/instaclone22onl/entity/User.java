@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @Builder
@@ -24,9 +22,9 @@ public class User {
     private String password;
     private Country country;
 
-    private List<Post> posts;
-    private List<Comment> comments;
-    private List<Like> likes;
+    private Iterable<Post> posts;
+    private Iterable<Comment> comments;
+    private Iterable<Like> likes;
 
     @Override
     public String toString() {
