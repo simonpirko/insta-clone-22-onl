@@ -32,7 +32,10 @@
 
                     <ul class="nav justify-content-end">
                               <c:if test="${sessionScope.user == null}">
-                                <li class="nav-item">
+                                  <li class="nav-item">
+                                      <a class="nav-link" aria-current="page" href="/localization">Language</a>
+                                  </li>
+                                  <li class="nav-item">
                                   <a class="nav-link" aria-current="page" href="/register">Register</a>
                                 </li>
                                 <li class="nav-item">
