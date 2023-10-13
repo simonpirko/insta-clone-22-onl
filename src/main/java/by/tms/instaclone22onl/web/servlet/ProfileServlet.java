@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/user/profile")
@@ -27,10 +28,13 @@ public class ProfileServlet extends HttpServlet {
         if (userByName.isPresent()){
             User user = userByName.get();
 
-            Optional<Post> posts = postService.findPost(user);
-            req.setAttribute("post", posts);
-            req.setAttribute("user", user);
+            List<Post> posts = postService.findAllByUser(user);
+            req.setAttribute("userPosts", posts);
+            req.setAttribute("viewedUser", user);
         }
+
+        User sessionUser = (User) req.getSession().getAttribute("user");
+        req.setAttribute("user", sessionUser);
         getServletContext().getRequestDispatcher("/pages/profile.jsp").forward(req, resp);
     }
 }

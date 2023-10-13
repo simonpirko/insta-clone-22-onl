@@ -52,8 +52,8 @@ public class PostService {
         return optionalPost;
     }
 
-    public Optional<Post> findPost(User user){
-        return postDao.findByUser(user);
+    public List<Post> findAllByUser(User user){
+        return postDao.findAllByUser(user);
     }
 
     public Iterable<Post> findAll(){

@@ -3,6 +3,7 @@ package by.tms.instaclone22onl.dao.PostDao;
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PostDao<ID> {
@@ -11,7 +12,7 @@ public interface PostDao<ID> {
 
     Optional<Post> findById(ID id);
 
-    Optional<Post> findByUser(User user);
+    List<Post> findAllByUser(User user);
 
     Iterable<Post> findAll();
 
