@@ -1,8 +1,8 @@
 <%--
   Created by IntelliJ IDEA.
   User: ilyamoiseenko
-  Date: 2.10.23
-  Time: 18:30
+  Date: 23.09.23
+  Time: 18:58
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -30,6 +30,11 @@
         <div class="form-floating">
           <textarea name="description" class="form-control" placeholder="Leave a description here" id="floatingTextarea" maxlength="2200" required></textarea>
           <label for="floatingTextarea">Description</label>
+        </div>
+
+        <div class="form-floating">
+          <textarea name="tag" class="form-control" placeholder="#car #test #nature" id="tag" maxlength="2200" required></textarea>
+          <label for="tag">Tag</label>
         </div>
 
         <p class="fs-6">    </p>

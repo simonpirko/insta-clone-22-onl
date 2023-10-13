@@ -38,7 +38,7 @@ public class JdbcPostDao implements PostDao<Integer> {
     @Override
     public Optional<Integer> save(Post post) {
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setInt(1, post.getUser().getId());
             preparedStatement.setBytes(2, Base64.getDecoder().decode(post.getPhoto()));
             preparedStatement.setString(3, post.getDescription());
@@ -47,8 +47,9 @@ public class JdbcPostDao implements PostDao<Integer> {
             preparedStatement.execute();
 
             try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
-                if (keys.next())
+                if (keys.next()) {
                     return Optional.of(keys.getInt(1));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

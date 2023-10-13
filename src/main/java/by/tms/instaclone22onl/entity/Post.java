@@ -22,6 +22,7 @@ public class Post {
     private LocalDateTime createdAt;
     private Iterable<Comment> comments;
     private Iterable<Like> likes;
+    private Iterable<Hashtag> hashtags;
 
     @Override
     public String toString() {

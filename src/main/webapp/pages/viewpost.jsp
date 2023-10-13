@@ -43,7 +43,7 @@
                             </c:if>
                         </div>
                         <div class="col-sm-3 align-self-center text-end">
-                            ${post.getLikes().size()}
+                            ${likes}
                         </div>
                         <c:if test="${like == false}">
                             <form action="/like" method="post" class="col-sm-1 align-self-center text-center">
@@ -70,6 +70,12 @@
                 <div class="card-body" style="height: 650px">
                     <p class="card-text overflow-y-scroll" style="height: 200px">
                         ${post.getDescription()}
+                    </p>
+
+                    <p class="card-text overflow-y-scroll" style="height: 200px">
+                        <c:forEach items="${post.getHashtags()}" var="item">
+                            #${item.getName()}
+                        </c:forEach>
                     </p>
 
                     <div class="container-sm-5 border-top overflow-y-scroll" style="height: 380px; border-color: black">
@@ -136,4 +142,3 @@
 
 </body>
 </html>
-

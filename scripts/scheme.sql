@@ -43,3 +43,13 @@ create table if not exists "comment" (
                                          post_id int references "post"(id),
                                          text varchar(255) not null
 );
+
+create table if not exists "hashtag" (
+                                         id serial not null unique,
+                                         name varchar(50) not null unique
+);
+
+create table if not exists "post_hashtag" (
+    hashtag_id int references "hashtag"(id),
+    post_id int references "post"(id) on delete cascade
+)
