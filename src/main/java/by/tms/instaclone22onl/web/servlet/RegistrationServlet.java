@@ -1,7 +1,7 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Country;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Country;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CountryService;
 import by.tms.instaclone22onl.service.UserService;
 import by.tms.instaclone22onl.utils.Validator;
@@ -45,7 +45,7 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Country> countryList = countryService.getAll();
+        Iterable<Country> countryList = countryService.getAll();
         req.setAttribute("countries", countryList);
         getServletContext().getRequestDispatcher(REG_PATH).forward(req, resp);
     }
@@ -58,21 +58,22 @@ public class RegistrationServlet extends HttpServlet {
         String username = req.getParameter(USERNAME);
         String email = req.getParameter(EMAIL);
         String password = req.getParameter(PASSWORD);
-        Country country = countryService.getById(Integer.parseInt(req.getParameter(COUNTRY))).orElse(new Country());
+        Country country = countryService.findById(Integer.parseInt(req.getParameter(COUNTRY))).get();
 
 
         User user = User.builder()
-                .setName(name)
-                .setSurname(surname)
-                .setUsername(username)
-                .setEmail(email)
-                .setPassword(password)
-                .setCountry(country)
-                .setPhoto(Base64.getEncoder().encodeToString(photoInputStream.readAllBytes()))
+                .name(name)
+                .surname(surname)
+                .username(username)
+                .email(email)
+                .password(password)
+                .country(country)
+                .photo(Base64.getEncoder().encodeToString(photoInputStream.readAllBytes()))
                 .build();
-        Optional<User> byUsername = userService.getUserByName(username);
+
+        Optional<User> byUsername = userService.findUserByName(username);
         if (byUsername.isEmpty()) {
-            UserService.getInstance().add(user);
+            UserService.getInstance().save(user);
             resp.sendRedirect(LOG_IN_PATH);
             return;
         } else {

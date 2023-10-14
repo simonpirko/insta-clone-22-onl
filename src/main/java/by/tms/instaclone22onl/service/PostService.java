@@ -1,24 +1,29 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.*;
-import by.tms.instaclone22onl.storage.CommentStorage.CommentStorage;
-import by.tms.instaclone22onl.storage.CommentStorage.JdbcCommentStorage;
-import by.tms.instaclone22onl.storage.PostStorage.JdbcPostStorage;
-import by.tms.instaclone22onl.storage.PostStorage.PostStorage;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Like;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
+import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
+import by.tms.instaclone22onl.dao.PostDao.JdbcPostDao;
+import by.tms.instaclone22onl.dao.PostDao.PostDao;
 
 import java.util.List;
 import java.util.Optional;
 
 public class PostService {
 
+    // Fields
     private static PostService instance;
 
-    private final PostStorage postStorage = JdbcPostStorage.getInstance();
-    private final CommentStorage commentStorage = JdbcCommentStorage.getInstance();
-    private final LikeService likeService = LikeService.getInstance();
+    private final PostDao<Integer> postDao = JdbcPostDao.getInstance();
+    private final CommentDao<Integer> commentDao = JdbcCommentDao.getInstance();
 
+    // Constructors
     private PostService() {}
 
+    // Methods
     public static PostService getInstance() {
         if (instance == null) {
             instance = new PostService();
@@ -27,24 +32,19 @@ public class PostService {
         return instance;
     }
 
-    public void addPost(Post post){
-        postStorage.addPost(post);
+    public Optional<Integer> save(Post post){
+        return postDao.save(post);
     }
-    public Optional<Post> getPost(int id) {
-        Optional<Post> optionalPost = postStorage.getPost(id);
+
+    public Optional<Post> findById(Integer id) {
+        Optional<Post> optionalPost = postDao.findById(id);
 
         if (optionalPost.isPresent()) {
             Post post = optionalPost.get();
 
-            Optional<List<Comment>> commentsByPost = commentStorage.getByPost(post);
-            List<Like> allLikesByPost = likeService.findAllByPost(post);
+            Iterable<Comment> commentsByPost = commentDao.findAllByPost(post);
 
-            if (commentsByPost.isPresent()) {
-                List<Comment> comments = commentsByPost.get();
-
-                post.setComments(comments);
-                post.setLikes(allLikesByPost);
-            }
+            post.setComments(commentsByPost);
 
             return Optional.of(post);
         }
@@ -52,27 +52,27 @@ public class PostService {
         return optionalPost;
     }
 
-    public Optional<Post> getPost(User user){
-        return postStorage.getPost(user);
+    public List<Post> findAllByUser(User user){
+        return postDao.findAllByUser(user);
     }
 
-    public List<Post> getAllPost(){
-        return postStorage.getAllPost();
+    public Iterable<Post> findAll(){
+        return postDao.findAll();
     }
 
     public List<Post> getAllWithPageable(Page page){
         return postStorage.findAllWithPageable(page);
     }
 
-    public boolean deletePost(int id){
-        return postStorage.deletePost(id);
+    public void removeById(Integer id){
+        postDao.removeById(id);
     }
 
-    public boolean deletePost(User user){
-        return postStorage.deletePost(user);
+    public void removeByUser(User user){
+        postDao.removeByUser(user);
     }
 
     public void updatePost(int id, Post newPost){
-        postStorage.updatePost(id, newPost);
+        postDao.updatePost(id, newPost);
     }
 }

@@ -1,6 +1,6 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.UserService;
 
 import javax.servlet.ServletException;
@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet("/search")
 public class SearchServlet extends HttpServlet {
@@ -29,16 +27,10 @@ public class SearchServlet extends HttpServlet {
 
         String username = req.getParameter("OtherUsername");
 
-        List <User> usersByUsername = userService.getUsersWithUsernameContaining(username);
+        Iterable<User> usersByUsername = userService.getUsersWithUsernameContaining(username);
 
-        if(!usersByUsername.isEmpty()){
+        req.setAttribute("users", usersByUsername);
 
-            req.setAttribute("users", usersByUsername);
-
-        }
-        else {
-            req.setAttribute("message", "Username not found!");
-        }
         getServletContext().getRequestDispatcher("/pages/search.jsp").forward(req, resp);
     }
 }

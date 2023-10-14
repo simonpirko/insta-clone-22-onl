@@ -1,31 +1,41 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
-import by.tms.instaclone22onl.storage.CommentStorage.CommentStorage;
-import by.tms.instaclone22onl.storage.CommentStorage.JdbcCommentStorage;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
+import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
 
-import java.util.List;
 import java.util.Optional;
 
 public class CommentService {
-    private static CommentService instance;
-    private final CommentStorage storage = JdbcCommentStorage.getInstance();
-    private CommentService(){
 
-    }
+    // Fields
+    private static CommentService instance;
+
+    private final CommentDao<Integer> commentDao = JdbcCommentDao.getInstance();
+
+    // Constructors
+    private CommentService() {}
+
+    // Methods
     public static CommentService getInstance() {
         if (instance == null)
             instance = new CommentService();
 
         return instance;
-        }
-    public void add(Comment comment) {storage.add(comment);}
+    }
 
+    public Optional<Integer> save(Comment comment) {
+        return commentDao.save(comment);
+    }
 
-    public Optional<List<Comment>> getByPost(Post post){return storage.getByPost(post); }
+    public Iterable<Comment> findByPost(Post post) {
+        return commentDao.findAllByPost(post);
+    }
 
-    public Optional<Comment> getByUser(User user){return  storage.getByUser(user);}
+    public Optional<Comment> findByUser(User user) {
+        return commentDao.findAllByUser(user);
+    }
 }
 

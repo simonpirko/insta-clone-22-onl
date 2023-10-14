@@ -1,8 +1,8 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Comment;
-import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.model.User;
+import by.tms.instaclone22onl.entity.Comment;
+import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CommentService;
 import by.tms.instaclone22onl.service.PostService;
 
@@ -25,17 +25,17 @@ public class AddCommentServlet extends HttpServlet {
         User user = ((User) req.getSession().getAttribute("user"));
 
         int postId = Integer.parseInt(req.getParameter("post_id"));
-        Optional<Post> post = postService.getPost(postId);
+        Optional<Post> post = postService.findById(postId);
 
         if (post.isPresent()) {
             String commentText = req.getParameter("commentMessage");
             Comment comment = Comment.builder()
-                    .setUser(user)
-                    .setPost(post.get())
-                    .setText(commentText)
+                    .user(user)
+                    .post(post.get())
+                    .text(commentText)
                     .build();
 
-            commentService.add(comment);
+            commentService.save(comment);
             resp.sendRedirect("/user/viewpost?id=" + postId);
         } else {
             req.setAttribute("errormessage", "Post don't found.");

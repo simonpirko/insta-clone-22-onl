@@ -1,31 +1,36 @@
-package by.tms.instaclone22onl.storage.CityStorage;
+package by.tms.instaclone22onl.dao.CityDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.model.City;
-import by.tms.instaclone22onl.model.Country;
+import by.tms.instaclone22onl.entity.City;
+import by.tms.instaclone22onl.entity.Country;
 
 import java.sql.*;
 import java.util.Optional;
 
-public class JdbcCityStorage implements CityStorage {
-    private static JdbcCityStorage instance;
+public class JdbcCityDao implements CityDao<Integer> {
+
+    // Fields
+    private static JdbcCityDao instance;
     private final String GET_BY_ID_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
                                                 "on \"сountry\".id = \"сity\".country_id\n" +
                                                 "WHERE \"сity\".id = ?";
     private final String GET_BY_NAME_SQL_SCRIPT = "SELECT * FROM \"сity\" JOIN \"сountry\"\n" +
                                                   "on \"сountry\".id = \"сity\".country_id\n" +
                                                   "WHERE \"сity\".name = ?;";
-    private JdbcCityStorage() {
-    }
-    public static JdbcCityStorage getInstance(){
+
+    // Constructors
+    private JdbcCityDao() {}
+
+    // Methods
+    public static JdbcCityDao getInstance(){
         if (instance == null){
-            instance = new JdbcCityStorage();
+            instance = new JdbcCityDao();
         }
         return instance;
     }
 
     @Override
-    public Optional<City> getById(int id) {
+    public Optional<City> findById(Integer id) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID_SQL_SCRIPT)){
 
@@ -34,13 +39,17 @@ public class JdbcCityStorage implements CityStorage {
 
             if (resultSet.next()){
 
-                City city = new City();
-                city.setId(resultSet.getInt(1));
-                city.setName(resultSet.getString(2));
+                City city = City
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
 
-                Country country = new Country(
-                        resultSet.getInt(4),
-                        resultSet.getString(5));
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(4))
+                        .name(resultSet.getString(5))
+                        .build();
 
                 city.setCountry(country);
 
@@ -53,7 +62,7 @@ public class JdbcCityStorage implements CityStorage {
     }
 
     @Override
-    public Optional<City> getByName(String name) {
+    public Optional<City> findByName(String name) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_NAME_SQL_SCRIPT)){
 
@@ -61,13 +70,17 @@ public class JdbcCityStorage implements CityStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
 
-                City city = new City();
-                city.setId(resultSet.getInt(1));
-                city.setName(resultSet.getString(2));
+                City city = City
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .name(resultSet.getString(2))
+                        .build();
 
-                Country country = new Country(
-                        resultSet.getInt(4),
-                        resultSet.getString(5));
+                Country country = Country
+                        .builder()
+                        .id(resultSet.getInt(4))
+                        .name(resultSet.getString(5))
+                        .build();
 
                 city.setCountry(country);
 
