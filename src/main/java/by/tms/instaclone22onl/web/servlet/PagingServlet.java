@@ -1,11 +1,9 @@
 package by.tms.instaclone22onl.web.servlet;
 
-import by.tms.instaclone22onl.model.Page;
+import by.tms.instaclone22onl.entity.Page;
 import by.tms.instaclone22onl.model.Post;
-import by.tms.instaclone22onl.service.PageService;
 import by.tms.instaclone22onl.service.PostService;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;

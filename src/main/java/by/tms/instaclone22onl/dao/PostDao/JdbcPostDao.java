@@ -4,8 +4,7 @@ import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.entity.Country;
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
-import by.tms.instaclone22onl.model.Page;
-import by.tms.instaclone22onl.service.PageService;
+import by.tms.instaclone22onl.entity.Page;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -33,6 +32,9 @@ public class JdbcPostDao implements PostDao<Integer> {
                                              ON h.country_id = cn.id 
                                              LIMIT ? OFFSET ?
                                              """;
+
+
+    private final String COUNT_ALL = "SELECT COUNT(*) AS total FROM post";
     // Constructors
     private JdbcPostDao() {}
 
@@ -184,8 +186,8 @@ public class JdbcPostDao implements PostDao<Integer> {
         return posts;
     }
     @Override
-    public List<Post> findAllWithPageable(Page page){
-        PageService pageService = new PageService();
+    public Iterable<Post> findAllWithPageable(Page page){
+
         List <Post> postsForPageList = new ArrayList<>();
 
         try {
@@ -193,7 +195,7 @@ public class JdbcPostDao implements PostDao<Integer> {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_FOR_PAGE);
 
             preparedStatement.setInt(1, page.getLimit());
-            preparedStatement.setInt(2, pageService.getOffset(page));
+            preparedStatement.setInt(2, page.getOffset(page));
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -207,16 +209,17 @@ public class JdbcPostDao implements PostDao<Integer> {
                         .build();
 
                 User user = User.builder()
-                        .setId(resultSet.getInt(6))
-                        .setName(resultSet.getString(7))
-                        .setSurname(resultSet.getString(8))
-                        .setUsername(resultSet.getString(9))
-                        .setPhoto(Base64.getEncoder().encodeToString(resultSet.getBytes(10)))
+                        .id(resultSet.getInt(6))
+                        .name(resultSet.getString(7))
+                        .surname(resultSet.getString(8))
+                        .username(resultSet.getString(9))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(10)))
                         .build();
 
-                Country country = new Country(
-                        resultSet.getInt(13),
-                        resultSet.getString(15));
+                Country country = Country.builder()
+                        .id(resultSet.getInt(13))
+                        .name(resultSet.getString(15))
+                        .build();
 
                 user.setCountry(country);
                 post.setUser(user);
@@ -229,8 +232,28 @@ public class JdbcPostDao implements PostDao<Integer> {
             throw new RuntimeException(e);
         }
         return postsForPageList;
-
     }
+
+
+
+    @Override
+    public int countAll(){
+int sum = 0;
+
+try (Connection connection = JdbcConnection.getConnection();
+PreparedStatement preparedStatement = connection.prepareStatement(COUNT_ALL)){
+   ResultSet resultSet = preparedStatement.executeQuery();
+
+   if(resultSet.next()){
+       sum = resultSet.getInt("total");
+   }
+} catch (SQLException e) {
+    throw new RuntimeException(e);
+}
+return sum;
+    }
+
+
     @Override
     public void removeById(Integer id) {
         try (Connection connection =JdbcConnection.getConnection()) {
