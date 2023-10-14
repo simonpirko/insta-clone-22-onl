@@ -1,7 +1,7 @@
 package by.tms.instaclone22onl.web.servlet;
 
 import by.tms.instaclone22onl.entity.Page;
-import by.tms.instaclone22onl.model.Post;
+import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.service.PostService;
 
 import javax.servlet.ServletException;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @WebServlet("/page")
 public class PagingServlet extends HttpServlet {
-    private final PageService pageService = new PageService();
+    private final PostService postService = PostService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,20 +23,30 @@ int pageNumber;     //int pageNumber = 1
 
 if(req.getParameter("page") != null){
     pageNumber = Integer.parseInt(req.getParameter("page"));
-    Page page = new Page();
+
+    Page<Post> page = Page.<Post>builder()
+            .pageMin(5)
+            .pageMax(5)
+            .limit(2)
+            .build();
+
     page.setPageNumber(pageNumber);
-    page.setLimit(2);
 
     PostService postService = PostService.getInstance();
 
-    List<Post> postsForPageList = postService.getAllWithPageable(page);
+    Iterable<Post> postsForPageList = postService.getAllWithPageable(page);
 
-    int numberOfPosts = postService.getAllPost().size();
-    int numberOfPages = (int) Math.ceil(numberOfPosts * 1.0 / postsForPageList.size());
+    page.setItemsForPageList(postsForPageList);
 
-    req.setAttribute("postList", postsForPageList);
-    req.setAttribute("numbOfPages", numberOfPages);
-    req.setAttribute("currentPage", pageNumber);
+    int numberOfPosts = postService.countAll();
+    page.setTotalItems(numberOfPosts);
+    int numberOfPages = page.getTotalPages();
+
+//    req.setAttribute("postList", postsForPageList);
+//    req.setAttribute("numbOfPages", numberOfPages);
+//    req.setAttribute("currentPage", pageNumber);
+    req.setAttribute("page", page);
+
 
     getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
 

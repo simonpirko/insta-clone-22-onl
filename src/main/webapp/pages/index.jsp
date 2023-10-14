@@ -29,7 +29,7 @@
     <div class="row justify-content-center">
         <div class="col-5 mt-3 justify-content-center">
             <ul>
-                <c:forEach items="${postList}" var="item">
+                <c:forEach items="${page.getItemsForPageList()}" var="item">
                     <div class="card mt-5" style="width: 30rem;">
                         <p style="margin-left: 20px">
                             <a href="/user/profile?username=${item.getUser().getUsername()}"
@@ -52,66 +52,41 @@
 </div>
 
 
-
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-3 mt-4 justify-content-center">
-            <c:if test="${currentPage != 1}">
-                <td>
-                    <a href="page?page=${currentPage - 1}">
+        <div class="col-4 mt-4 justify-content-center">
+            <nav aria-label="...">
+                <ul class="pagination">
 
-                        <button type="button" class="btn btn-primary btn-lg"
-                                style="padding: unset; --bs-btn-hover-color: red; transition: 0.3s">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="grey" class="bi bi-arrow-left-square-fill" viewBox="0 0 16 16">
-                                <path d="M16 14a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12zm-4.5-6.5H5.707l2.147-2.146a.5.5 0 1 0-.708-.708l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 0 0 .708-.708L5.707 8.5H11.5a.5.5 0 0 0 0-1z"/>
-                            </svg>
-                        </button>
-                    </a>
-                </td>
-            </c:if>
+                    <li class="page-item ${page.hasPreviousPage() ? "" : "disabled"}">
+                        <a class="page-link" href="/page?page=${page.getPreviousPage()}" tabindex="-1">Previous</a>
+                    </li>
 
+                    <c:forEach begin="${page.getMinRange()}" end="${page.getMaxRange()}" var="i">
+                        <c:choose>
+                            <c:when test="${page.getPageNumber() eq i}">
 
-<table cellpadding="5" cellspacing="5">
-    <tr>
-        <c:forEach begin="1" end="${numbOfPages}" var="i">
-            <c:choose>
-                <c:when test="${currentPage eq i}">
-                    <td class="pages">
-                            ${i}
-                    </td>
-                </c:when>
+                                <li class="page-item active" aria-current="page">
+                                    <a class="page-link" href="/page?page=${i}">${i}</a>
+                                </li>
 
-                    <c:otherwise>
-                        <td class="pages">
-                            <a href="page?page=${i}"> ${i} </a>
-                        </td>
-                    </c:otherwise>
-            </c:choose>
-        </c:forEach>
-    </tr>
-</table>
+                            </c:when>
 
+                            <c:otherwise>
+                                <li class="page-item"><a class="page-link" href="/page?page=${i}">${i}</a></li>
 
-                        <c:if test="${currentPage lt numbOfPages}">
-                <td>
-                    <a href="page?page=${currentPage + 1}">
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
 
-                        <button type="button" class="btn btn-primary btn-lg"
-                                style="padding: unset; --bs-btn-hover-color: red; transition: 0.3s">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="grey" class="bi bi-arrow-right-square-fill" viewBox="0 0 16 16">
-                                <path d="M0 14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v12zm4.5-6.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5a.5.5 0 0 1 0-1z"/>
-                            </svg>
-                        </button>
-                    </a>
-
-                </td>
-
-            </c:if>
+                    <li class="page-item ${page.hasNextPage() ? "" : "disabled"}">
+                        <a class="page-link" href="/page?page=${page.getNextPage()}">Next</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
-
 </div>
-
 
 </body>
 </html>

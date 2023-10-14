@@ -61,6 +61,10 @@ public class PostService {
         return postDao.findAllWithPageable(page);
     }
 
+    public int countAll(){
+        return postDao.countAll();
+    }
+
     public void removeById(Integer id){
         postDao.removeById(id);
     }

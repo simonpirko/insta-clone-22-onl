@@ -195,7 +195,7 @@ public class JdbcPostDao implements PostDao<Integer> {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_FOR_PAGE);
 
             preparedStatement.setInt(1, page.getLimit());
-            preparedStatement.setInt(2, page.getOffset(page));
+            preparedStatement.setInt(2, page.getOffset());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
