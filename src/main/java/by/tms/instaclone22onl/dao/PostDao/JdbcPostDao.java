@@ -235,22 +235,21 @@ public class JdbcPostDao implements PostDao<Integer> {
     }
 
 
-
     @Override
-    public int countAll(){
-int sum = 0;
+    public int countAll() {
+        int sum = 0;
 
-try (Connection connection = JdbcConnection.getConnection();
-PreparedStatement preparedStatement = connection.prepareStatement(COUNT_ALL)){
-   ResultSet resultSet = preparedStatement.executeQuery();
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_ALL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-   if(resultSet.next()){
-       sum = resultSet.getInt("total");
-   }
-} catch (SQLException e) {
-    throw new RuntimeException(e);
-}
-return sum;
+            if (resultSet.next()) {
+                sum = resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return sum;
     }
 
 
