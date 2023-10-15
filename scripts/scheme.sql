@@ -39,6 +39,7 @@ CREATE TABLE "post_like"(
 );
 
 create table if not exists "comment" (
+    id serial not null primary key,
                                          author_id int references "human"(id),
                                          post_id int references "post"(id),
                                          text varchar(255) not null
