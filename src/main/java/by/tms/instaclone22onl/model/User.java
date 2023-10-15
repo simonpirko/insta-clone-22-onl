@@ -5,6 +5,7 @@ package by.tms.instaclone22onl.model;
 */
 
 import java.util.List;
+import java.util.Set;
 
 public class User {
 
@@ -20,6 +21,7 @@ public class User {
     private List<Post> posts;
     private List<Comment> comments;
     private List<Like> likes;
+    private Set<User> followers;
 
     public static UserBuilder builder() {
         return new User().new UserBuilder();
@@ -161,6 +163,9 @@ public class User {
     public void setLikes(List<Like> likes) {
         this.likes = likes;
     }
+    public Set<User>getFollowers(){return followers;}
+
+
 
     @Override
     public String toString() {

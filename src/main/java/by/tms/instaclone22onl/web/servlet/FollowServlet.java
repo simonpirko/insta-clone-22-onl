@@ -16,10 +16,13 @@ public class FollowServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-         User user = (User) req.getSession().getAttribute("user");
-        int userId = Integer.parseInt(req.getParameter("userId"));
-        userService.follow(userId);
-        resp.getWriter().write("You're  a follower now");
-
+        User follower = (User) req.getSession().getAttribute("follower");
+        User followee = (User) req.getSession().getAttribute("followee");
+        if (follower != null && followee != null) {
+            userService.follow(follower, followee);
+            resp.getWriter().write("You are  following " + followee.getId());
+        } else {
+            resp.getWriter().write("Follower is not found");
+        }
     }
 }

@@ -1,12 +1,17 @@
 package by.tms.instaclone22onl.service;
 
+import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.model.User;
 import by.tms.instaclone22onl.storage.UserStorage.JdbcUserStorage;
 import by.tms.instaclone22onl.storage.UserStorage.UserStorage;
-import com.sun.jdi.connect.spi.Connection;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+
+import static org.postgresql.jdbc.EscapedFunctions.INSERT;
 
 public class UserService {
     private static UserService instance;
@@ -35,11 +40,40 @@ public class UserService {
         return userStorage.getByUsername(username);
     }
 
-    public List<User> getUsersWithUsernameContaining(String keyword){ return userStorage.getUsersWithUsernameContaining(keyword); }
+    public List<User> getUsersWithUsernameContaining(String keyword) {
+        return userStorage.getUsersWithUsernameContaining(keyword);
+    }
 
-    public  void follow(int userId){userStorage.getById(userId);}
+    public void follow(User follower, User followee) {
+        follower.getFollowers().add(followee);
+    }
+    void add (User  follower,User followee) {
+        try (Connection connection = JdbcConnection.getConnection()) {
 
-    public  void unfollow(int userId){userStorage.getById(userId);}
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
 
+            preparedStatement.setInt(1, follower.getId());
+            preparedStatement.setInt(2, followee.getId());
 
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public  void unfollow(User follower,User followee){
+      follower.getFollowers().remove(followee);}
+
+    void delete (User  follower,User followee) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement("delete * from \"followers\"(follower;followee)values(?,?)");
+
+            preparedStatement.setInt(1, follower.getId());
+            preparedStatement.setInt(2, followee.getId());
+
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
