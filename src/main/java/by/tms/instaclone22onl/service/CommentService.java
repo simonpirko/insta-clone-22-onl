@@ -37,5 +37,9 @@ public class CommentService {
     public Optional<Comment> findByUser(User user) {
         return commentDao.findAllByUser(user);
     }
+
+    public void removeById(Integer id) {
+        commentDao.removeById(id);
+    }
 }
 

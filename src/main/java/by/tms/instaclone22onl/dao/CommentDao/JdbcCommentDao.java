@@ -23,6 +23,7 @@ public class JdbcCommentDao implements CommentDao<Integer> {
     private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
     private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
     private final String GET_BY_POST = "select * from \"comment\" join \"human\" on \"comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"comment\".post_id = ?";
+    private final String REMOVE_BY_ID = "delete from \"comment\" where id = ?";
 
     // Constructors
     private JdbcCommentDao() {}
@@ -107,25 +108,26 @@ public class JdbcCommentDao implements CommentDao<Integer> {
             while (resultSet.next()) {
                 Comment comment = Comment
                         .builder()
+                        .id(resultSet.getInt(1))
                         .post(post)
-                        .text(resultSet.getString(3))
+                        .text(resultSet.getString(4))
                         .build();
 
                 User user = User
                         .builder()
-                        .id(resultSet.getInt(4))
-                        .name(resultSet.getString(5))
-                        .surname(resultSet.getString(6))
-                        .username(resultSet.getString(7))
-                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(8)))
-                        .email(resultSet.getString(9))
-                        .password(resultSet.getString(10))
+                        .id(resultSet.getInt(5))
+                        .name(resultSet.getString(6))
+                        .surname(resultSet.getString(7))
+                        .username(resultSet.getString(8))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(9)))
+                        .email(resultSet.getString(10))
+                        .password(resultSet.getString(11))
                         .build();
 
                 Country country = Country
                         .builder()
-                        .id(resultSet.getInt(12))
-                        .name(resultSet.getString(13))
+                        .id(resultSet.getInt(13))
+                        .name(resultSet.getString(14))
                         .build();
 
                 user.setCountry(country);
@@ -139,5 +141,16 @@ public class JdbcCommentDao implements CommentDao<Integer> {
         }
 
         return comments;
+    }
+
+    @Override
+    public void removeById(Integer id) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_ID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
