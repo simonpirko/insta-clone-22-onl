@@ -1,9 +1,6 @@
 package by.tms.instaclone22onl.service;
 
-import by.tms.instaclone22onl.entity.Comment;
-import by.tms.instaclone22onl.entity.Like;
-import by.tms.instaclone22onl.entity.Post;
-import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.entity.*;
 import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
 import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
 import by.tms.instaclone22onl.dao.PostDao.JdbcPostDao;
@@ -58,6 +55,14 @@ public class PostService {
 
     public Iterable<Post> findAll(){
         return postDao.findAll();
+    }
+
+    public Iterable<Post> getAllWithPageable(Page page){
+        return postDao.findAllWithPageable(page);
+    }
+
+    public int countAll(){
+        return postDao.countAll();
     }
 
     public void removeById(Integer id){

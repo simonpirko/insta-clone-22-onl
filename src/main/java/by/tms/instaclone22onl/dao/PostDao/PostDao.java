@@ -2,6 +2,7 @@ package by.tms.instaclone22onl.dao.PostDao;
 
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.entity.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,10 @@ public interface PostDao<ID> {
     List<Post> findAllByUser(User user);
 
     Iterable<Post> findAll();
+
+    Iterable<Post> findAllWithPageable(Page page);
+
+    int countAll();
 
     void removeById(ID id);
 
