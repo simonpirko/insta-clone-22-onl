@@ -81,5 +81,33 @@
     </div>
 </div>
 
+
+<form name="pageForm" id="pageForm" method="POST">
+    <input id="postsPerPage" name="postsPerPage" type="hidden">
+    <input id="page" name="page" type="hidden" value="${page.getPageNumber()}">
+    <div class="dropdown">
+        <div class="row justify-content-center">
+            <div class="col-6 mt-6 justify-content-center">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Quantity on page
+                </button>
+                <ul class="dropdown-menu">
+                    <li onclick="document.getElementById('postsPerPage').value = '2'; document.getElementById('pageForm').submit()">
+                        2
+                    </li>
+                    <li onclick="document.getElementById('postsPerPage').value = '5'; document.getElementById('pageForm').submit()">
+                        5
+                    </li>
+                    <li onclick="document.getElementById('postsPerPage').value = '10'; document.getElementById('pageForm').submit()">
+                        10
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+
+
 </body>
 </html>

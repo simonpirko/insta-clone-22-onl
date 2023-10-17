@@ -1,5 +1,6 @@
 package by.tms.instaclone22onl.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -9,14 +10,14 @@ import java.util.List;
 public class Page<T> {
     private int limit;
     private int pageNumber;
-    private int pageMin = 5;
-    private int pageMax = 5;
+    private int pageMin;
+    private int pageMax;
     private int totalItems;
     private Iterable<T> itemsForPageList;
 
+
     public int getOffset() {
         int offset = this.limit * (this.pageNumber - 1);
-
         return offset;
     }
 

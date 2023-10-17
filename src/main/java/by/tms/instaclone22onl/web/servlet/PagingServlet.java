@@ -2,6 +2,7 @@ package by.tms.instaclone22onl.web.servlet;
 
 import by.tms.instaclone22onl.entity.Page;
 import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.PostService;
 
 import javax.servlet.ServletException;
@@ -18,41 +19,51 @@ public class PagingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-int pageNumber;     //int pageNumber = 1
+        int pageNumber;
+        int postsPerPage;
+        if(req.getSession().getAttribute("postsPerPage") != null){
+            postsPerPage = (int) req.getSession().getAttribute("postsPerPage");
+        }
+        else{
+            postsPerPage = 2;
+        }
 
+        if (req.getParameter("page") != null) {
+            pageNumber = Integer.parseInt(req.getParameter("page"));
 
-if(req.getParameter("page") != null){
-    pageNumber = Integer.parseInt(req.getParameter("page"));
+            Page<Post> page = Page.<Post>builder()
+                    .pageMin(5)
+                    .pageMax(5)
+                    .limit(postsPerPage)
+                    .build();
 
-    Page<Post> page = Page.<Post>builder()
-            .pageMin(5)
-            .pageMax(5)
-            .limit(2)
-            .build();
+            page.setPageNumber(pageNumber);
 
-    page.setPageNumber(pageNumber);
+            PostService postService = PostService.getInstance();
 
-    PostService postService = PostService.getInstance();
+            Iterable<Post> postsForPageList = postService.getAllWithPageable(page);
 
-    Iterable<Post> postsForPageList = postService.getAllWithPageable(page);
+            page.setItemsForPageList(postsForPageList);
 
-    page.setItemsForPageList(postsForPageList);
+            int numberOfPosts = postService.countAll();
+            page.setTotalItems(numberOfPosts);
+            int numberOfPages = page.getTotalPages();
 
-    int numberOfPosts = postService.countAll();
-    page.setTotalItems(numberOfPosts);
-    int numberOfPages = page.getTotalPages();
+            req.setAttribute("page", page);
 
-//    req.setAttribute("postList", postsForPageList);
-//    req.setAttribute("numbOfPages", numberOfPages);
-//    req.setAttribute("currentPage", pageNumber);
-    req.setAttribute("page", page);
-
-
-    getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
-
-
-}
+            getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
+        }
     }
 
 
-}
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        int pageNumber = Integer.parseInt(req.getParameter("page"));
+        int postsPerPage = Integer.parseInt(req.getParameter("postsPerPage"));
+        req.getSession().setAttribute("postsPerPage", postsPerPage);
+
+            resp.sendRedirect("/pages?page=" + pageNumber);
+        }
+
+    }
+
