@@ -9,13 +9,11 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="java.util.Properties" %>
 
-
         <%
           Properties properties = (Properties) request.getAttribute("properties");
             String username = properties.getProperty("login.username");
             String password = properties.getProperty("login.password");
         %>
-
 
 <html>
 <head>
