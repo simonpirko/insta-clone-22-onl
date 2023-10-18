@@ -7,39 +7,14 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page import="java.io.FileInputStream" %>
 <%@ page import="java.util.Properties" %>
-<%@ page import="java.io.IOException" %>
-        <%@ page import="java.util.Locale" %>
+
 
         <%
-    String filePathEn = "C:/Users/vvvvv/AppData/Local/Temp/Temp3f1a262f-50a7-4222-b95c-284a126eb5ea_lesson-22-22-onl.zip/insta-clone-22-onl/src/main/resources/massage_eng.properties";
-    String filePathRu = "C:/Users/vvvvv/AppData/Local/Temp/Temp3f1a262f-50a7-4222-b95c-284a126eb5ea_lesson-22-22-onl.zip/insta-clone-22-onl/src/main/resources/massage_rus.properties";
-
-    Locale locale = (Locale) request.getSession().getAttribute("locale");
-    String language = locale.getLanguage();
-    Properties properties = new Properties();
-
-    String username;
-    String password;
-    String filePath;
-
-    if (language.equals("ru")) {
-        filePath = filePathRu;
-    } else {
-        filePath = filePathEn;
-    }
-
-    try {
-        properties.load(new FileInputStream(filePath));
-
-        username = properties.getProperty("login.username");
-        password = properties.getProperty("login.password");
-
-    } catch (IOException e) {
-        throw new RuntimeException(e);
-    }
-%>
+          Properties properties = (Properties) request.getAttribute("properties");
+            String username = properties.getProperty("login.username");
+            String password = properties.getProperty("login.password");
+        %>
 
 
 <html>

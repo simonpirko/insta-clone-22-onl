@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 
-@WebServlet("/localization")
+@WebServlet(name = "LocalizationServlet", urlPatterns = "/localization")
 public class LocalizationServlet extends HttpServlet {
 
     @Override
