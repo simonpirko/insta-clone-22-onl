@@ -13,7 +13,8 @@ import java.io.InputStream;
 import java.util.Locale;
 import java.util.Properties;
 
-@WebFilter(urlPatterns = {"/login", "/register", "/settings", "/pages/login.jsp", "/pages/register.jsp", "/pages/settings.jsp"})
+@WebFilter(urlPatterns = {"/login", "/register", "/settings", "/localization", "/pages/locale.jsp",
+        "/pages/_header.jsp", "/pages/login.jsp", "/pages/register.jsp", "/pages/settings.jsp"})
 public class LocalizationFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {

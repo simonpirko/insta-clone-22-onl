@@ -11,6 +11,9 @@
     String photo = properties.getProperty("registration.photo");
     String username = properties.getProperty("registration.username");
     String password = properties.getProperty("registration.password");
+    String button = properties.getProperty("registration.button");
+    String button2 = properties.getProperty("registration.button2");
+    String description = properties.getProperty("registration.description");
 %>
 
 <html>
@@ -61,13 +64,13 @@
                 <input name="password" type="password" class="form-control" id="password" required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-dark" type="submit">Sign In</button>
+                <button class="btn btn-dark" type="submit"><%=button%></button>
             </div>
 
             <p class="fs-6">    </p>
 
             <p class="text-body-secondary">
-                Already have an account? <a href="/login">Log in</a>
+                <%=description%> <a href="/login"><%=button2%></a>
             </p>
 
         </form>

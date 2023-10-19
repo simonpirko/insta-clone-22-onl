@@ -11,8 +11,11 @@
 
         <%
           Properties properties = (Properties) request.getAttribute("properties");
-            String username = properties.getProperty("login.username");
-            String password = properties.getProperty("login.password");
+          String username = properties.getProperty("login.username");
+          String password = properties.getProperty("login.password");
+          String button = properties.getProperty("login.button");
+          String button2 = properties.getProperty("login.button2");
+          String description = properties.getProperty("login.description");
         %>
 
 <html>
@@ -53,13 +56,13 @@
         </div>
 
         <div class="d-grid gap-2 col-6 mx-auto">
-          <button class="btn btn-primary" type="submit">Log In</button>
+          <button class="btn btn-primary" type="submit"> <%=button2%></button>
         </div>
 
         <p class="fs-6">    </p>
 
         <p class="text-body-secondary">
-          Don`t have an account? <a href="/register">Sign up</a>
+          <%=description%> <a href="/register"> <%=button%></a>
         </p>
       </form>
     </div>

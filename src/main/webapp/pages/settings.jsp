@@ -15,6 +15,7 @@
     String country = properties.getProperty("settings.country");
     String username = properties.getProperty("settings.username");
     String password = properties.getProperty("settings.password");
+    String button = properties.getProperty("settings.button");
 %>
 <html>
 <head>
@@ -61,7 +62,7 @@
                 <label for="password"><%=password%></label>
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-dark" type="submit">Save changes</button>
+                <button class="btn btn-dark" type="submit"><%=button%></button>
             </div>
         </form>
     </div>

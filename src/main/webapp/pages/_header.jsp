@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: ilyamoiseenko
   Date: 23.09.23
@@ -7,6 +7,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%
+    Properties properties = (Properties) request.getAttribute("properties");
+    String brand = properties.getProperty("header.brand");
+    String home = properties.getProperty("header.home");
+    String createPost = properties.getProperty("header.createPost");
+    String language = properties.getProperty("header.language");
+    String register = properties.getProperty("header.register");
+    String login = properties.getProperty("header.login");
+    String logout = properties.getProperty("header.logout");
+%>
 <html>
 <head>
 <title>Header</title>
@@ -17,7 +27,7 @@
 <nav class="navbar navbar-expand-lg bg-dark justify-content-center sticky-top" data-bs-theme="dark">
     <div class="container justify-content-center">
         <div class="container-fluid d-flex align-items-center">
-            <a class="navbar-brand fst-italic fw-bolder fs-4" href="/">Insta-clone-22-onl</a>
+            <a class="navbar-brand fst-italic fw-bolder fs-4" href="/"><%=brand%></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                           data-bs-target="#navbarSupportedContent"
                           aria-controls="navbarSupportedContent" aria-expanded="false">
@@ -27,32 +37,32 @@
             <!-- ��� ����� ������������� ������ � ��������� � ����������� �� ������� ��� ���������� ����������� ����� -->
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                       <c:if test="${sessionScope.user != null}">
-                        <a class="nav-link" aria-current="page" href="/">Home</a>   <%-- �������� ������ �� �������� �� ����������! --%>
+                        <a class="nav-link" aria-current="page" href="/"><%=home%></a>   <%-- �������� ������ �� �������� �� ����������! --%>
                       </c:if>
                     </ul>
 
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                               <c:if test="${sessionScope.user != null}">
-                                <a class="nav-link" aria-current="page" href="/create-post">Create post</a>    <%-- �������� ������ �� �������� �� ����������! --%>
+                                <a class="nav-link" aria-current="page" href="/create-post"><%=createPost%></a>    <%-- �������� ������ �� �������� �� ����������! --%>
                               </c:if>
                     </ul>
 
                     <ul class="nav justify-content-end">
                               <c:if test="${sessionScope.user == null}">
                                   <li class="nav-item">
-                                      <a class="nav-link" aria-current="page" href="/localization">Language</a>
+                                      <a class="nav-link" aria-current="page" href="/localization"><%=language%></a>
                                   </li>
                                   <li class="nav-item">
-                                  <a class="nav-link" aria-current="page" href="/register">Register</a>
+                                  <a class="nav-link" aria-current="page" href="/register"><%=register%></a>
                                 </li>
                                 <li class="nav-item">
-                                  <a class="nav-link" aria-current="page" href="/login">Log in</a>
+                                  <a class="nav-link" aria-current="page" href="/login"><%=login%></a>
                                 </li>
                               </c:if>
 
                               <c:if test="${sessionScope.user != null}">
                                 <li class="nav-item">
-                                  <a class="nav-link" aria-current="page" href="/logout">Log out</a>
+                                  <a class="nav-link" aria-current="page" href="/logout"><%=logout%></a>
                                 </li>
                               </c:if>
 
