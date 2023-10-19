@@ -1,5 +1,7 @@
 package by.tms.instaclone22onl.service;
 
+import by.tms.instaclone22onl.dao.HashtagDao.HashtagDao;
+import by.tms.instaclone22onl.dao.HashtagDao.JdbcHashtagDao;
 import by.tms.instaclone22onl.entity.*;
 import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
 import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
@@ -16,6 +18,7 @@ public class PostService {
 
     private final PostDao<Integer> postDao = JdbcPostDao.getInstance();
     private final CommentDao<Integer> commentDao = JdbcCommentDao.getInstance();
+    private final HashtagDao<Integer> hashtagDao = JdbcHashtagDao.getInstance();
 
     // Constructors
     private PostService() {}
@@ -40,8 +43,10 @@ public class PostService {
             Post post = optionalPost.get();
 
             Iterable<Comment> commentsByPost = commentDao.findAllByPost(post);
-
             post.setComments(commentsByPost);
+
+            Iterable<Hashtag> allHashtagsByPost = hashtagDao.findAllByPost(post);
+            post.setHashtags(allHashtagsByPost);
 
             return Optional.of(post);
         }
