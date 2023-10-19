@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.entity.Country;
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.entity.Page;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,7 +24,17 @@ public class JdbcPostDao implements PostDao<Integer> {
     private final String REMOVE_BY_ID = "DELETE  FROM Post WHERE id = ?";
     private final String REMOVE_BY_USER = "DELETE FROM Post WHERE id = ?";
     private final String UPDATE = "UPDATE Post SET photo = ?, description = ?, created_at = ? WHERE id = ?";
+    private final String SELECT_ALL_FOR_PAGE = """
+                                             SELECT * FROM post p  
+                                             JOIN human h  
+                                             ON p.author_id = h.id  
+                                             JOIN country cn  
+                                             ON h.country_id = cn.id 
+                                             LIMIT ? OFFSET ?
+                                             """;
 
+
+    private final String COUNT_ALL = "SELECT COUNT(*) AS total FROM post";
     // Constructors
     private JdbcPostDao() {}
 
@@ -175,6 +186,73 @@ public class JdbcPostDao implements PostDao<Integer> {
         }
         return posts;
     }
+    @Override
+    public Iterable<Post> findAllWithPageable(Page page){
+
+        List <Post> postsForPageList = new ArrayList<>();
+
+        try {
+            Connection connection = JdbcConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_FOR_PAGE);
+
+            preparedStatement.setInt(1, page.getLimit());
+            preparedStatement.setInt(2, page.getOffset());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(1))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(3)))
+                        .description(resultSet.getString(4))
+                        .createdAt(resultSet.getTimestamp(5).toLocalDateTime())
+                        .build();
+
+                User user = User.builder()
+                        .id(resultSet.getInt(6))
+                        .name(resultSet.getString(7))
+                        .surname(resultSet.getString(8))
+                        .username(resultSet.getString(9))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(10)))
+                        .build();
+
+                Country country = Country.builder()
+                        .id(resultSet.getInt(13))
+                        .name(resultSet.getString(15))
+                        .build();
+
+                user.setCountry(country);
+                post.setUser(user);
+
+                postsForPageList.add(post);
+            }
+
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return postsForPageList;
+    }
+
+
+    @Override
+    public int countAll() {
+        int sum = 0;
+
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_ALL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                sum = resultSet.getInt("total");
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return sum;
+    }
+
 
     @Override
     public void removeById(Integer id) {
