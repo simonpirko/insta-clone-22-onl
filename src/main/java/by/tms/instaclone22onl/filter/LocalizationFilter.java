@@ -8,8 +8,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -17,8 +15,6 @@ import java.util.Properties;
 
 @WebFilter(urlPatterns = {"/login", "/register", "/settings", "/pages/login.jsp", "/pages/register.jsp", "/pages/settings.jsp"})
 public class LocalizationFilter extends HttpFilter {
-    private InputStream  filePathEn = getClass().getClassLoader().getResourceAsStream("massage_eng.properties");
-    private InputStream  filePathRu = getClass().getClassLoader().getResourceAsStream("massage_rus.properties");
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
 
@@ -40,13 +36,14 @@ public class LocalizationFilter extends HttpFilter {
         }
 
         String language = locale.getLanguage();
+
         Properties properties = new Properties();
         InputStream  filePath;
 
         if ("ru".equals(language)) {
-            filePath = filePathRu;
+            filePath = getClass().getClassLoader().getResourceAsStream("massage_rus.properties");
         } else {
-            filePath = filePathEn;
+            filePath = getClass().getClassLoader().getResourceAsStream("massage_eng.properties");
         }
 
         try {
