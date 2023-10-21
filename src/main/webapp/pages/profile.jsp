@@ -75,6 +75,13 @@
                         </div>
 
                         <br>
+
+
+                        <div class="col-5 align-self-right">
+                            <form action="/user/viewpost/remove" method="post" class="col-sm-1 align-self-center text-center">
+                                <button class="btn btn-primary" type="button">Delete</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </c:forEach>
@@ -82,5 +89,14 @@
         </div>
     </div>
 </div>
+
+
+<%--<div class="container">--%>
+<%--    <div class="col-1 align-self-center">--%>
+<%--        <form action="/user/viewpost/remove" method="post" class="col-sm-3 align-self-center text-center">--%>
+<%--            <button class="btn btn-primary" type="button">Delete</button>--%>
+<%--        </form>--%>
+<%--    </div>--%>
+<%--</div>--%>
 </body>
 </html>

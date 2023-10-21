@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/user/remove_post")
+@WebServlet("/user/profile/remove")
 public class RemovePostServlet extends HttpServlet {
    PostService postService = PostService.getInstance();
     @Override
@@ -22,7 +22,9 @@ public class RemovePostServlet extends HttpServlet {
             postService.removeById(postId);
         }
 
-        resp.sendRedirect("/user/viewpost");
+        resp.sendRedirect("/user/profile.jsp");
+//        getServletContext().getRequestDispatcher("/pages/profile.jsp").forward(req, resp);
+
 
     }
 }
