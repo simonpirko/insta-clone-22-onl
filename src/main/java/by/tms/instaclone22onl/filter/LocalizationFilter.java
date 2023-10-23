@@ -10,11 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Properties;
 
-@WebFilter(urlPatterns = {"/login", "/register", "/settings", "/localization", "/pages/locale.jsp",
-        "/pages/_header.jsp", "/pages/login.jsp", "/pages/register.jsp", "/pages/settings.jsp"})
+@WebFilter(urlPatterns = {"/login", "/register", "/settings", "/localization", "/create-post", "/", "/user/profile",
+        "/search", "/user/viewpost", "/pages/locale.jsp", "/pages/_header.jsp", "/pages/login.jsp", "/pages/register.jsp",
+        "/pages/settings.jsp", "/pages/createPost.jsp", "/pages/index.jsp", "/pages/profile.jsp", "/pages/search.jsp",
+        "/pages/viewpost.jsp"})
 public class LocalizationFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
@@ -47,13 +52,14 @@ public class LocalizationFilter extends HttpFilter {
             filePath = getClass().getClassLoader().getResourceAsStream("massage_eng.properties");
         }
 
-        try {
-            properties.load(filePath);
+        try (Reader reader = new InputStreamReader(filePath, StandardCharsets.UTF_8)) {
+            properties.load(reader);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         req.setAttribute("properties", properties);
+
         chain.doFilter(req, res);
     }
 }

@@ -7,6 +7,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%
     Properties properties = (Properties) request.getAttribute("properties");
     String brand = properties.getProperty("header.brand");
@@ -17,6 +18,7 @@
     String login = properties.getProperty("header.login");
     String logout = properties.getProperty("header.logout");
 %>
+
 <html>
 <head>
 <title>Header</title>

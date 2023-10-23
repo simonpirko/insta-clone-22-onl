@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: ilyamoiseenko
   Date: 23.09.23
@@ -6,16 +6,22 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+    Properties properties = (Properties) request.getAttribute("properties");
+    String button = properties.getProperty("viewpost.button");
+    String editpost = properties.getProperty("viewpost.editpost");
+%>
+
 <html>
 <head>
     <title>Post ${post.getId()}</title>
 </head>
 <body>
-<%@include file="_header.jsp" %>
-
+<jsp:include page="_header.jsp"/>
 <div class="container mt-3">
     <div class="text-end">
-        <button onclick="history.back()" class="btn border-0">[x]close</button>
+        <button onclick="history.back()" class="btn border-0">[x]<%=button%></button>
     </div>
     <div class="card mb-3 rounded-0">
         <div class="row g-0" style="height: 800px; background-color: black">
@@ -38,7 +44,7 @@
                         <div class="col-sm-2 align-self-center text-center">
                             <c:if test="${user.getId() == post.getUser().getId()}">
                                 <a class="page-link col-sm-10 align-self-center text-center" href="/user/editpost?id=${post.getId()}" style="padding: unset; text-decoration: unset">
-                                    edit post
+                                    <%=editpost%>
                                 </a>
                             </c:if>
                         </div>

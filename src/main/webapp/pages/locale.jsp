@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: vvvvv
   Date: 12.10.2023
@@ -6,6 +6,13 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    Properties properties = (Properties) request.getAttribute("properties");
+    String language = properties.getProperty("locale.language");
+    String languageEn = properties.getProperty("locale.languageEn");
+    String languageRu = properties.getProperty("locale.languageRu");
+    String button = properties.getProperty("locale.button");
+%>
 <html>
 <head>
     <title>Locale</title>
@@ -19,12 +26,12 @@
     <div class="row justify-content-center">
         <form class="mt-5 w-25" action="/localization" method="post">
         <select class="form-select form-select-lg mb-3" name="lang" aria-label="Large select example">
-        <option selected>Language</option>
-        <option value="en">English</option>
-        <option value="ru">Russian</option>
+        <option selected><%=language%></option>
+        <option value="en"><%=languageEn%></option>
+        <option value="ru"><%=languageRu%></option>
         </select>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-dark" type="submit">Submit</button>
+                <button class="btn btn-dark" type="submit"><%=button%></button>
             </div>
         </form>
     </div>
