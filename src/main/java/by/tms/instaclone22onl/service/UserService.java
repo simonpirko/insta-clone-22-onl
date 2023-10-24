@@ -43,34 +43,23 @@ public class UserService {
     public List<User> getUsersWithUsernameContaining(String keyword) {
         return userStorage.getUsersWithUsernameContaining(keyword);
     }
-
-    public void follow(User follower, User followee) {
-        follower.getFollowers().add(followee);
-    }
-    void add (User  follower,User followee) {
+    public void follow(User user, int userId) {
+        user.getId().add(user,userId);
         try (Connection connection = JdbcConnection.getConnection()) {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
-
-            preparedStatement.setInt(1, follower.getId());
-            preparedStatement.setInt(2, followee.getId());
-
+            PreparedStatement preparedStatement = connection.prepareStatement("insert into\"follow\"(user_id,userId_id)values(?,?)");
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, userId);
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public  void unfollow(User follower,User followee){
-      follower.getFollowers().remove(followee);}
-
-    void delete (User  follower,User followee) {
+    public void unfollow(User user, int userId) {
+        user.getId().remove(user,userId);
         try (Connection connection = JdbcConnection.getConnection()) {
-
-            PreparedStatement preparedStatement = connection.prepareStatement("delete * from \"followers\"(follower;followee)values(?,?)");
-
-            preparedStatement.setInt(1, follower.getId());
-            preparedStatement.setInt(2, followee.getId());
-
+            PreparedStatement preparedStatement = connection.prepareStatement("delete * from \"follow\"(user_id;userId_id)values(?,?)");
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, userId);
             preparedStatement.execute();
         } catch (SQLException e) {
             e.printStackTrace();

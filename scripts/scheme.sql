@@ -44,8 +44,8 @@ create table if not exists "comment" (
                                          text varchar(255) not null
 );
 create table  if not exists "follow" (
-                                          follower int  not null ,
-                                          followee int not null
+                                          user_id int  not null ,
+                                          userId_id int not null
 );
 
 
