@@ -21,7 +21,7 @@ public class User {
     private List<Post> posts;
     private List<Comment> comments;
     private List<Like> likes;
-    private Set<User> followeeId;
+
 
     public static UserBuilder builder() {
         return new User().new UserBuilder();
