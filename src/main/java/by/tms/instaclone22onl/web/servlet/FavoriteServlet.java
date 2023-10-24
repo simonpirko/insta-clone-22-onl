@@ -6,7 +6,6 @@ package by.tms.instaclone22onl.web.servlet;
 
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
-import by.tms.instaclone22onl.service.FavoriteService;
 import by.tms.instaclone22onl.service.PostService;
 
 import javax.servlet.ServletException;
@@ -15,20 +14,32 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @WebServlet("/favorite")
 public class FavoriteServlet extends HttpServlet {
 
-    private final FavoriteService favoriteService = FavoriteService.getInstance();
     private final PostService postService = PostService.getInstance();
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        User user = (User) req.getSession().getAttribute("user");
+        List<Post> allByUser = postService.findAllFavorite(user);
+
+        req.setAttribute("favoritePosts", allByUser);
+
+        getServletContext().getRequestDispatcher("/pages/favorite.jsp").forward(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
-        int favoritePostId = Integer.parseInt(req.getParameter("favorite_post_id"));
-        Optional<Post> favoritePost = postService.findById(favoritePostId);
+        int postId = Integer.parseInt(req.getParameter("post_id"));
+        Optional<Post> favoritePost = postService.findById(postId);
 
-        favoritePost.ifPresent(post -> favoriteService.save(user, post));
+        favoritePost.ifPresent(post -> postService.saveFavorite(user, post));
+
+        resp.sendRedirect("/user/viewpost?id=" + postId);
     }
 }

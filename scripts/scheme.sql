@@ -80,4 +80,10 @@ create table if not exists "hashtag" (
 create table if not exists "post_hashtag" (
     hashtag_id int references "hashtag"(id),
     post_id int references "post"(id) on delete cascade
-)
+);
+
+create table if not exists "favorite" (
+    id serial not null unique,
+    user_id int references "human"(id) on delete cascade,
+    post_id int references "post"(id) on delete cascade
+);
