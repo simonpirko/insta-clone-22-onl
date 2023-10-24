@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: ilyamoiseenko
   Date: 23.09.23
@@ -6,12 +6,20 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%
+  Properties properties = (Properties) request.getAttribute("properties");
+  String text = properties.getProperty("createPost.text");
+  String description = properties.getProperty("createPost.description");
+  String button = properties.getProperty("createPost.button");
+%>
+
 <html>
 <head>
   <title>Create post</title>
 </head>
 <body>
-<%@include file="_header.jsp"%>
+<jsp:include page="_header.jsp"/>
 
 <div class="row justify-content-center">
   <div class="col-4">
@@ -20,7 +28,7 @@
         <p class="fs-6">    </p>
 
         <h4>
-          <div class="text-center mb-3" style="width: calc(100% - 0px);">Create new post</div>
+          <div class="text-center mb-3" style="width: calc(100% - 0px);"><%=text%></div>
         </h4>
 
         <div class="input-group flex-nowrap mb-3">
@@ -29,7 +37,7 @@
 
         <div class="form-floating">
           <textarea name="description" class="form-control" placeholder="Leave a description here" id="floatingTextarea" maxlength="2200" required></textarea>
-          <label for="floatingTextarea">Description</label>
+          <label for="floatingTextarea"><%=description%></label>
         </div>
 
         <div class="form-floating">
@@ -40,7 +48,7 @@
         <p class="fs-6">    </p>
 
         <div class="d-grid gap-2 col-6 mx-auto">
-          <button class="btn btn-primary" type="submit">Create</button>
+          <button class="btn btn-primary" type="submit"><%=button%></button>
         </div>
       </form>
     </div>

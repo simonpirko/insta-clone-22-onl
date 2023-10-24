@@ -3,7 +3,6 @@ package by.tms.instaclone22onl.web.servlet;
 import by.tms.instaclone22onl.entity.Country;
 import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CountryService;
-import by.tms.instaclone22onl.dao.UserDao.UserDao;
 import by.tms.instaclone22onl.service.UserService;
 import by.tms.instaclone22onl.utils.Validator;
 
@@ -16,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
-import java.util.List;
 
 @WebServlet("/settings")
 @MultipartConfig(

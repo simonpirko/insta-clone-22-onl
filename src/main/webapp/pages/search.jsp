@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: Nastya
   Date: 26.09.2023
@@ -8,15 +8,23 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%
+    Properties properties = (Properties) request.getAttribute("properties");
+    String title = properties.getProperty("search.title");
+    String username = properties.getProperty("search.username");
+    String button = properties.getProperty("search.button");
+%>
+
 <html>
 <head>
-    <title>Search</title>
+    <title><%=title%></title>
 </head>
 <body>
 
 <form action="/search" method="post">
-    <input type="text" name = "OtherUsername" placeholder="Username">
-    <button>Search</button>
+    <input type="text" name = "OtherUsername" placeholder=<%=username%>>
+    <button><%=button%></button>
 
     <ul>
         <c:forEach var="user" items="${users}">

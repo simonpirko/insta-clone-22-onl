@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: Алёна
   Date: 26.09.2023
@@ -7,7 +7,12 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%
+    Properties properties = (Properties) request.getAttribute("properties");
+    String next = properties.getProperty("index.next");
+    String previous = properties.getProperty("index.previous");
+    String button = properties.getProperty("index.button");
+%>
 <html>
 <head>
     <title>Home</title>
@@ -16,8 +21,7 @@
 
 </head>
 <body>
-<%@include file="_header.jsp"%>
-
+<jsp:include page="_header.jsp"/>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-5 mt-3 justify-content-center">
@@ -52,7 +56,7 @@
                 <ul class="pagination">
 
                     <li class="page-item ${page.hasPreviousPage() ? "" : "disabled"}">
-                        <a class="page-link" href="/page?page=${page.getPreviousPage()}" tabindex="-1">Previous</a>
+                        <a class="page-link" href="/page?page=${page.getPreviousPage()}" tabindex="-1"><%=previous%></a>
                     </li>
 
                     <c:forEach begin="${page.getMinRange()}" end="${page.getMaxRange()}" var="i">
@@ -73,7 +77,7 @@
                     </c:forEach>
 
                     <li class="page-item ${page.hasNextPage() ? "" : "disabled"}">
-                        <a class="page-link" href="/page?page=${page.getNextPage()}">Next</a>
+                        <a class="page-link" href="/page?page=${page.getNextPage()}"><%=next%></a>
                     </li>
                 </ul>
             </nav>
@@ -90,7 +94,7 @@
             <div class="col-6 mt-6 justify-content-center">
                 <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                    Quantity on page
+                    <%=button%>
                 </button>
                 <ul class="dropdown-menu">
                     <li onclick="document.getElementById('postsPerPage').value = '2'; document.getElementById('pageForm').submit()">

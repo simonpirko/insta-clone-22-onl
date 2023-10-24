@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.util.Properties" %><%--
   Created by IntelliJ IDEA.
   User: ilyamoiseenko
   Date: 23.09.23
@@ -6,12 +6,20 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%
+    Properties properties = (Properties) request.getAttribute("properties");
+    String edit = properties.getProperty("profile.edit");
+    String followers = properties.getProperty("profile.Followers");
+    String following = properties.getProperty("profile.Following");
+%>
 <html>
 <head>
     <title>Profile</title>
 </head>
 <body>
-<%@include file="_header.jsp"%>
+<jsp:include page="_header.jsp"/>
 <div class="container-fluid bg-3 text-center border-bottom">
     <br>
     <div class="row">
@@ -23,14 +31,14 @@
             <h4>@${viewedUser.getUsername()}</h4>
 
             <c:if test="${viewedUser.getUsername() == user.getUsername()}">
-                <a href="/edit-profile" class="btn btn-sm btn-danger" role="button" aria-pressed="true">Edit</a>
+                <a href="/edit-profile" class="btn btn-sm btn-danger" role="button" aria-pressed="true"><%=edit%></a>
             </c:if>
         </div>
         <div class="col-md">
             <div class="container">
                 <div class="row">
-                    <a class="col" href="#">${followersCount} Followers</a>
-                    <a class="col" href="#">${followingCount} Following</a>
+                    <a class="col" href="#">${followersCount} <%=followers%></a>
+                    <a class="col" href="#">${followingCount} <%=following%></a>
                 </div>
                 <c:if test="${viewedUser.getUsername() != user.getUsername()}">
                     <br>
