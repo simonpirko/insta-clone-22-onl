@@ -77,9 +77,12 @@
                         <br>
 
 
-                        <div class="col-5 align-self-right">
-                            <form action="/user/viewpost/remove" method="post" class="col-sm-1 align-self-center text-center">
-                                <button class="btn btn-primary" type="button">Delete</button>
+                        <div class="d-flex justify-content-end">
+                            <form action="/user/profile/remove" method="post">
+                                <a href="/user/profile?username=${user.getUsername()}">
+                                    <button class="btn btn-primary btn-sm" type="submit">Delete</button>
+                                </a>
+
                             </form>
                         </div>
                     </div>
@@ -90,13 +93,5 @@
     </div>
 </div>
 
-
-<%--<div class="container">--%>
-<%--    <div class="col-1 align-self-center">--%>
-<%--        <form action="/user/viewpost/remove" method="post" class="col-sm-3 align-self-center text-center">--%>
-<%--            <button class="btn btn-primary" type="button">Delete</button>--%>
-<%--        </form>--%>
-<%--    </div>--%>
-<%--</div>--%>
 </body>
 </html>
