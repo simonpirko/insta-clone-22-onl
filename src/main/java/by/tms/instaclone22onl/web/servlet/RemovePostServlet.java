@@ -15,15 +15,14 @@ public class RemovePostServlet extends HttpServlet {
    PostService postService = PostService.getInstance();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("currentUser");
+        User user = (User) req.getSession().getAttribute("user");
         int postId = Integer.parseInt(req.getParameter("postId"));
 
         if(postService.findById(postId) != null){
             postService.removeById(postId);
         }
 
-        resp.sendRedirect("/user/profile.jsp");
-//        getServletContext().getRequestDispatcher("/pages/profile.jsp").forward(req, resp);
+        resp.sendRedirect("/user/profile.jsp?username=" + user.getUsername());
 
 
     }
