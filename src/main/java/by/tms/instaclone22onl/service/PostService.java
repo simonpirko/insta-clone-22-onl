@@ -8,6 +8,7 @@ import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
 import by.tms.instaclone22onl.dao.PostDao.JdbcPostDao;
 import by.tms.instaclone22onl.dao.PostDao.PostDao;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,5 +81,17 @@ public class PostService {
 
     public void updatePost(int id, Post newPost){
         postDao.updatePost(id, newPost);
+    }
+
+    public Optional<Integer> saveFavorite(User user, Post post) {
+        return postDao.saveFavorite(user, post);
+    }
+
+    public List<Post> findAllFavorite(User user) {
+        return postDao.findFavorite(user);
+    }
+
+    public void removeFavoriteByUser(User user) {
+        postDao.removeFavoriteByUser(user);
     }
 }

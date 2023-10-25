@@ -45,6 +45,33 @@ create table if not exists "comment" (
                                          text varchar(255) not null
 );
 
+-- /* Таблица со списком чатов */
+-- create table if not exists "chat" (
+--     id serial not null unique, /* id чата */
+--     user_id int references "human"(id), /* id пользователя создавшего чат */
+--     name varchar(50) /* название чата */
+-- );
+--
+-- /* Таблица со списком участников чата */
+-- create table if not exists "chat_party" (
+--     chat_id int references "chat"(id), /* id чата */
+--     user_id int references "human"(id) /* id пользователя, который учавствует в переписке */
+-- );
+--
+-- /* Таблица со списком сообщений */
+-- create table if not exists "message" (
+--     id serial not null unique, /* id сообщения */
+--     chat_id int references "chat"(id), /* id чата, которому принадлежит сообщение  */
+--     sender_id int references "human"(id), /* id пользователя, который отправил сообщение(автор) */
+--     text varchar /* текст сообщения */
+-- );
+
+create table if not exists "favorite" (
+    id serial not null unique,
+    post_id int references "post"(id) on delete cascade,
+    user_id int references "human"(id) on delete cascade
+);
+
 create table if not exists "hashtag" (
                                          id serial not null unique,
                                          name varchar(50) not null unique
@@ -53,4 +80,4 @@ create table if not exists "hashtag" (
 create table if not exists "post_hashtag" (
     hashtag_id int references "hashtag"(id),
     post_id int references "post"(id) on delete cascade
-)
+);

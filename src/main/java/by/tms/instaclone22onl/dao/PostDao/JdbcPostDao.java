@@ -35,6 +35,10 @@ public class JdbcPostDao implements PostDao<Integer> {
 
 
     private final String COUNT_ALL = "SELECT COUNT(*) AS total FROM post";
+    private final String SAVE_FAVORITE = "insert into \"favorite\" (user_id, post_id) values (?, ?)";
+    private final String FIND_FAVORITE = "select * from \"favorite\" join \"post\" on \"favorite\".post_id = \"post\".id where \"favorite\".user_id = ?";
+    private final String REMOVE_FAVORITE_BY_USER = "delete from \"favorite\" where user_id = ?";
+
     // Constructors
     private JdbcPostDao() {}
 
@@ -296,5 +300,89 @@ public class JdbcPostDao implements PostDao<Integer> {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public Optional<Integer> saveFavorite(User user, Post post) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(SAVE_FAVORITE, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(2, post.getId());
+
+            preparedStatement.executeUpdate();
+
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next())
+                    return Optional.of(keys.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Post> findFavorite(User user) {
+        List<Post> allFavoritePosts = new ArrayList<>();
+
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_FAVORITE);
+            preparedStatement.setInt(1, user.getId());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Post post = buildPostEntityFromResultSet(resultSet);
+                allFavoritePosts.add(post);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return allFavoritePosts;
+    }
+
+    @Override
+    public void removeFavoriteByUser(User user) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_FAVORITE_BY_USER);
+            preparedStatement.setInt(1, user.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Post buildPostEntityFromResultSet(ResultSet resultSet) throws SQLException {
+        Post post = Post
+                .builder()
+                .id(resultSet.getInt(4))
+                .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(5)))
+                .description(resultSet.getString(6))
+                .createdAt(resultSet.getTimestamp(7).toLocalDateTime())
+                .build();
+
+        User user = User
+                .builder()
+                .id(resultSet.getInt(8))
+                .name(resultSet.getString(9))
+                .surname(resultSet.getString(10))
+                .username(resultSet.getString(11))
+                .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(12)))
+                .email(resultSet.getString(13))
+                .password(resultSet.getString(14))
+                .build();
+
+        Country country = Country
+                .builder()
+                .id(resultSet.getInt(16))
+                .name(resultSet.getString(17))
+                .build();
+
+        user.setCountry(country);
+        post.setUser(user);
+
+        return post;
     }
 }
