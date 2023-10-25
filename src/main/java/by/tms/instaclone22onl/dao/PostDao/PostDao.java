@@ -29,4 +29,5 @@ public interface PostDao<ID> {
 
     Optional<ID> saveFavorite(User user, Post post);
     List<Post> findFavorite(User user);
+    void removeFavoriteByUser(User user);
 }

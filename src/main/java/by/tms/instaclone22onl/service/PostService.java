@@ -90,4 +90,8 @@ public class PostService {
     public List<Post> findAllFavorite(User user) {
         return postDao.findFavorite(user);
     }
+
+    public void removeFavoriteByUser(User user) {
+        postDao.removeFavoriteByUser(user);
+    }
 }

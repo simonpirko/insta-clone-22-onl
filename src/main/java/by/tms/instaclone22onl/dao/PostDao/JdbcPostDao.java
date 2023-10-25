@@ -37,6 +37,7 @@ public class JdbcPostDao implements PostDao<Integer> {
     private final String COUNT_ALL = "SELECT COUNT(*) AS total FROM post";
     private final String SAVE_FAVORITE = "insert into \"favorite\" (user_id, post_id) values (?, ?)";
     private final String FIND_FAVORITE = "select * from \"favorite\" join \"post\" on \"favorite\".post_id = \"post\".id where \"favorite\".user_id = ?";
+    private final String REMOVE_FAVORITE_BY_USER = "delete from \"favorite\" where user_id = ?";
 
     // Constructors
     private JdbcPostDao() {}
@@ -331,13 +332,26 @@ public class JdbcPostDao implements PostDao<Integer> {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-
+                Post post = buildPostEntityFromResultSet(resultSet);
+                allFavoritePosts.add(post);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return allFavoritePosts;
+    }
+
+    @Override
+    public void removeFavoriteByUser(User user) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_FAVORITE_BY_USER);
+            preparedStatement.setInt(1, user.getId());
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private Post buildPostEntityFromResultSet(ResultSet resultSet) throws SQLException {
