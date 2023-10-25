@@ -31,14 +31,17 @@
             <h4>@${viewedUser.getUsername()}</h4>
 
             <c:if test="${viewedUser.getUsername() == user.getUsername()}">
-                <a href="/edit-profile" class="btn btn-sm btn-danger" role="button" aria-pressed="true"><%=edit%></a>
+                <a href="/edit-profile" class="btn btn-sm btn-danger" role="button" aria-pressed="true"><%=edit%>
+                </a>
             </c:if>
         </div>
         <div class="col-md">
             <div class="container">
                 <div class="row">
-                    <a class="col" href="#">${followersCount} <%=followers%></a>
-                    <a class="col" href="#">${followingCount} <%=following%></a>
+                    <a class="col" href="#">${followersCount} <%=followers%>
+                    </a>
+                    <a class="col" href="#">${followingCount} <%=following%>
+                    </a>
                 </div>
                 <c:if test="${viewedUser.getUsername() != user.getUsername()}">
                     <br>
@@ -75,7 +78,8 @@
                 <div class="col-sm-4">
                     <div class="card" style="width: 100%">
                         <a href="#">
-                            <img class="card-img-top" src="data:image/jpg;base64,${item.getPhoto()}" style="width:100%; height: auto;  aspect-ratio: 16/9" alt="Image"/>
+                            <img class="card-img-top" src="data:image/jpg;base64,${item.getPhoto()}"
+                                 style="width:100%; height: auto;  aspect-ratio: 16/9" alt="Image"/>
                         </a>
 
                         <div class="card-body">
@@ -84,19 +88,17 @@
 
                         <br>
 
-
                         <div class="d-flex justify-content-end">
-                            <form action="/user/profile/removePost" method="post">
-                                <a href="/user/profile?username=${user.getUsername()}">
-                                    <button class="btn btn-primary btn-sm" type="submit">Delete</button>
-                                </a>
-
+                            <form action="/user/remove_post" method="post">
+                                <input type="hidden" name="postId" value="${item.getId()}">
+                                <button class="btn btn-primary btn-sm" type="submit">
+                                    Delete
+                                </button>
                             </form>
                         </div>
                     </div>
                 </div>
             </c:forEach>
-
         </div>
     </div>
 </div>

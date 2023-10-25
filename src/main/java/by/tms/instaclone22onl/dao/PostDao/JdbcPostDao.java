@@ -21,16 +21,7 @@ public class JdbcPostDao implements PostDao<Integer> {
     private final String SELECT_ALL = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id";
     private final String FIND_BY_ID = "select * from post join human on post.author_id = human.id  join country on human.country_id = country.id where post.id = ?";
     private final String FIND_ALL_BY_USER = "select * from post join human on post.author_id = human.id join country on human.country_id = country.id where post.author_id = ?";
-//    private final String REMOVE_BY_ID = "DELETE  FROM Post WHERE id = ?";
-    private final String REMOVE_BY_ID = """
-                                        DELETE  FROM post WHERE id = ?;
-                                        DELETE  FROM post p
-                                        USING comment c
-                                        WHERE c.post_id = p.id;
-                                        DELETE  FROM post p
-                                        USING post_like pl
-                                        WHERE pl.post_id = p.id
-                                        """;
+    private final String REMOVE_BY_ID = "DELETE  FROM post WHERE id = ?";
     private final String REMOVE_BY_USER = "DELETE FROM Post WHERE id = ?";
     private final String UPDATE = "UPDATE Post SET photo = ?, description = ?, created_at = ? WHERE id = ?";
     private final String SELECT_ALL_FOR_PAGE = """
