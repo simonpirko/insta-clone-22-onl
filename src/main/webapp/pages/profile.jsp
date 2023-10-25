@@ -86,7 +86,7 @@
 
 
                         <div class="d-flex justify-content-end">
-                            <form action="/user/profile/remove" method="post">
+                            <form action="/user/profile/removePost" method="post">
                                 <a href="/user/profile?username=${user.getUsername()}">
                                     <button class="btn btn-primary btn-sm" type="submit">Delete</button>
                                 </a>
