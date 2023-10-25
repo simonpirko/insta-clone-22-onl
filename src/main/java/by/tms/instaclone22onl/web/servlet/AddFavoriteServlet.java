@@ -14,23 +14,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
-@WebServlet("/favorite")
-public class FavoriteServlet extends HttpServlet {
+@WebServlet("/addfavorite")
+public class AddFavoriteServlet extends HttpServlet {
 
     private final PostService postService = PostService.getInstance();
-
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        User user = (User) req.getSession().getAttribute("user");
-        List<Post> allByUser = postService.findAllFavorite(user);
-
-        req.setAttribute("favoritePosts", allByUser);
-
-        getServletContext().getRequestDispatcher("/pages/favorite.jsp").forward(req, resp);
-    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
