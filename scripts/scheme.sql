@@ -33,7 +33,7 @@ create table if not exists "post" (
 
 CREATE TABLE "post_like"(
                             author_id int REFERENCES "human"(id),
-                            post_id int REFERENCES "post"(id),
+                            post_id int REFERENCES "post"(id) ON DELETE CASCADE,
                             created_at timestamp,
                             CONSTRAINT post_like_pk PRIMARY KEY(author_id, post_id)
 );
@@ -41,7 +41,7 @@ CREATE TABLE "post_like"(
 create table if not exists "comment" (
     id serial not null primary key,
                                          author_id int references "human"(id),
-                                         post_id int references "post"(id),
+                                         post_id int REFERENCES "post"(id) ON DELETE CASCADE,
                                          text varchar(255) not null
 );
 
