@@ -21,7 +21,25 @@ insert into post_like values (1, 2, '2023-09-27 19:58:30.2964321');
 insert into post_like values (3, 3, '2023-09-27 19:58:30.2964321');
 insert into post_like values (4, 4, '2023-09-27 19:58:30.2964321');
 
-insert into comment values (1, 1, 'Great!');
-insert into comment values (2, 2, 'You are like a drop of water in the desert');
-insert into comment values (2, 1, 'Irresistable');
-insert into comment values (3, 3, 'Good');
+insert into post_comment values (1, 1, 1, 'Great!');
+insert into post_comment values (2, 2, 2, 'You are like a drop of water in the desert');
+insert into post_comment values (3, 2, 1, 'Irresistable');
+insert into post_comment values (4, 3, 3, 'Good');
+
+INSERT INTO story VALUES (1, 1, null, 'photo', 'Test description by story #1', '2023-10-01 19:58:30.2964321');
+INSERT INTO story VALUES (2, 1, null, 'video', 'Test description by story #2', '2023-10-01 19:59:30.2964321');
+INSERT INTO story VALUES (3, 1, null, 'video', 'Test description by story #3', '2023-10-01 20:00:30.2964321');
+INSERT INTO story VALUES (4, 2, null, 'photo', 'Test description by story #4', '2023-10-11 12:58:30.2964321');
+INSERT INTO story VALUES (5, 2, null, 'video', 'Test description by story #15', '2023-10-12 13:58:30.2964321');
+
+INSERT INTO story_comment VALUES (1, 2, 1, 'Great!');
+INSERT INTO story_comment VALUES (2, 2, 2, 'Hi!!!');
+INSERT INTO story_comment VALUES (3, 4, 1, 'Cool!');
+INSERT INTO story_comment VALUES (4, 3, 3, 'Good');
+INSERT INTO story_comment VALUES (5, 1, 4, 'Good');
+
+INSERT INTO story_like VALUES (1, 1, '2023-09-27 19:58:30.2964321');
+INSERT INTO story_like VALUES (1, 2, '2023-09-27 19:58:30.2964321');
+INSERT INTO story_like VALUES (3, 3, '2023-09-27 19:58:30.2964321');
+INSERT INTO story_like VALUES (4, 4, '2023-09-27 19:58:30.2964321');
+INSERT INTO story_like VALUES (2, 4, '2023-09-27 19:58:30.2964321');
