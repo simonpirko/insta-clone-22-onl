@@ -14,39 +14,39 @@ public class JdbcStoryDao implements StoryDao<Integer> {
 
     private final String INSERT = "INSERT INTO story (author_id, photoorVideo, contenttype, description, created_at) VALUES (?, ?, ?, ?, ?)";
     private final String FIND_BY_ID = """                          
-                                      SELECT * FROM story s
-                                      JOIN human h 
-                                      ON s.author_id = h.id
-                                      JOIN country c
-                                      ON c.id = h.country_id
-                                      WHERE s.id = ?
-                                      """;
+            SELECT * FROM story s
+            JOIN human h 
+            ON s.author_id = h.id
+            JOIN country c
+            ON c.id = h.country_id
+            WHERE s.id = ?
+            """;
     private final String FIND_BY_USER = """
-                                      SELECT * FROM story s
-                                      JOIN human h 
-                                      ON s.author_id = h.id
-                                      JOIN country c
-                                      ON c.id = h.country_id
-                                      WHERE s.author_id = ? 
-                                      """;
+            SELECT * FROM story s
+            JOIN human h 
+            ON s.author_id = h.id
+            JOIN country c
+            ON c.id = h.country_id
+            WHERE s.author_id = ? 
+            """;
 
     private final String SELECT_ALL = """
-                                    SELECT * FROM story s
-                                    JOIN human h ON 
-                                    h.id = s.author_id
-                                    JOIN country c ON
-                                    h.country_id = c.id
-                                    """;
+            SELECT * FROM story s
+            JOIN human h ON 
+            h.id = s.author_id
+            JOIN country c ON
+            h.country_id = c.id
+            """;
 
     private final String
             SELECT_ALL_FOR_PAGE = """
-                                    SELECT * FROM story s
-                                    JOIN human h ON
-                                    s.author_id = h.id
-                                    JOIN country c ON
-                                    h.country_id = c.id
-                                    LIMIT ? OFFSET ?
-                                    """;
+            SELECT * FROM story s
+            JOIN human h ON
+            s.author_id = h.id
+            JOIN country c ON
+            h.country_id = c.id
+            LIMIT ? OFFSET ?
+            """;
 
     private final String COUNT_ALL = "SELECT COUNT(*) AS total FROM story";
 
@@ -77,7 +77,7 @@ public class JdbcStoryDao implements StoryDao<Integer> {
             preparedStatement.setTimestamp(4, Timestamp.valueOf(story.getCreatedAt()));
             preparedStatement.execute();
 
-            try (ResultSet keys=preparedStatement.getGeneratedKeys()){
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
                 if (keys.next
                         ()) {
                     return Optional.of(keys.getInt(1));
@@ -92,10 +92,8 @@ public class JdbcStoryDao implements StoryDao<Integer> {
 
 
     @Override
-    public Optional<
-            Story> findById(Integer id) {
-        try (Connection connection = JdbcConnection.
-                getConnection();
+    public Optional<Story> findById(Integer id) {
+        try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID)) {
             preparedStatement.setInt(1, id);
             preparedStatement.executeQuery();
@@ -103,26 +101,17 @@ public class JdbcStoryDao implements StoryDao<Integer> {
             if (resultSet.next()) {
                 Story story = Story.builder()
                         .id(resultSet.getInt(1))
-                        .photoOrVideo((Base64.getEncoder().
-                                encodeToString(resultSet.
-                                        getBytes(3))))
+                        .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
                         .contentType(resultSet.getString(4))
-                        .description(resultSet.
-                                getString(5))
+                        .description(resultSet.getString(5))
                         .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
-                        .build
+                        .build();
 
-                                ();
-
-                User user = User.
-                        builder()
+                User user = User.builder()
                         .id(resultSet.getInt(7))
-                        .name(resultSet.getString(8
-
-                        ))
+                        .name(resultSet.getString(8))
                         .surname(resultSet.getString(9))
-                        .username(resultSet
-                                .getString(10))
+                        .username(resultSet.getString(10))
                         .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(11)))
                         .email(resultSet.getString(12))
                         .password(resultSet.getString(13))
@@ -160,10 +149,8 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                 Story story = Story.builder()
                         .id(resultSet.getInt(1))
                         .user(user)
-                        .photoOrVideo((Base64.
-                                getEncoder().encodeToString(resultSet.getBytes(3))))
-                                .
-                        contentType(resultSet.getString(4))
+                        .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
+                        .contentType(resultSet.getString(4))
                         .description(resultSet.getString(5))
                         .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
                         .build();
@@ -275,20 +262,11 @@ public class JdbcStoryDao implements StoryDao<Integer> {
     public int countAll() {
         int sum = 0;
 
-        try (Connection connection = JdbcConnection.getConnection(
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(COUNT_ALL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-        );
-             PreparedStatement preparedStatement = connection.
-                     prepareStatement
-                             (COUNT_ALL)) {
-            ResultSet resultSet = preparedStatement.executeQuery
-                    ();
-
-            if (
-
-
-                    resultSet.
-                            next()) {
+            if (resultSet.next()) {
                 sum = resultSet.getInt("total");
             }
 
@@ -304,45 +282,31 @@ public class JdbcStoryDao implements StoryDao<Integer> {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_ID)) {
             preparedStatement.setInt(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            int removedRows = preparedStatement.executeUpdate();
 
-            if (resultSet.next()) {
-                preparedStatement.
-
-
-                        executeUpdate();
+            if (removedRows > 0) {
                 return true;
             }
 
         } catch (SQLException e) {
-            throw new
-
-                    RuntimeException(e);
+            throw new RuntimeException(e);
         }
         return false;
     }
 
 
     @Override
-    public boolean
-    removeByUser(User user) {
-        try (Connection connection = JdbcConnection.
-                getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     REMOVE_BY_USER)) {
-            preparedStatement.setInt(1,
-                    user.getId());
-            ResultSet resultSet =
-                    preparedStatement.executeQuery();
+    public boolean removeByUser(User user) {
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_USER)) {
+            preparedStatement.setInt(1, user.getId());
+            int removedRows = preparedStatement.executeUpdate();
 
-            if (resultSet.next()) {
-                preparedStatement.executeUpdate();
+            if (removedRows > 0) {
                 return true;
             }
 
         } catch (SQLException e) {
-
-
             throw new RuntimeException(e);
         }
         return false;
@@ -362,8 +326,8 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                 preparedStatement.setTimestamp(4, Timestamp.valueOf(newStory.getCreatedAt()));
                 preparedStatement.setInt(5, id);
 
-                preparedStatement.executeUpdate();
-                if (newStory.getCreatedAt() != story.get().getCreatedAt()) {
+                int updatedRows = preparedStatement.executeUpdate();
+                if (updatedRows > 0) {
                     return true;
                 }
 

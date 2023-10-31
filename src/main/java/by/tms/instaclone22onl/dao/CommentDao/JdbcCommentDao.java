@@ -1,10 +1,7 @@
 package by.tms.instaclone22onl.dao.CommentDao;
 
 import by.tms.instaclone22onl.config.JdbcConnection;
-import by.tms.instaclone22onl.entity.Comment;
-import by.tms.instaclone22onl.entity.Country;
-import by.tms.instaclone22onl.entity.Post;
-import by.tms.instaclone22onl.entity.User;
+import by.tms.instaclone22onl.entity.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,10 +17,18 @@ public class JdbcCommentDao implements CommentDao<Integer> {
     // Fields
     private static JdbcCommentDao instance;
 
-    private final String INSERT = "insert into \"comment\" (author_id, post_id, text) values (?, ?, ?)";
-    private final String GET_BY_USER = "select * from \"comment\" join \"post\" on \"comment\".post_id = \"post\".id where \"comment\".author_id = ?";
-    private final String GET_BY_POST = "select * from \"comment\" join \"human\" on \"comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"comment\".post_id = ?";
-    private final String REMOVE_BY_ID = "delete from \"comment\" where id = ?";
+    private final String INSERT = "insert into \"post_comment\" (author_id, post_id, text) values (?, ?, ?)";
+    private final String GET_BY_USER = "select * from \"post_comment\" join \"post\" on \"post_comment\".post_id = \"post\".id where \"post_comment\".author_id = ?";
+    private final String GET_BY_POST = "select * from \"post_comment\" join \"human\" on \"post_comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"post_comment\".post_id = ?";
+    private final String GET_BY_STORY = """
+            SELECT * FROM story_comment sc
+            JOIN human h
+            ON sc.author_id = h.id
+            JOIN country c
+            ON h.country_id = c.id
+            WHERE sc.story_id = ?
+            """;
+    private final String REMOVE_BY_ID = "delete from \"post_comment\" where id = ?";
 
     // Constructors
     private JdbcCommentDao() {}
@@ -141,6 +146,52 @@ public class JdbcCommentDao implements CommentDao<Integer> {
         }
 
         return comments;
+    }
+
+
+    @Override
+    public List<Comment> findAllByStory(Story story) {
+        List<Comment> allCommentsByStoryList = new ArrayList<>();
+
+        try (Connection connection = JdbcConnection.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_STORY)) {
+            preparedStatement.setInt(1, story.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Comment storyComment = Comment.builder()
+                        .id(resultSet.getInt(1))
+                        .story(story)
+                        .text(resultSet.getString(4))
+                        .build();
+
+                User user = User.builder()
+                        .id(resultSet.getInt(5))
+                        .name(resultSet.getString(6))
+                        .surname(resultSet.getString(7))
+                        .username(resultSet.getString(8))
+                        .photo(Base64.getEncoder().encodeToString(resultSet.getBytes(9)))
+                        .email(resultSet.getString(10))
+                        .password(resultSet.getString(11))
+                        .build();
+
+                Country country = Country.builder()
+                        .id(resultSet.getInt(13))
+                        .name(resultSet.getString(14))
+                        .build();
+
+                user.setCountry(country);
+                storyComment.setUser(user);
+                storyComment.setStory(story);
+
+                allCommentsByStoryList.add(storyComment);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return allCommentsByStoryList;
+
     }
 
     @Override

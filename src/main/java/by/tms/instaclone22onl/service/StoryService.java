@@ -6,6 +6,10 @@ import by.tms.instaclone22onl.dao.HashtagDao.HashtagDao;
 import by.tms.instaclone22onl.dao.HashtagDao.JdbcHashtagDao;
 import by.tms.instaclone22onl.dao.StoryDao.JdbcStoryDao;
 import by.tms.instaclone22onl.dao.StoryDao.StoryDao;
+import by.tms.instaclone22onl.entity.*;
+
+import java.util.List;
+import java.util.Optional;
 
 public class StoryService {
     private static StoryService instance;
@@ -22,5 +26,53 @@ public class StoryService {
         return instance;
     }
 
+
+    public Optional<Integer> save(Story story){
+        storyDao.save(story);
+    }
+
+    public Optional<Story> findById(Integer id) {
+        Optional <Story> findByIdStory= storyDao.findById(id);
+
+        if(findByIdStory.isPresent()){
+            Story story = findByIdStory.get();
+
+            Iterable<Comment> allCommentsByStory = commentDao.findAllByStory(story);
+            story.setComments(allCommentsByStory);
+
+            Iterable<Hashtag> allHashtagsByStory = hashtagDao.findAllByPost(story);
+            story.setHashtags(allHashtagsByStory);
+
+            return Optional.of(story);
+        }
+        return findByIdStory;
+    }
+
+    public List<Story> findAllByUser(User user) {
+        return storyDao.findAllByUser(user);
+    }
+    public Iterable<Story> findAll() {
+        return storyDao.findAll();
+    }
+
+    public Iterable<Story> findAllWithPageable(Page page) {
+        return storyDao.findAllWithPageable(page);
+    }
+
+    public int countAll() {
+        return storyDao.countAll();
+    }
+
+    public boolean removeById(Integer id) {
+        return storyDao.removeById(id);
+    }
+
+    public boolean removeByUser(User user) {
+        return storyDao.removeByUser(user);
+    }
+
+    public boolean updatePost(Integer id, Story newStory) {
+        return storyDao.updatePost(id, newStory);
+    }
 
 }
