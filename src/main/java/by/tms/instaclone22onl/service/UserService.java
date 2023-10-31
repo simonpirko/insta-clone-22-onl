@@ -44,7 +44,7 @@ public class UserService {
         return userStorage.getUsersWithUsernameContaining(keyword);
     }
     public void follow(User user, int userId) {
-        user.getId().add(user,userId);
+
         try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("insert into\"follow\"(user_id,userId_id)values(?,?)");
             preparedStatement.setInt(1, user.getId());
@@ -55,9 +55,9 @@ public class UserService {
         }
     }
     public void unfollow(User user, int userId) {
-        user.getId().remove(user,userId);
+
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("delete * from \"follow\"(user_id;userId_id)values(?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("delete  from \"follow\"where user_id =? and userId_id=?");
             preparedStatement.setInt(1, user.getId());
             preparedStatement.setInt(2, userId);
             preparedStatement.execute();

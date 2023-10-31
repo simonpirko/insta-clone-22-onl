@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @WebServlet("/follow")
 public class FollowServlet extends HttpServlet{
@@ -17,10 +18,12 @@ public class FollowServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
+        String userName = req.getParameter("username");
+        userService.getUserByName(userName);
         int userId =Integer.parseInt( req.getParameter("userId"));
         userService.follow( user,userId);
-        resp.sendRedirect("/user/?id =" + user);
-        resp.getWriter().write("You are a follower now " + userId);
+        resp.sendRedirect("/profile/?username/?id =" + user);
+
 
         }
     }

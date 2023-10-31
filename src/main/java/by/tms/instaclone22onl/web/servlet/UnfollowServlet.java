@@ -15,11 +15,12 @@ public class UnfollowServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user=(User)req.getSession().getAttribute ("user");
+        String userName = req.getParameter("username");
+        userService.getUserByName(userName);
         int userId =Integer.parseInt( req.getParameter("userId"));
+        userService.unfollow(user,userId);
+        resp.sendRedirect( "/profile/?username/?id ="+ userId);
 
-            userService.unfollow(user,userId);
-            resp.sendRedirect("/user/?id =" + userId);
-            resp.getWriter().write("You have  unfollowed " + userId);
         }
 
     }
