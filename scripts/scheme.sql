@@ -72,6 +72,20 @@ CREATE TABLE "story_like"(
                             CONSTRAINT story_like_pk PRIMARY KEY(author_id, story_id)
 );
 
+
+CREATE TABLE "story_hashtag"(
+                                hashtag_id int REFERENCES "hashtag"(id),
+                                story_id int REFERENCES "story"(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE "story_reactions"(
+                             author_id int REFERENCES "human"(id),
+                             story_id int REFERENCES "story"(id) ON DELETE CASCADE,
+                             created_at timestamp,
+                             CONSTRAINT story_reactions_pk PRIMARY KEY(author_id, story_id)
+);
+
 -- /* Таблица со списком чатов */
 -- create table if not exists "chat" (
 --     id serial not null unique, /* id чата */

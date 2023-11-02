@@ -25,7 +25,7 @@ public class LikeService {
     // Methods
     public static LikeService getInstance() {
         if (instance == null)
-            return new LikeService();
+            instance = new LikeService();
 
         return instance;
     }

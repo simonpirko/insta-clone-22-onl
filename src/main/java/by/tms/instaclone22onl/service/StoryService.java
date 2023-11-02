@@ -40,7 +40,7 @@ public class StoryService {
             Iterable<Comment> allCommentsByStory = commentDao.findAllByStory(story);
             story.setComments(allCommentsByStory);
 
-            Iterable<Hashtag> allHashtagsByStory = hashtagDao.findAllByPost(story);
+            Iterable<Hashtag> allHashtagsByStory = hashtagDao.findAllByStory(story);
             story.setHashtags(allHashtagsByStory);
 
             return Optional.of(story);

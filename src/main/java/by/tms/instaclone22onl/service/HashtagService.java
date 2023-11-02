@@ -4,6 +4,7 @@ import by.tms.instaclone22onl.dao.HashtagDao.HashtagDao;
 import by.tms.instaclone22onl.dao.HashtagDao.JdbcHashtagDao;
 import by.tms.instaclone22onl.entity.Hashtag;
 import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.Story;
 
 import java.util.Optional;
 
@@ -37,6 +38,22 @@ public class HashtagService {
                 Hashtag curr = hashtagForPost.get();
 
                 tagDao.saveForPost(curr, post);
+            }
+        }
+    }
+
+
+    public void save(Iterable<Hashtag> hashtags, Story story) {
+        for (Hashtag hashtag : hashtags) {
+            Optional<Hashtag> hashtagByName = this.findByName(hashtag.getName());
+            if (!hashtagByName.isPresent())
+                tagDao.save(hashtag);
+
+            Optional<Hashtag> hashtagForStory = this.findByName(hashtag.getName());
+            if (hashtagForStory.isPresent()) {
+                Hashtag curr = hashtagForStory.get();
+
+                tagDao.saveForStory(curr, story);
             }
         }
     }

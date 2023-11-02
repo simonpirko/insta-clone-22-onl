@@ -16,4 +16,5 @@ public class Hashtag {
     private int id;
     private String name;
     private Iterable<Post> posts;
+    private Iterable<Story> stories;
 }

@@ -17,6 +17,14 @@
 <html>
 <head>
     <title>Profile</title>
+
+<style>
+    div {
+    border-style: solid;
+    border-color: coral;
+    }
+    </style>
+
 </head>
 <body>
 <jsp:include page="_header.jsp"/>
@@ -24,7 +32,11 @@
     <br>
     <div class="row">
         <div class="col-md d-flex align-items-center justify-content-center">
-            <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+
+            <a href="/user?username=username/view_story">
+                <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+            </a>
+
         </div>
         <div class="col-md text-md-start">
             <h3>${viewedUser.getName()} ${viewedUser.getSurname()}</h3>

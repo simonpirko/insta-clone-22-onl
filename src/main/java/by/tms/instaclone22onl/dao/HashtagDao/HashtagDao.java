@@ -16,4 +16,5 @@ public interface HashtagDao<ID> {
     Iterable<Hashtag> findAllByPost(Post post);
     Iterable<Hashtag> findAllByStory(Story story);
     Optional<ID> saveForPost(Hashtag hashtag, Post post);
+    Optional<ID> saveForStory(Hashtag hashtag, Story story);
 }
