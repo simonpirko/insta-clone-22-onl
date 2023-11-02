@@ -33,7 +33,7 @@
     <div class="row">
         <div class="col-md d-flex align-items-center justify-content-center">
 
-            <a href="/user?username=username/view_story">
+            <a href="/user?username=${viewedUser.getUsername()}/view_story">
                 <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
             </a>
 
