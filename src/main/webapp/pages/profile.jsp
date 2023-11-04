@@ -19,7 +19,7 @@
     <title>Profile</title>
 
 <style>
-    div {
+    .avatar-border {
     border-style: solid;
     border-color: coral;
     }
@@ -33,9 +33,14 @@
     <div class="row">
         <div class="col-md d-flex align-items-center justify-content-center">
 
-            <a href="/user?username=${viewedUser.getUsername()}/view_story">
+            <c:if test="${viewedUser.getStories().size() > 0}">
+                <a class="avatar-border" href="/user?username=${viewedUser.getUsername()}/view_story">
+                    <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+                </a>
+            </c:if>
+            <c:otherwise>
                 <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
-            </a>
+            </c:otherwise>
 
         </div>
         <div class="col-md text-md-start">

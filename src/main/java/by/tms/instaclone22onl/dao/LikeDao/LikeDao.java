@@ -9,8 +9,10 @@ import java.util.Optional;
 
 public interface LikeDao<ID> {
 
-    Optional<ID> save(Like like);
-    Iterable<Like> findAll();
+    Optional<ID> saveForPost(Like like);
+    Optional<ID> saveForStory(Like like);
+    Iterable<Like> findAllForPost();
+    Iterable<Like> findAllForStory();
     Optional<Like> findByUserAndPost(User user, Post post);
     Optional<Like> findByUserAndStory(User user, Story story);
     void removeByUserAndPost(User user, Post post);

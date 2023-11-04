@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class Story {
     private int id;
     private User user;
-    private Source photoOrVideo;
-//    private String contentType;         //photo or video      ???????????????????????????
+    private String photoOrVideo;
+    private Source contentType;
     private String description;
     private LocalDateTime createdAt;
     private Iterable<Comment> comments;
@@ -28,7 +28,7 @@ public class Story {
                "id=" + id +
                ", user=" + user +
                ", photoOrVideo='" + photoOrVideo + '\'' +
-//               ", contentType='" + contentType + '\'' +
+               ", contentType=" + contentType +
                ", description='" + description + '\'' +
                ", createdAt=" + createdAt +
                ", comments=" + comments +
@@ -37,10 +37,13 @@ public class Story {
                ", hashtags=" + hashtags +
                '}';
     }
+
+    public enum Source {           // public ????????????????????????????????
+        PHOTO,
+        VIDEO
+    }
+
 }
 
 
-public enum Source {           // public ????????????????????????????????
-    PHOTO,
-    VIDEO
-}
+

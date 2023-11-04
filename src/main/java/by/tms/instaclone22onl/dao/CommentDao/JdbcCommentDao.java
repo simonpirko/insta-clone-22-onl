@@ -17,8 +17,10 @@ public class JdbcCommentDao implements CommentDao<Integer> {
     // Fields
     private static JdbcCommentDao instance;
 
-    private final String INSERT = "insert into \"post_comment\" (author_id, post_id, text) values (?, ?, ?)";
-    private final String GET_BY_USER = "select * from \"post_comment\" join \"post\" on \"post_comment\".post_id = \"post\".id where \"post_comment\".author_id = ?";
+    private final String INSERT_POST = "insert into \"post_comment\" (author_id, post_id, text) values (?, ?, ?)";
+    private final String INSERT_STORY = "insert into \"story_comment\" (author_id, story_id, text) values (?, ?, ?)";
+    private final String GET_FOR_POST_BY_USER = "select * from \"post_comment\" join \"post\" on \"post_comment\".post_id = \"post\".id where \"post_comment\".author_id = ?";
+    private final String GET_FOR_STORY_BY_USER = "select * from \"story_comment\" join \"story\" on \"story_comment\".story_id = \"story\".id where \"story_comment\".author_id = ?";
     private final String GET_BY_POST = "select * from \"post_comment\" join \"human\" on \"post_comment\".author_id = \"human\".id join \"country\" on \"human\".country_id = \"country\".id where \"post_comment\".post_id = ?";
     private final String GET_BY_STORY = """
             SELECT * FROM story_comment sc
@@ -28,7 +30,8 @@ public class JdbcCommentDao implements CommentDao<Integer> {
             ON h.country_id = c.id
             WHERE sc.story_id = ?
             """;
-    private final String REMOVE_BY_ID = "delete from \"post_comment\" where id = ?";
+    private final String REMOVE_FOR_POST_BY_ID = "delete from \"post_comment\" where id = ?";
+    private final String REMOVE_FOR_STORY_BY_ID = "delete from \"story_comment\" where id = ?";
 
     // Constructors
     private JdbcCommentDao() {}
@@ -42,9 +45,32 @@ public class JdbcCommentDao implements CommentDao<Integer> {
     }
 
     @Override
-    public Optional<Integer> save(Comment comment) {
+    public Optional<Integer> saveForPost(Comment comment) {
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(INSERT);
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_POST);
+
+            preparedStatement.setInt(1, comment.getUser().getId());
+            preparedStatement.setInt(2, comment.getPost().getId());
+            preparedStatement.setString(3, comment.getText());
+
+            preparedStatement.execute();
+
+            try (ResultSet keys = preparedStatement.getGeneratedKeys()) {
+                if (keys.next())
+                    return Optional.of(keys.getInt(1));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+
+    @Override
+    public Optional<Integer> saveForStory(Comment comment) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(INSERT_STORY);
 
             preparedStatement.setInt(1, comment.getUser().getId());
             preparedStatement.setInt(2, comment.getPost().getId());
@@ -64,9 +90,48 @@ public class JdbcCommentDao implements CommentDao<Integer> {
     }
 
     @Override
-    public Optional<Comment> findAllByUser(User user) {
+    public Optional<Comment> findAllForPostByUser(User user) {
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_FOR_POST_BY_USER);
+            preparedStatement.setInt(1, user.getId());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                Comment comment = Comment
+                        .builder()
+                        .user(user)
+                        .text(resultSet.getString(3))
+                        .build();
+
+                Post post = Post
+                        .builder()
+                        .id(resultSet.getInt(2))
+                        .user(user)
+                        .photo(
+                                Base64.getEncoder().encodeToString(resultSet.getBytes(6))
+                        )
+                        .description(resultSet.getString(7))
+                        .createdAt(resultSet.getTimestamp(8).toLocalDateTime())
+                        .build();
+
+                comment.setPost(post);
+
+                return Optional.of(comment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
+
+
+
+    @Override
+    public Optional<Comment> findAllForStoryByUser(User user) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_FOR_STORY_BY_USER);
             preparedStatement.setInt(1, user.getId());
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -195,9 +260,21 @@ public class JdbcCommentDao implements CommentDao<Integer> {
     }
 
     @Override
-    public void removeById(Integer id) {
+    public void removeForPostById(Integer id) {
         try (Connection connection = JdbcConnection.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_FOR_POST_BY_ID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
+    public void removeForStoryById(Integer id) {
+        try (Connection connection = JdbcConnection.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_FOR_STORY_BY_ID);
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {

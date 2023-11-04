@@ -9,7 +9,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
-public final class JdbcLikeDao implements LikeDao<Integer> {
+public class JdbcLikeDao implements LikeDao<Integer> {
 
     // Fields
     private static JdbcLikeDao instance;
@@ -18,7 +18,7 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
     private final String STORY_LIKE_INSERT = "insert into \"story_like\" (author_id, story_id, created_at) values (?, ?, ?)";
     private final String GET_BY_USER_POST = "select * from \"post_like\" where author_id = ? and post_id = ?";
     private final String GET_BY_USER_STORY = "select * from \"story_like\" where author_id = ? and story_id = ?";
-    private final String SELECT_ALL = """
+    private final String SELECT_ALL_POST = """
             select h.*, c.name, p.id, p.photo, p.description, p.created_at, pl.created_at from "post_like" pl
             join "human" h
             on pl.author_id = h.id
@@ -27,7 +27,7 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
             join post p
             on pl.post_id = p.id""";
 
-    private final String SELECT_ALL = """
+    private final String SELECT_ALL_STORY = """
             select h.*, c.name, s.id, s.photoorvideo, s.description, s.created_at, sl.created_at from "story_like" sl
             join "human" h
             on sl.author_id = h.id
@@ -53,7 +53,7 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
     }
 
     @Override
-    public Optional<Integer> save(Like like) {
+    public Optional<Integer> saveForPost(Like like) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(POST_LIKE_INSERT)) {
 
@@ -76,7 +76,7 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
 
 
     @Override
-    public Optional<Integer> save(Like like) {
+    public Optional<Integer> saveForStory(Like like) {
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(STORY_LIKE_INSERT)) {
 
@@ -95,9 +95,10 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
         }
 
         return Optional.empty();
+    }
 
         @Override
-        public Optional<Like> findByUserAndPost (User user, Post post){
+        public Optional<Like> findByUserAndPost(User user, Post post){
             try (Connection connection = JdbcConnection.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER_POST)) {
 
@@ -125,7 +126,7 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
 
 
         @Override
-        public Optional<Like> findByUserAndStory (User user, Story story){
+        public Optional<Like> findByUserAndStory(User user, Story story){
             try (Connection connection = JdbcConnection.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_USER_STORY)) {
 
@@ -152,11 +153,11 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
         }
 
         @Override
-        public List<Like> findAll() {
+        public List<Like> findAllForPost() {
             List<Like> allLikes = new ArrayList<>();
 
             try (Connection connection = JdbcConnection.getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
+                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_POST)) {
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -208,11 +209,11 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
 
 
         @Override
-        public List<Like> findAll() {
+        public List<Like> findAllForStory() {
             List<Like> allLikes = new ArrayList<>();
 
             try (Connection connection = JdbcConnection.getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL)) {
+                 PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_STORY)) {
 
                 ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -263,7 +264,7 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
         }
 
         @Override
-        public void removeByUserAndPost (User user, Post post){
+        public void removeByUserAndPost(User user, Post post){
 
             try (Connection connection = JdbcConnection.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_USER_POST)) {
@@ -333,4 +334,3 @@ public final class JdbcLikeDao implements LikeDao<Integer> {
             return countOfLike;
         }
     }
-}

@@ -25,6 +25,10 @@ public interface StoryDao<ID> {
 
     boolean removeByUser(User user);
 
-    boolean updatePost(ID id, Story newStory);
+    List<Story> getAllBefore24Hour(User user);
+
+    List<Story> getAllAfter24Hour(User user);
+
+    boolean updateStory(ID id, Story newStory);
 
 }

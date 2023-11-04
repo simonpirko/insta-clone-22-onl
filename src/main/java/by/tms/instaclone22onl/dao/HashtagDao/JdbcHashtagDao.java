@@ -31,7 +31,7 @@ public class JdbcHashtagDao implements HashtagDao<Integer> {
                                                 WHERE sh.story_id = ? 
                                                 """;
     private final String SAVE_FOR_POST = "insert into \"post_hashtag\" (hashtag_id, post_id) values (?, ?)";
-    private final String SAVE_FOR_STORY = "INTSERT INTO story_hashtag (hashtag_id, story_id) values (?, ?)";
+    private final String SAVE_FOR_STORY = "INSERT INTO story_hashtag (hashtag_id, story_id) values (?, ?)";
 
     private JdbcHashtagDao() {}
 

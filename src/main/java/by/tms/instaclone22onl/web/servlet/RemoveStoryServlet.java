@@ -1,5 +1,6 @@
 package by.tms.instaclone22onl.web.servlet;
 
+import by.tms.instaclone22onl.entity.Story;
 import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.StoryService;
 
@@ -9,6 +10,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @WebServlet("user/remove_story")
 public class RemoveStoryServlet extends HttpServlet {
@@ -22,7 +25,5 @@ public class RemoveStoryServlet extends HttpServlet {
         if(storyService.findById(storyId).isPresent()){
             storyService.removeById(storyId);
         }
-
-        resp.sendRedirect("/user/profile?username=" + user.getUsername());
     }
 }

@@ -9,9 +9,13 @@ import java.util.Optional;
 
 public interface CommentDao<ID> {
 
-    Optional<ID> save(Comment comment);
-    Optional<Comment> findAllByUser(User user);
+    Optional<ID> saveForPost(Comment comment);
+    Optional<ID> saveForStory(Comment comment);
+    Optional<Comment> findAllForPostByUser(User user);
+    Optional<Comment> findAllForStoryByUser(User user);
     Iterable<Comment> findAllByPost(Post post);
     Iterable<Comment> findAllByStory(Story story);
-    void removeById(ID id);
+    void removeForPostById(ID id);
+    void removeForStoryById(ID id);
+
 }

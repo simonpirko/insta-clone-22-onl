@@ -53,6 +53,19 @@ public class JdbcStoryDao implements StoryDao<Integer> {
     private final String REMOVE_BY_ID = "DELETE FROM story WHERE id = ?";
     private final String REMOVE_BY_USER = "DELETE FROM story WHERE author_id = ?";
     private final String UPDATE = "UPDATE story SET photoorVideo = ?, contenttype = ?, description = ?, created_at = ? WHERE id = ?";
+    private final String GET_ALL_AFTER_24H = """
+                                              SELECT *
+                                              FROM story
+                                              WHERE created_at >= NOW() - INTERVAL '24 HOURS'
+                                              ORDER BY created_at DESC
+                                              """;
+    private final String GET_ALL_BEFORE_24H = """
+                                              SELECT *
+                                              FROM story
+                                              WHERE created_at <= NOW() - INTERVAL '24 HOURS'
+                                              ORDER BY created_at DESC
+                                             """;
+
 
 
     private JdbcStoryDao() {
@@ -102,7 +115,7 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                 Story story = Story.builder()
                         .id(resultSet.getInt(1))
                         .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
-                        .contentType(resultSet.getString(4))
+                        .contentType(Story.Source.valueOf(resultSet.getString(4)))
                         .description(resultSet.getString(5))
                         .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
                         .build();
@@ -140,6 +153,7 @@ public class JdbcStoryDao implements StoryDao<Integer> {
     public List<Story> findAllByUser(User user) {
 
         List<Story> allStoriesByUserList = new ArrayList<>();
+
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_USER)) {
             preparedStatement.setInt(1, user.getId());
@@ -150,7 +164,7 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                         .id(resultSet.getInt(1))
                         .user(user)
                         .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
-                        .contentType(resultSet.getString(4))
+                        .contentType(Story.Source.valueOf(resultSet.getString(4)))
                         .description(resultSet.getString(5))
                         .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
                         .build();
@@ -177,7 +191,7 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                 Story story = Story.builder()
                         .id(resultSet.getInt(1))
                         .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
-                        .contentType(resultSet.getString(4))
+                        .contentType(Story.Source.valueOf(resultSet.getString(4)))
                         .description(resultSet.getString(5))
                         .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
                         .build();
@@ -224,7 +238,7 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                 Story story = Story.builder()
                         .id(resultSet.getInt(1))
                         .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
-                        .contentType(resultSet.getString(4))
+                        .contentType(Story.Source.valueOf(resultSet.getString(4)))
                         .description(resultSet.getString(5))
                         .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
                         .build();
@@ -314,14 +328,73 @@ public class JdbcStoryDao implements StoryDao<Integer> {
 
 
     @Override
-    public boolean updatePost(Integer id, Story newStory) {
+    public List<Story> getAllBefore24Hour(User user){
+
+        List<Story> allStoriesBefore24HList = new ArrayList<>();
+
+        try(Connection connection = JdbcConnection.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_BEFORE_24H)) {
+            preparedStatement.setInt(1, user.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                Story story = Story.builder()
+                        .id(resultSet.getInt(1))
+                        .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
+                        .contentType(Story.Source.valueOf(resultSet.getString(4)))
+                        .description(resultSet.getString(5))
+                        .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
+                        .build();
+
+                allStoriesBefore24HList.add(story);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return allStoriesBefore24HList;
+    }
+
+
+    @Override
+    public List<Story> getAllAfter24Hour(User user){
+
+        List<Story> allStoriesAfter24HList = new ArrayList<>();
+
+     try(Connection connection = JdbcConnection.getConnection();
+     PreparedStatement preparedStatement = connection.prepareStatement(GET_ALL_AFTER_24H)) {
+         preparedStatement.setInt(1, user.getId());
+         ResultSet resultSet = preparedStatement.executeQuery();
+
+         while (resultSet.next()){
+             Story story = Story.builder()
+                     .id(resultSet.getInt(1))
+                     .photoOrVideo((Base64.getEncoder().encodeToString(resultSet.getBytes(3))))
+                     .contentType(Story.Source.valueOf(resultSet.getString(4)))
+                     .description(resultSet.getString(5))
+                     .createdAt(resultSet.getTimestamp(6).toLocalDateTime())
+                     .build();
+
+             allStoriesAfter24HList.add(story);
+         }
+
+     } catch (SQLException e) {
+         throw new RuntimeException(e);
+     }
+
+        return allStoriesAfter24HList;
+    }
+
+    @Override
+    public boolean updateStory(Integer id, Story newStory) {
         Optional<Story> story = findById(id);
 
         if (story.isPresent()) {
             try (Connection connection = JdbcConnection.getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(UPDATE)) {
                 preparedStatement.setBytes(1, Base64.getDecoder().decode(newStory.getPhotoOrVideo()));
-                preparedStatement.setString(2, newStory.getContentType());
+                preparedStatement.setString(2, String.valueOf(newStory.getContentType()));
                 preparedStatement.setString(3, newStory.getDescription());
                 preparedStatement.setTimestamp(4, Timestamp.valueOf(newStory.getCreatedAt()));
                 preparedStatement.setInt(5, id);
@@ -337,5 +410,8 @@ public class JdbcStoryDao implements StoryDao<Integer> {
         }
         return false;
     }
+
+
+
 
 }

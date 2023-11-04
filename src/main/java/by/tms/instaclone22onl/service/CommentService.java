@@ -2,10 +2,12 @@ package by.tms.instaclone22onl.service;
 
 import by.tms.instaclone22onl.entity.Comment;
 import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.Story;
 import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.dao.CommentDao.CommentDao;
 import by.tms.instaclone22onl.dao.CommentDao.JdbcCommentDao;
 
+import java.util.List;
 import java.util.Optional;
 
 public class CommentService {
@@ -26,20 +28,38 @@ public class CommentService {
         return instance;
     }
 
-    public Optional<Integer> save(Comment comment) {
-        return commentDao.save(comment);
+    public Optional<Integer> saveForPost(Comment comment) {
+        return commentDao.saveForPost(comment);
     }
+
+    public Optional<Integer> saveForStory(Comment comment) {
+        return commentDao.saveForStory(comment);
+    }
+
 
     public Iterable<Comment> findByPost(Post post) {
         return commentDao.findAllByPost(post);
     }
 
-    public Optional<Comment> findByUser(User user) {
-        return commentDao.findAllByUser(user);
+    public Iterable<Comment> findAllByStory(Story story) {
+        return commentDao.findAllByStory(story);
     }
 
-    public void removeById(Integer id) {
-        commentDao.removeById(id);
+
+    public Optional<Comment> findAllForPostByUser(User user) {
+        return commentDao.findAllForPostByUser(user);
+    }
+
+        public Optional<Comment> findAllForStoryByUser(User user) {
+        return commentDao.findAllForStoryByUser(user);
+    }
+
+    public void removeForPostById(Integer id) {
+        commentDao.removeForPostById(id);
+    }
+
+    public void removeForStoryById(Integer id) {
+        commentDao.removeForStoryById(id);
     }
 }
 

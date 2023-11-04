@@ -23,20 +23,26 @@ public class User {
     private Country country;
 
     private Iterable<Post> posts;
+    private Iterable<Story> stories;
     private Iterable<Comment> comments;
     private Iterable<Like> likes;
+
 
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", username='" + username + '\'' +
-                ", photo='" + photo + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", countryId=" + country +
-                '}';
+               "id=" + id +
+               ", name='" + name + '\'' +
+               ", surname='" + surname + '\'' +
+               ", username='" + username + '\'' +
+               ", photo='" + photo + '\'' +
+               ", email='" + email + '\'' +
+               ", password='" + password + '\'' +
+               ", country=" + country +
+               ", posts=" + posts +
+               ", stories=" + stories +
+               ", comments=" + comments +
+               ", likes=" + likes +
+               '}';
     }
 }

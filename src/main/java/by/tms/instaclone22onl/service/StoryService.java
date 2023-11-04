@@ -28,7 +28,7 @@ public class StoryService {
 
 
     public Optional<Integer> save(Story story){
-        storyDao.save(story);
+        return storyDao.save(story);
     }
 
     public Optional<Story> findById(Integer id) {
@@ -71,8 +71,14 @@ public class StoryService {
         return storyDao.removeByUser(user);
     }
 
-    public boolean updatePost(Integer id, Story newStory) {
-        return storyDao.updatePost(id, newStory);
+    public List<Story> getAllBefore24Hour(User user){
+        return storyDao.getAllBefore24Hour(user);
+    }
+
+        public List<Story> getAllAfter24Hour(User user){return storyDao.getAllAfter24Hour(user);}
+
+    public boolean updateStory(Integer id, Story newStory) {
+        return storyDao.updateStory(id, newStory);
     }
 
 }
