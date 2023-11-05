@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.web.servlet;
+package by.tms.instaclone22onl.web.servlet.StoryServlet;
 
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.Story;

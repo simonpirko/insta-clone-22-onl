@@ -241,8 +241,9 @@ public class JdbcLikeDao implements LikeDao<Integer> {
                             .builder()
                             .id(resultSet.getInt(10))
                             .user(user)
-                            .photoOrVideo(Source.valueOf(Base64.getEncoder().encodeToString(resultSet.getBytes(11))))
-                            .description(resultSet.getString(13))           //???????????? Col. number
+                            .photoOrVideo(Base64.getEncoder().encodeToString(resultSet.getBytes(11)))
+                            .contentType(Story.Source.valueOf(resultSet.getString(12)))
+                            .description(resultSet.getString(13))
                             .createdAt(resultSet.getTimestamp(14).toLocalDateTime())
                             .build();
 
@@ -250,7 +251,7 @@ public class JdbcLikeDao implements LikeDao<Integer> {
                             .builder()
                             .user(user)
                             .story(story)
-                            .createdAt(resultSet.getTimestamp(14).toLocalDateTime())
+                            .createdAt(resultSet.getTimestamp(15).toLocalDateTime())
                             .build();
 
                     allLikes.add(like);
