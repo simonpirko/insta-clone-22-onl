@@ -57,12 +57,14 @@ public class JdbcStoryDao implements StoryDao<Integer> {
                                               SELECT *
                                               FROM story
                                               WHERE created_at >= NOW() - INTERVAL '24 HOURS'
+                                              AND author_id = ?
                                               ORDER BY created_at DESC
                                               """;
     private final String GET_ALL_BEFORE_24H = """
                                               SELECT *
                                               FROM story
                                               WHERE created_at <= NOW() - INTERVAL '24 HOURS'
+                                              AND author_id = ?
                                               ORDER BY created_at DESC
                                              """;
 
@@ -232,6 +234,10 @@ public class JdbcStoryDao implements StoryDao<Integer> {
 
         try (Connection connection = JdbcConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_FOR_PAGE)) {
+
+            preparedStatement.setInt(1, page.getLimit());
+            preparedStatement.setInt(2, page.getOffset());
+
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {

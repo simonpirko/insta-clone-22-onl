@@ -24,7 +24,7 @@ public class ViewStoryServlet extends HttpServlet {
 
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = (User) req.getSession().getAttribute("user");
         int storyId = Integer.parseInt(req.getParameter("id"));
 
@@ -42,11 +42,8 @@ public class ViewStoryServlet extends HttpServlet {
             }
 
             Iterable<Comment> currentComments = commentService.findAllByStory(story);
-            if (!currentComments.toString().isEmpty()) {            //Normal checking??????????????
-                req.setAttribute("comment", true);
-            } else {
-                req.setAttribute("comment", false);
-            }
+            req.setAttribute("comments", currentComments);
+
 
             Optional<Reaction> currentReactions = reactionService.findByUserAndStory(user, story);
             if (currentReactions.isPresent()) {

@@ -19,7 +19,7 @@ import java.util.Properties;
 @WebFilter(urlPatterns = {"/login", "/register", "/settings", "/localization", "/create-post", "/", "/user/profile",
         "/search", "/user/viewpost", "/pages/locale.jsp", "/pages/_header.jsp", "/pages/login.jsp", "/pages/register.jsp",
         "/pages/settings.jsp", "/pages/createPost.jsp", "/pages/index.jsp", "/pages/profile.jsp", "/pages/search.jsp",
-        "/pages/viewpost.jsp"})
+        "/pages/viewpost.jsp", "/page", "/user/view_story"})
 public class LocalizationFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {

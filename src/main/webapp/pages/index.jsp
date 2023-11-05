@@ -26,65 +26,7 @@
     <div class="row justify-content-center">
         <div class="col-5 mt-3 justify-content-center">
 
-            //??????????????????????????????????????????????????????????
-            <ul>
-                <c:forEach items="${page.getItemsForPageList()}" var="item">
-                    <div class="card mt-5" style="width: 30rem;">
-                        <p style="margin-left: 20px">
-                            <a href="/user/profile?username=${item.getUser().getUsername()}"
-                               class="link-body-emphasis link-offset-2 link-underline-opacity-25 link-underline-opacity-75-hover fs-5 fw-bold font-monospace">${item.getUser().getUsername()}
-                            </a>
-                        </p>
-
-                        <a href="/user/view_story?id=${item.getId()}">
-                            <img src="data:image/jpg;base64,${item.getPhotoOrVideo()}" width="100%"/>
-                        </a>
-                    </div>
-                </c:forEach>
-            </ul>
-
-
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-4 mt-4 justify-content-center">
-                        <nav aria-label="...">
-                            <ul class="pagination">
-
-                                <li class="page-item ${page.hasPreviousPage() ? "" : "disabled"}">
-                                    <a class="page-link" href="/page?page=${page.getPreviousPage()}"
-                                       tabindex="-1"><%=previous%>
-                                    </a>
-                                </li>
-
-                                <c:forEach begin="${page.getMinRange()}" end="${page.getMaxRange()}" var="i">
-                                    <c:choose>
-                                        <c:when test="${page.getPageNumber() eq i}">
-
-                                            <li class="page-item active" aria-current="page">
-                                                <a class="page-link" href="/page?page=${i}">${i}</a>
-                                            </li>
-
-                                        </c:when>
-
-                                        <c:otherwise>
-                                            <li class="page-item"><a class="page-link" href="/page?page=${i}">${i}</a>
-                                            </li>
-
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:forEach>
-
-                                <li class="page-item ${page.hasNextPage() ? "" : "disabled"}">
-                                    <a class="page-link" href="/page?page=${page.getNextPage()}"><%=next%>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-                    //????????????????????????????????????????????????????????????????????
-
+            <jsp:include page="indexstory.jsp"/>
 
             <ul>
                 <c:forEach items="${page.getItemsForPageList()}" var="item">

@@ -30,15 +30,11 @@ public class Story {
                ", photoOrVideo='" + photoOrVideo + '\'' +
                ", contentType=" + contentType +
                ", description='" + description + '\'' +
-               ", createdAt=" + createdAt +
-               ", comments=" + comments +
-               ", likes=" + likes +
-               ", reactions=" + reactions +
-               ", hashtags=" + hashtags +
+               ", createdAt=" + createdAt  +
                '}';
     }
 
-    public enum Source {           // public ????????????????????????????????
+    public enum Source {
         PHOTO,
         VIDEO
     }

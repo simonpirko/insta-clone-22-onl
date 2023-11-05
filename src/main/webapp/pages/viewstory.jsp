@@ -12,7 +12,7 @@
     String button = properties.getProperty("viewstory.button");
     String editstory = properties.getProperty("viewstory.editstory");
 %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Story ${story.getId()}</title>

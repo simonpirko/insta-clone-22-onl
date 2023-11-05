@@ -1,9 +1,10 @@
-package by.tms.instaclone22onl.web.servlet;
+package by.tms.instaclone22onl.web.servlet.PostServlet;
 
 import by.tms.instaclone22onl.entity.Page;
 import by.tms.instaclone22onl.entity.Post;
 import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.PostService;
+import by.tms.instaclone22onl.web.servlet.StoryServlet.PagingStoryServletHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,7 +20,7 @@ public class PagingServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int pageNumber;
+        int pageNumber = 1;
         int postsPerPage;
         if(req.getSession().getAttribute("postsPerPage") != null){
             postsPerPage = (int) req.getSession().getAttribute("postsPerPage");
@@ -30,7 +31,7 @@ public class PagingServlet extends HttpServlet {
 
         if (req.getParameter("page") != null) {
             pageNumber = Integer.parseInt(req.getParameter("page"));
-
+        }
             Page<Post> page = Page.<Post>builder()
                     .pageMin(5)
                     .pageMax(5)
@@ -51,9 +52,10 @@ public class PagingServlet extends HttpServlet {
 
             req.setAttribute("page", page);
 
+            PagingStoryServletHelper.getStoryPages(req);
+
             getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
         }
-    }
 
 
     @Override

@@ -18,11 +18,11 @@
 <head>
     <title>Profile</title>
 
-<style>
-    .avatar-border {
-    border-style: solid;
-    border-color: coral;
-    }
+    <style>
+        .avatar-border {
+            border-style: solid;
+            border-color: coral;
+        }
     </style>
 
 </head>
@@ -32,16 +32,16 @@
     <br>
     <div class="row">
         <div class="col-md d-flex align-items-center justify-content-center">
-
-            <c:if test="${viewedUser.getStories().size() > 0}">
-                <a class="avatar-border" href="/user?username=${viewedUser.getUsername()}/view_story">
+            <c:choose>
+                <c:when test="${viewedUser.getStories().size() > 0}">
+                    <a class="avatar-border" href="/user?username=${viewedUser.getUsername()}/view_story">
+                        <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+                    </a>
+                </c:when>
+                <c:otherwise>
                     <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
-                </a>
-            </c:if>
-            <c:otherwise>
-                <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
-            </c:otherwise>
-
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="col-md text-md-start">
             <h3>${viewedUser.getName()} ${viewedUser.getSurname()}</h3>

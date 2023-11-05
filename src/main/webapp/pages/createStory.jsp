@@ -34,24 +34,24 @@
             <input name="add story" type="file" class="form-control" placeholder="link" aria-label="link" aria-describedby="addon-wrapping" required>
         </div>
 
-<%--        <div class="form-floating">--%>
-<%--            <textarea name="description" class="form-control" placeholder="Leave a description here" id="floatingTextarea" maxlength="1100" required></textarea>--%>
-<%--            <label for="floatingTextarea"><%=description%></label>--%>
-<%--        </div>--%>
+        <div class="form-floating">
+            <textarea name="description" class="form-control" placeholder="Leave a description here" id="floatingTextarea" maxlength="1100" required></textarea>
+            <label for="floatingTextarea"><%=description%></label>
+        </div>
 
 
-<%--        <div class="form-floating">--%>
-<%--            <textarea name="hashtag" class="form-control" placeholder="#car #test #nature" id="tag" maxlength="1100" required></textarea>--%>
-<%--            <label for="tag">Tag</label>--%>
-<%--        </div>--%>
+        <div class="form-floating">
+            <textarea name="hashtag" class="form-control" placeholder="#car #test #nature" id="tag" maxlength="1100" required></textarea>
+            <label for="tag">Tag</label>
+        </div>
 
 
-    <%--        <form>--%>
-<%--            <div class="form-group">--%>
-<%--                <label for="exampleFormControlFile1">Example file input</label>--%>
-<%--                <input type="file" class="form-control-file" id="exampleFormControlFile1">--%>
-<%--            </div>--%>
-<%--        </form>--%>
+            <form>
+            <div class="form-group">
+                <label for="exampleFormControlFile1">Example file input</label>
+                <input type="file" class="form-control-file" id="exampleFormControlFile1">
+            </div>
+        </form>
 
         <div class="d-grid gap-2 col-6 mx-auto">
             <button class="btn btn-primary" type="submit"><%=button%></button>
