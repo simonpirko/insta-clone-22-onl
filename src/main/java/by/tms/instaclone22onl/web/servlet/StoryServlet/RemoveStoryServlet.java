@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@WebServlet("user/remove_story")
+@WebServlet("/user/remove_story")
 public class RemoveStoryServlet extends HttpServlet {
     StoryService storyService = StoryService.getInstance();
 

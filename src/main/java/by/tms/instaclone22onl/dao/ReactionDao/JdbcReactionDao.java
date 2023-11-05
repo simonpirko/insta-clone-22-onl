@@ -94,7 +94,7 @@ public class JdbcReactionDao implements ReactionDao<Integer>{
                             .builder()
                             .id(resultSet.getInt(10))
                             .user(user)
-                            .photoOrVideo(Source.valueOf(Base64.getEncoder().encodeToString(resultSet.getBytes(11))))
+                            .photoOrVideo(Base64.getEncoder().encodeToString(resultSet.getBytes(11)))
                             .description(resultSet.getString(13))           //???????????? Col. number
                             .createdAt(resultSet.getTimestamp(14).toLocalDateTime())
                             .build();
