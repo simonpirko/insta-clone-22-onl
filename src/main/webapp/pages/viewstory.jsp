@@ -34,7 +34,7 @@
                         <div class="col-sm-6 text-start">
                             <div class="row g-0">
                                 <a class="page-link col-sm-2 align-self-center text-center" href="/user/profile?username=${story.getUser().getUsername()}" style="padding: unset; text-decoration: unset">
-                                    <img src="data:image/jpg;base64,${post.getUser().getPhoto()}" style="padding: unset; height: 24px; width: 24px" alt="profile image">
+                                    <img src="data:image/jpg;base64,${story.getUser().getPhoto()}" style="padding: unset; height: 24px; width: 24px" alt="profile image">
                                 </a>
                                 <a class="page-link col-sm-10 align-self-center text-center" href="/user/profile?username=${story.getUser().getUsername()}" style="padding: unset; text-decoration: unset">
                                     ${story.getUser().getUsername()}
@@ -129,7 +129,7 @@
                     <form action="/user/create_story_comment" class="row g-2" method="post">
                         <div class="col-sm-11 align-self-center">
                             <input name="commentMessage" type="text" class="form-control" placeholder="create comment" aria-label="create comment" style="height: 50px;">
-                            <input type="hidden" name="post_id" value="${story.getId()}">
+                            <input type="hidden" name="story_id" value="${story.getId()}">
                         </div>
                         <div class="col-1 align-self-center">
                             <button type="submit" class="btn border-0" style="padding: unset; --bs-btn-hover-color: blue; transition: 0.3s">

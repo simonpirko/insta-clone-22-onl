@@ -19,15 +19,8 @@ import java.util.List;
 @WebServlet("/")
 public class IndexServlet extends HttpServlet {
 
-    private final PostService postService = PostService.getInstance();
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        List<Post> allPost = postService.getAllPost();
-//        req.setAttribute("postList", allPost);
-
-//        getServletContext().getRequestDispatcher("/pages/index.jsp").forward(req, resp);
-
 
         User user = (User) req.getSession().getAttribute("user");
         if(user == null){

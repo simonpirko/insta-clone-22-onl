@@ -47,12 +47,12 @@ public class CreateStoryServlet extends HttpServlet {
 
         String description = req.getParameter("description");
         String hashtag = req.getParameter("hashtag");
-        String contentType = req.getParameter("contentType");           //?????????????????
+        String contentType = req.getParameter("contentType");           
 
         Story story = Story.builder()
                 .user(user)
                 .photoOrVideo(Base64.getEncoder().encodeToString(partPhotoOrVideoInputStream.readAllBytes()))
-                .contentType(Story.Source.valueOf(contentType))         //??????????????????????
+                .contentType(Story.Source.valueOf(contentType))
                 .description(description)
                 .createdAt(LocalDateTime.now())
                 .build();

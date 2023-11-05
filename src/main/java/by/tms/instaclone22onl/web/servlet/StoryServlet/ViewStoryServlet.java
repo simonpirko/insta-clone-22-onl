@@ -32,7 +32,7 @@ public class ViewStoryServlet extends HttpServlet {
 
         if (storyById.isPresent()) {
             Story story = storyById.get();
-            req.setAttribute("currentStory", story);
+            req.setAttribute("story", story);
 
             Optional<Like> currentLikes = likeService.findByUserAndStory(user, story);
             if (currentLikes.isPresent()) {
@@ -41,19 +41,7 @@ public class ViewStoryServlet extends HttpServlet {
                 req.setAttribute("like", false);
             }
 
-            Iterable<Comment> currentComments = commentService.findAllByStory(story);
-            req.setAttribute("comments", currentComments);
-
-
-            Optional<Reaction> currentReactions = reactionService.findByUserAndStory(user, story);
-            if (currentReactions.isPresent()) {
-                req.setAttribute("reaction", true);
-            } else {
-                req.setAttribute("reaction", false);
-            }
-
-        }
-
         getServletContext().getRequestDispatcher("/pages/viewstory.jsp").forward(req, resp);
+    }
     }
 }
