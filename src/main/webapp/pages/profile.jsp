@@ -105,6 +105,7 @@
 
                         <br>
 
+                        <c:if test="${viewedUser.getUsername() == user.getUsername()}">
                         <div class="d-flex justify-content-end">
                             <form action="/user/remove_post" method="post">
                                 <input type="hidden" name="postId" value="${item.getId()}">
@@ -113,6 +114,8 @@
                                 </button>
                             </form>
                         </div>
+                        </c:if>
+
                     </div>
                 </div>
             </c:forEach>

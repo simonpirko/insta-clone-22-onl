@@ -14,11 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
-
-public class UnlikeStoryServlet {
-    @WebServlet("/unlike_story")
-    public class UnlikeServlet extends HttpServlet {
-
+@WebServlet("/unlike_story")
+public class UnlikeStoryServlet extends HttpServlet{
         private final LikeService likeService = LikeService.getInstance();
         private final StoryService storyService = StoryService.getInstance();
 
@@ -34,4 +31,3 @@ public class UnlikeStoryServlet {
             }
         }
     }
-}

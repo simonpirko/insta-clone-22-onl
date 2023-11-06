@@ -49,7 +49,7 @@
 
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <c:if test="${sessionScope.user != null}">
-                        <a class="nav-link" aria-current="page" href="/user?username=${sessionUser.getUsername()}/profile"><%=profile%>
+                        <a class="nav-link" aria-current="page" href="/user/profile?username=${sessionScope.user.getUsername()}"><%=profile%>
                         </a>   <%-- �������� ������ �� �������� �� ����������! --%>
                     </c:if>
                 </ul>

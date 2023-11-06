@@ -30,7 +30,10 @@ INSERT INTO story VALUES (1, 1, null, 'photo', 'Test description by story #1', '
 INSERT INTO story VALUES (2, 1, null, 'video', 'Test description by story #2', '2023-10-01 19:59:30.2964321');
 INSERT INTO story VALUES (3, 1, null, 'video', 'Test description by story #3', '2023-10-01 20:00:30.2964321');
 INSERT INTO story VALUES (4, 2, null, 'photo', 'Test description by story #4', '2023-10-11 12:58:30.2964321');
-INSERT INTO story VALUES (5, 2, null, 'video', 'Test description by story #15', '2023-10-12 13:58:30.2964321');
+INSERT INTO story VALUES (5, 2, null, 'video', 'Test description by story #5', '2023-10-12 13:58:30.2964321');
+INSERT INTO story VALUES (6, 1, null, 'photo', 'Test description by story #6', '2023-11-06 23:58:30.2964321');
+INSERT INTO story VALUES (7, 1, null, 'photo', 'Test description by story #7', '2023-11-06 23:58:30.2964321');
+
 
 INSERT INTO story_comment VALUES (1, 2, 1, 'Great!');
 INSERT INTO story_comment VALUES (2, 2, 2, 'Hi!!!');

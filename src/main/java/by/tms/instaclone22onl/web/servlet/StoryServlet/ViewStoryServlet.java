@@ -17,10 +17,7 @@ import java.util.Optional;
 public class ViewStoryServlet extends HttpServlet {
 
     StoryService storyService = StoryService.getInstance();
-    UserService userService = UserService.getInstance();
     LikeService likeService = LikeService.getInstance();
-    CommentService commentService = CommentService.getInstance();
-    ReactionService reactionService = ReactionService.getInstance();
 
 
     @Override
