@@ -92,38 +92,42 @@
                         <div class="col-sm-12 align-self-center text-end">
                             <div class="dropdown">
                                 <button class="btn btn-warning btn-sm dropdown-toggle" type="button"
-                                        id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                        aria-expanded="false">
+                                        id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                     Reaction
                                 </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="/user/story/create_reaction?story_id=${story.getId()}">
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                    <li><a class="dropdown-item"
+                                           href="/user/story/create_reaction?story_id=${story.getId()}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-emoji-smile" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
                                             <path d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683zM7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
                                         </svg>
-                                    </a>
-                                    <a class="dropdown-item" href="/user/story/create_reaction?story_id=${story.getId()}">
+                                    </a></li>
+                                    <li><a class="dropdown-item"
+                                           href="/user/story/create_reaction?story_id=${story.getId()}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
                                             <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z"/>
                                         </svg>
-                                    </a>
-                                    <a class="dropdown-item" href="/user/story/create_reaction?story_id=${story.getId()}">
+                                    </a></li>
+                                    <li><a class="dropdown-item"
+                                           href="/user/story/create_reaction?story_id=${story.getId()}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                              fill="currentColor" class="bi bi-emoji-grimace" viewBox="0 0 16 16">
                                             <path d="M7 6.25c0 .69-.448 1.25-1 1.25s-1-.56-1-1.25S5.448 5 6 5s1 .56 1 1.25Zm3 1.25c.552 0 1-.56 1-1.25S10.552 5 10 5s-1 .56-1 1.25.448 1.25 1 1.25Zm2.98 3.25A1.5 1.5 0 0 1 11.5 12h-7a1.5 1.5 0 0 1-1.48-1.747v-.003A1.5 1.5 0 0 1 4.5 9h7a1.5 1.5 0 0 1 1.48 1.747v.003Zm-8.48.75h.25v-.75H3.531a1 1 0 0 0 .969.75Zm7 0a1 1 0 0 0 .969-.75H11.25v.75h.25Zm.969-1.25a1 1 0 0 0-.969-.75h-.25v.75h1.219ZM4.5 9.5a1 1 0 0 0-.969.75H4.75V9.5H4.5Zm1.75 2v-.75h-1v.75h1Zm.5 0h1v-.75h-1v.75Zm1.5 0h1v-.75h-1v.75Zm1.5 0h1v-.75h-1v.75Zm1-2h-1v.75h1V9.5Zm-1.5 0h-1v.75h1V9.5Zm-1.5 0h-1v.75h1V9.5Zm-1.5 0h-1v.75h1V9.5Z"/>
                                             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16Zm0-1A7 7 0 1 1 8 1a7 7 0 0 1 0 14Z"/>
                                         </svg>
-                                    </a>
-                                    <a class="dropdown-item" href="/user/story/create_reaction?story_id=${story.getId()}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-emoji-surprise" viewBox="0 0 16 16">
+                                    </a></li>
+                                    <li><a class="dropdown-item"
+                                           href="/user/story/create_reaction?story_id=${story.getId()}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-emoji-surprise" viewBox="0 0 16 16">
                                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14Zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16Z"/>
                                             <path d="M7 5.5C7 6.328 6.552 7 6 7s-1-.672-1-1.5S5.448 4 6 4s1 .672 1 1.5Zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 4 10 4s1 .672 1 1.5ZM10 11a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
                                         </svg>
-                                    </a>
-                                </div>
+                                    </a></li>
+                                </ul>
                             </div>
                         </div>
 

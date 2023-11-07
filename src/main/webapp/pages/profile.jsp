@@ -13,6 +13,7 @@
     String edit = properties.getProperty("profile.edit");
     String followers = properties.getProperty("profile.Followers");
     String following = properties.getProperty("profile.Following");
+    String Delete = properties.getProperty("profile.Delete");
 %>
 <html>
 <head>
@@ -110,7 +111,7 @@
                             <form action="/user/remove_post" method="post">
                                 <input type="hidden" name="postId" value="${item.getId()}">
                                 <button class="btn btn-primary btn-sm" type="submit">
-                                    Delete
+                                    <%=Delete%>
                                 </button>
                             </form>
                         </div>
