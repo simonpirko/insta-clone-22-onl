@@ -38,11 +38,52 @@ CREATE TABLE "post_like"(
                             CONSTRAINT post_like_pk PRIMARY KEY(author_id, post_id)
 );
 
-create table if not exists "comment" (
+create table if not exists "post_comment" (
     id serial not null primary key,
                                          author_id int references "human"(id),
                                          post_id int REFERENCES "post"(id) ON DELETE CASCADE,
                                          text varchar(255) not null
+);
+
+
+CREATE TABLE if NOT EXISTS story (
+                                        id serial not null primary key,
+                                        author_id int,
+                                        photoOrVideo bytea,
+                                        contentType varchar(255) not null,
+                                        description varchar(255),
+                                        created_at timestamp,
+                                        foreign key (author_id) references "human"(id)
+);
+
+
+CREATE TABLE if NOT EXISTS "story_comment" (
+                                         id serial not null primary key,
+                                         author_id int references "human"(id),
+                                         story_id int REFERENCES "story"(id) ON DELETE CASCADE,
+                                         text varchar(255) not null
+);
+
+
+CREATE TABLE "story_like"(
+                            author_id int REFERENCES "human"(id),
+                            story_id int REFERENCES "story"(id) ON DELETE CASCADE,
+                            created_at timestamp,
+                            CONSTRAINT story_like_pk PRIMARY KEY(author_id, story_id)
+);
+
+
+CREATE TABLE "story_hashtag"(
+                                hashtag_id int REFERENCES "hashtag"(id),
+                                story_id int REFERENCES "story"(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE "story_reactions"(
+                             author_id int REFERENCES "human"(id),
+                             story_id int REFERENCES "story"(id) ON DELETE CASCADE,
+                             created_at timestamp,
+                             CONSTRAINT story_reactions_pk PRIMARY KEY(author_id, story_id)
 );
 
 -- /* Таблица со списком чатов */

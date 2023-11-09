@@ -3,6 +3,7 @@ package by.tms.instaclone22onl.dao.HashtagDao;
 import by.tms.instaclone22onl.config.JdbcConnection;
 import by.tms.instaclone22onl.entity.Hashtag;
 import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.Story;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +24,14 @@ public class JdbcHashtagDao implements HashtagDao<Integer> {
     private final String INSERT = "insert into \"hashtag\" (name) values (?)";
     private final String FIND_BY_NAME = "select * from \"hashtag\" where name = ?";
     private final String FIND_ALL_BY_POST = "select * from \"hashtag\" join \"post_hashtag\" on \"hashtag\".id = \"post_hashtag\".hashtag_id where \"post_hashtag\".post_id = ?";
+    private final String FIND_ALL_BY_STORY = """
+                                                SELECT * FROM hashtag h
+                                                JOIN story_hashtag sh
+                                                ON h.id = sh.hashtag_id
+                                                WHERE sh.story_id = ? 
+                                                """;
     private final String SAVE_FOR_POST = "insert into \"post_hashtag\" (hashtag_id, post_id) values (?, ?)";
+    private final String SAVE_FOR_STORY = "INSERT INTO story_hashtag (hashtag_id, story_id) values (?, ?)";
 
     private JdbcHashtagDao() {}
 
@@ -93,6 +101,30 @@ public class JdbcHashtagDao implements HashtagDao<Integer> {
         return hashtags;
     }
 
+
+    @Override
+    public List<Hashtag> findAllByStory(Story story){
+        List<Hashtag> allHastagsByStoryList = new ArrayList<>();
+
+        try(Connection connection = JdbcConnection.getConnection();
+        PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_BY_STORY)) {
+            preparedStatement.setInt(1, story.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                Hashtag hashtag = buildHashtagEntityFromResultSet(resultSet);
+                allHastagsByStoryList.add(hashtag);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return allHastagsByStoryList;
+    }
+
+
+
     @Override
     public Optional<Integer> saveForPost(Hashtag hashtag, Post post) {
         try (Connection connection = JdbcConnection.getConnection()) {
@@ -112,6 +144,31 @@ public class JdbcHashtagDao implements HashtagDao<Integer> {
 
         return Optional.empty();
     }
+
+
+
+    @Override
+    public Optional<Integer> saveForStory(Hashtag hashtag, Story story){
+try(Connection connection = JdbcConnection.getConnection();
+PreparedStatement preparedStatement = connection.prepareStatement(SAVE_FOR_STORY)) {
+
+    preparedStatement.setInt(1, hashtag.getId());
+    preparedStatement.setInt(2, story.getId());
+
+   preparedStatement.execute();
+
+    try (ResultSet keys = preparedStatement.getGeneratedKeys()){
+        if(keys.next()){
+            return Optional.of(keys.getInt(1));
+        }
+    }
+} catch (SQLException e) {
+    throw new RuntimeException(e);
+}
+
+return Optional.empty();
+    }
+
 
     private Hashtag buildHashtagEntityFromResultSet(ResultSet resultSet) throws SQLException {
 

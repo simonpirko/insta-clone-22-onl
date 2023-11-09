@@ -25,6 +25,9 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-5 mt-3 justify-content-center">
+
+            <jsp:include page="indexstory.jsp"/>
+
             <ul>
                 <c:forEach items="${page.getItemsForPageList()}" var="item">
                     <div class="card mt-5" style="width: 30rem;">
@@ -47,7 +50,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="container">
     <div class="row justify-content-center">

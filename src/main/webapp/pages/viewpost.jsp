@@ -12,7 +12,7 @@
     String button = properties.getProperty("viewpost.button");
     String editpost = properties.getProperty("viewpost.editpost");
 %>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>Post ${post.getId()}</title>

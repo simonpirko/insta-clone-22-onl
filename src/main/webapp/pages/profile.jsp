@@ -13,10 +13,19 @@
     String edit = properties.getProperty("profile.edit");
     String followers = properties.getProperty("profile.Followers");
     String following = properties.getProperty("profile.Following");
+    String Delete = properties.getProperty("profile.Delete");
 %>
 <html>
 <head>
     <title>Profile</title>
+
+    <style>
+        .avatar-border {
+            border-style: solid;
+            border-color: coral;
+        }
+    </style>
+
 </head>
 <body>
 <jsp:include page="_header.jsp"/>
@@ -24,7 +33,16 @@
     <br>
     <div class="row">
         <div class="col-md d-flex align-items-center justify-content-center">
-            <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+            <c:choose>
+                <c:when test="${viewedUser.getStories().size() > 0}">
+                    <a class="avatar-border" href="/user?username=${viewedUser.getUsername()}/view_story">
+                        <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+                    </a>
+                </c:when>
+                <c:otherwise>
+                    <img src="data:image/jpg;base64,${viewedUser.getPhoto()}" width="150" height="150" alt="fsd"/>
+                </c:otherwise>
+            </c:choose>
         </div>
         <div class="col-md text-md-start">
             <h3>${viewedUser.getName()} ${viewedUser.getSurname()}</h3>
@@ -88,14 +106,17 @@
 
                         <br>
 
+                        <c:if test="${viewedUser.getUsername() == user.getUsername()}">
                         <div class="d-flex justify-content-end">
                             <form action="/user/remove_post" method="post">
                                 <input type="hidden" name="postId" value="${item.getId()}">
                                 <button class="btn btn-primary btn-sm" type="submit">
-                                    Delete
+                                    <%=Delete%>
                                 </button>
                             </form>
                         </div>
+                        </c:if>
+
                     </div>
                 </div>
             </c:forEach>

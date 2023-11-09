@@ -1,4 +1,4 @@
-package by.tms.instaclone22onl.web.servlet;
+package by.tms.instaclone22onl.web.servlet.PostServlet;
 
 /*
     @author Ilya Moiseenko on 25.10.23

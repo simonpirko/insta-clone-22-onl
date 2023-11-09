@@ -1,9 +1,5 @@
 package by.tms.instaclone22onl.entity;
 
-/*
-    @author Ilya Moiseenko on 19.09.23
-*/
-
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,21 +9,18 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Builder
-public class Like {
-
+public class Reaction {
     private int id;
     private User user;
-    private Post post;
     private Story story;
     private LocalDateTime createdAt;
 
 
     @Override
     public String toString() {
-        return "Like{" +
+        return "Reaction{" +
                "id=" + id +
                ", user=" + user +
-               ", post=" + post +
                ", story=" + story +
                ", createdAt=" + createdAt +
                '}';

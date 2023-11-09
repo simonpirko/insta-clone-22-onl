@@ -25,13 +25,13 @@ public class JdbcPostDao implements PostDao<Integer> {
     private final String REMOVE_BY_USER = "DELETE FROM Post WHERE id = ?";
     private final String UPDATE = "UPDATE Post SET photo = ?, description = ?, created_at = ? WHERE id = ?";
     private final String SELECT_ALL_FOR_PAGE = """
-                                             SELECT * FROM post p  
-                                             JOIN human h  
-                                             ON p.author_id = h.id  
-                                             JOIN country cn  
-                                             ON h.country_id = cn.id 
-                                             LIMIT ? OFFSET ?
-                                             """;
+            SELECT * FROM post p  
+            JOIN human h  
+            ON p.author_id = h.id  
+            JOIN country cn  
+            ON h.country_id = cn.id 
+            LIMIT ? OFFSET ?
+            """;
 
 
     private final String COUNT_ALL = "SELECT COUNT(*) AS total FROM post";
@@ -40,7 +40,8 @@ public class JdbcPostDao implements PostDao<Integer> {
     private final String REMOVE_FAVORITE_BY_USER = "delete from \"favorite\" where user_id = ?";
 
     // Constructors
-    private JdbcPostDao() {}
+    private JdbcPostDao() {
+    }
 
     // Methods
     public static JdbcPostDao getInstance() {
@@ -190,10 +191,11 @@ public class JdbcPostDao implements PostDao<Integer> {
         }
         return posts;
     }
-    @Override
-    public Iterable<Post> findAllWithPageable(Page page){
 
-        List <Post> postsForPageList = new ArrayList<>();
+    @Override
+    public Iterable<Post> findAllWithPageable(Page page) {
+
+        List<Post> postsForPageList = new ArrayList<>();
 
         try {
             Connection connection = JdbcConnection.getConnection();
@@ -260,25 +262,24 @@ public class JdbcPostDao implements PostDao<Integer> {
 
     @Override
     public void removeById(Integer id) {
-        try (Connection connection =JdbcConnection.getConnection()) {
+        try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_ID);
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void removeByUser(User user) {
-        try (Connection connection =JdbcConnection.getConnection()) {
+        try (Connection connection = JdbcConnection.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(REMOVE_BY_USER);
             preparedStatement.setInt(1, user.getId());
 
             preparedStatement.executeUpdate();
-        }
-        catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -287,7 +288,7 @@ public class JdbcPostDao implements PostDao<Integer> {
     public void updatePost(Integer id, Post newPost) {
         Optional<Post> post = findById(id);
 
-        if (post.isPresent()){
+        if (post.isPresent()) {
             try (Connection connection = JdbcConnection.getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement(UPDATE);
                 preparedStatement.setBytes(1, Base64.getDecoder().decode(newPost.getPhoto()));
@@ -296,7 +297,7 @@ public class JdbcPostDao implements PostDao<Integer> {
                 preparedStatement.setInt(4, id);
 
                 preparedStatement.executeUpdate();
-            } catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }

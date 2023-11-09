@@ -1,10 +1,12 @@
-package by.tms.instaclone22onl.web.servlet;
+package by.tms.instaclone22onl.web.servlet.StoryServlet;
 
 import by.tms.instaclone22onl.entity.Comment;
 import by.tms.instaclone22onl.entity.Post;
+import by.tms.instaclone22onl.entity.Story;
 import by.tms.instaclone22onl.entity.User;
 import by.tms.instaclone22onl.service.CommentService;
 import by.tms.instaclone22onl.service.PostService;
+import by.tms.instaclone22onl.service.StoryService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,31 +16,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebServlet("/user/create-comment")
-public class AddCommentServlet extends HttpServlet {
+@WebServlet("/user/create_story_comment")
+public class AddCommentStoryServlet extends HttpServlet {
 
-    private final PostService postService = PostService.getInstance();
+    private final StoryService storyService = StoryService.getInstance();
     private final CommentService commentService = CommentService.getInstance();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User user = ((User) req.getSession().getAttribute("user"));
 
-        int postId = Integer.parseInt(req.getParameter("post_id"));
-        Optional<Post> post = postService.findById(postId);
+        int storyId = Integer.parseInt(req.getParameter("story_id"));
+        Optional<Story> story = storyService.findById(storyId);
 
-        if (post.isPresent()) {
+        if (story.isPresent()) {
             String commentText = req.getParameter("commentMessage");
             Comment comment = Comment.builder()
                     .user(user)
-                    .post(post.get())
+                    .story(story.get())
                     .text(commentText)
                     .build();
 
-            commentService.save(comment);
-            resp.sendRedirect("/user/viewpost?id=" + postId);
+            commentService.saveForPost(comment);
+            resp.sendRedirect("/user/view_story?id=" + storyId);
         } else {
-            req.setAttribute("errormessage", "Post don't found.");
+            req.setAttribute("errormessage", "Story don't found.");
         }
     }
 }
+
